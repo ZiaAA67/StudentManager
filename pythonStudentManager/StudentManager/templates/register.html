@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
 {%extends 'layout/base.html'%}
 
 {%block title%} Đăng nhập {%endblock%}
 
 {%block content%}
 
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="d-flex justify-content-center align-items-center vh-100 ">
 
+<div class="d-flex justify-content-center align-items-center vh-100 ">
     <div class="card" style="width: 35rem; ">
         <div class="card-body">
             <p class="text-center" style="font-weight: bold;font-size:30px">2NT Edu</p>
@@ -20,8 +13,7 @@
                 <!-- Image next to the text -->
                 <img src="static/images/LogoRBG.png" alt="Logo" style="width: 200px; height: 200px;">
             </div>
-
-            <h2 class="text-center" style="font-weight:bold">ĐĂNG NHẬP</h2>
+            <h2 class="text-center" style="font-weight:bold">ĐĂNG KÝ TÀI KHOẢN</h2>
 
             <form method="post" action="/login" class="mt-4">
                 <!-- Username -->
@@ -36,8 +28,8 @@
                     <label for="username">Tài khoản</label>
                 </div>
 
-                <!-- Password -->
-                <div class="form-floating mb-3">
+                <!-- Nhập mật khẩu -->
+                <div class="form-floating mb-4">
                     <input type="password"
                            class="form-control shadow-sm"
                            id="password"
@@ -45,36 +37,36 @@
                            name="password"
                            required>
                     <label for="password">Nhập mật khẩu</label>
-                    <!-- Eye Icon -->
+                    <!-- Eye Icon for Password -->
                     <span class="icon" onclick="togglePass(this)"
-
-                          style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size:25px">🙉
-    </span>
-                    <script src="static/js/script.js"></script>
+                          style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size:25px">🙉</span>
                 </div>
+
+                <!-- Xác nhận mật khẩu -->
+                <div class="form-floating mb-4">
+                    <input type="password"
+                           class="form-control shadow-sm"
+                           id="confirm_password"
+                           placeholder="Xác nhận mật khẩu"
+                           name="confirm_password"
+                           required>
+                    <label for="confirm_password">Xác nhận mật khẩu</label>
+                    <!-- Eye Icon for Confirm Password -->
+                    <span class="icon" onclick="togglePass(this)"
+                          style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size:25px">🙉</span>
+                </div>
+
+                <script src="static/js/script.js"></script>
+
 
                 <!-- Error Message -->
                 {% if err_msg %}
                 <div class="alert alert-danger text-center py-2">{{ err_msg }}</div>
                 {% endif %}
-                <!-- Forgot Password Link -->
-                <div class="text-end">
-                    <a href="/forgot-password" class="text-decoration-none text-info">
-                        Quên mật khẩu?
-                    </a>
-                </div>
-                <!-- Login Button -->
-                <div class="d-grid mt-3 mb-3">
-                    <button class="btn btn-lightseagreen shadow" type="submit ">
-                        Đăng nhập
-                    </button>
-                </div>
 
+                <!-- Login Button -->
                 <div class="d-grid mb-3">
-                    <button class="btn btn-lightseagreen shadow" onclick="goToRegisterPage()">
-                        Đăng ký
-                    </button>
-                    <script src="static/js/script.js"></script>
+                    <button class="btn btn-lightseagreen shadow" type="submit">Đăng ký</button>
                 </div>
 
 
@@ -82,6 +74,5 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+
 {%endblock%}

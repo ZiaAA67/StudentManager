@@ -1,0 +1,115 @@
+/* General Body Styles */
+body {
+    background-color: #2f353b;
+    font-family: 'Arial', sans-serif;
+    color: #495057;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+.h1{
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); /* Light-colored shadow (white with opacity) */
+    background-color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.4); /* Stronger shadow on hover */
+}
+
+.card-header, .card-footer {
+    background-color: lightseagreen;
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Form Fields: Border on Hover */
+.form-control {
+    transition: border-color 0.3s ease; /* Smooth transition */
+    border-radius: 15px; /* Slightly rounded corners */
+    border: 3px solid #ced4da; /* Light gray border by default */
+}
+
+.form-control:focus {
+    border-color: lightseagreen !important; /* Add black border on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional: subtle shadow on focus */
+}
+
+.form-floating .form-control:focus {
+    border-color: lightseagreen !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional */
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #6c757d;
+}
+
+/* Button Styles */
+.btn-lightseagreen {
+    background-color: lightseagreen;
+    color: white;
+    border: 0px;
+    width:320px;
+    border-radius: 50px;
+     padding: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-lightseagreen:hover {
+    background-color: #20b2aa;
+    transform: translateY(-2px);
+}
+
+.btn-lightseagreen:active {
+    background-color: #2e8b57;
+    transform: translateY(0);
+}
+.d-grid {
+    display: flex;
+    justify-content: center; /* Horizontally centers the button */
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .card {
+        margin: 10px;
+    }
+
+    .btn-lightseagreen {
+        width: 100%;
+        padding: 12px 20px;
+    }
+
+    .form-control {
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .card-header,
+    .card-footer {
+        font-size: 16px;
+    }
+
+    .btn-lightseagreen {
+        padding: 14px 20px;
+    }
+}
