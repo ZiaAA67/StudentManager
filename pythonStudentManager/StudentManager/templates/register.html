@@ -1,21 +1,33 @@
 {%extends 'layout/base.html'%}
 
-{%block title%} Đăng nhập {%endblock%}
+{%block title%} Đăng ký {%endblock%}
 
 {%block content%}
 
+<div class="d-flex justify-content-center align-items-center ">
 
-<div class="d-flex justify-content-center align-items-center vh-100 ">
-    <div class="card" style="width: 35rem; ">
+    <div class="card mt-3" style="width: 30rem; ">
         <div class="card-body">
-            <p class="text-center" style="font-weight: bold;font-size:30px">2NT Edu</p>
+            <p class="text-center" style="font-weight: bold;font-size:20px">2NT Edu</p>
             <div class="d-flex justify-content-center align-items-center">
                 <!-- Image next to the text -->
-                <img src="static/images/LogoRBG.png" alt="Logo" style="width: 200px; height: 200px;">
+                <img src="static/images/LogoRBG.png" alt="Logo" style="width: 170px; height: 170px;">
             </div>
-            <h2 class="text-center" style="font-weight:bold">ĐĂNG KÝ TÀI KHOẢN</h2>
 
-            <form method="post" action="/login" class="mt-4">
+            <h3 class="text-center" style="font-weight:bold">ĐĂNG KÝ TÀI KHOẢN</h3>
+
+            <form method="post" action="/register" class="mt-4">
+
+                <!-- Name -->
+                <div class="form-floating mb-4 ">
+                    <input type="text"
+                           class="form-control shadow-sm"
+                           id="name"
+                           placeholder="Họ tên"
+                           name="name"
+                           required>
+                    <label for="username">Họ tên</label>
+                </div>
                 <!-- Username -->
                 <div class="form-floating mb-4 ">
                     <input type="text"
@@ -28,7 +40,7 @@
                     <label for="username">Tài khoản</label>
                 </div>
 
-                <!-- Nhập mật khẩu -->
+                <!-- Password -->
                 <div class="form-floating mb-4">
                     <input type="password"
                            class="form-control shadow-sm"
@@ -37,12 +49,12 @@
                            name="password"
                            required>
                     <label for="password">Nhập mật khẩu</label>
-                    <!-- Eye Icon for Password -->
+
                     <span class="icon" onclick="togglePass(this)"
                           style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size:25px">🙉</span>
                 </div>
 
-                <!-- Xác nhận mật khẩu -->
+                <!-- Confirm Password-->
                 <div class="form-floating mb-4">
                     <input type="password"
                            class="form-control shadow-sm"
@@ -51,20 +63,25 @@
                            name="confirm_password"
                            required>
                     <label for="confirm_password">Xác nhận mật khẩu</label>
-                    <!-- Eye Icon for Confirm Password -->
+
                     <span class="icon" onclick="togglePass(this)"
                           style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size:25px">🙉</span>
                 </div>
 
                 <script src="static/js/script.js"></script>
 
+                <!-- Avatar -->
+                <div class="form-floating mt-3 mb-3">
+                    <input type="file" class="form-control" id="avatar" name="avatar">
+                    <label for="avatar">Ảnh đại diện</label>
+                </div>
 
                 <!-- Error Message -->
                 {% if err_msg %}
                 <div class="alert alert-danger text-center py-2">{{ err_msg }}</div>
                 {% endif %}
 
-                <!-- Login Button -->
+                <!-- Register Button -->
                 <div class="d-grid mb-3">
                     <button class="btn btn-lightseagreen shadow" type="submit">Đăng ký</button>
                 </div>
