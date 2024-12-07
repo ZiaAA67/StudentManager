@@ -35,7 +35,10 @@ body {
 .card-body {
     padding: 20px;
 }
-
+.d-grid {
+    display: flex;
+    justify-content: center; /* Horizontally centers the button */
+}
 /* Form Fields: Border on Hover */
 .form-control {
     transition: border-color 0.3s ease; /* Smooth transition */
@@ -79,10 +82,7 @@ textarea::placeholder {
     background-color: #2e8b57;
     transform: translateY(0);
 }
-.d-grid {
-    display: flex;
-    justify-content: center; /* Horizontally centers the button */
-}
+
 
 /* Responsive Design */
 @media (max-width: 767px) {

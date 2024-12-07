@@ -1,9 +1,16 @@
-{%extends 'layout/base.html'%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%extends 'layout/base.html'%}
 
-{%block title%} Đăng ký {%endblock%}
+    {%block title%} Đăng ký {%endblock%}
 
-{%block content%}
+    {%block content%}
 
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
 <div class="d-flex justify-content-center align-items-center ">
 
     <div class="card mt-3" style="width: 30rem; ">
@@ -71,7 +78,7 @@
                 <script src="static/js/script.js"></script>
 
                 <!-- Avatar -->
-                <div class="form-floating mt-3 mb-3">
+                <div class="form-floating mt-3 mb-4">
                     <input type="file" class="form-control" id="avatar" name="avatar">
                     <label for="avatar">Ảnh đại diện</label>
                 </div>
@@ -82,7 +89,7 @@
                 {% endif %}
 
                 <!-- Register Button -->
-                <div class="d-grid mb-3">
+                <div class="d-grid mb-2">
                     <button class="btn btn-lightseagreen shadow" type="submit">Đăng ký</button>
                 </div>
 
@@ -91,5 +98,6 @@
         </div>
     </div>
 </div>
-
+</body>
+</html>
 {%endblock%}

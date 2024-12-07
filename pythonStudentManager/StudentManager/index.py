@@ -16,6 +16,12 @@ def index():
     return render_template("index.html")
 
 
+#student_admission
+@app.route('/student_admission')
+def student_admission():
+    return render_template("student_admission.html")
+
+
 # register
 @app.route('/register', methods=["get", "post"])
 def register_user():
