@@ -132,3 +132,24 @@ textarea::placeholder {
     color: #666;
 }
 
+/* Căn chỉnh thanh đo độ mạnh mật khẩu */
+.progress {
+    background-color: #e9ecef; /* Màu nền mặc định */
+}
+
+.progress-bar {
+    transition: width 0.3s ease; /* Hiệu ứng tăng chiều rộng */
+}
+
+.input-group input[type="file"] {
+    padding-right: 10px;
+}
+#avatarPreview {
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        padding: 3px;
+    }
+
+
+
+

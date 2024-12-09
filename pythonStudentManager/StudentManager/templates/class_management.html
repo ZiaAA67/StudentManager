@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%extends 'layout/base.html'%}
+
+    {%block title%} Quản lý học sinh {%endblock%}
+
+    {%block content%}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class List Management</title>
+    <link href="static/css/class_management.css" rel="stylesheet">
+</head>
+<body>
+<div class="d-flex justify-content-center align-items-center">
+
+    <div class="card" style="width: 38rem;">
+        <div class="card-body">
+            <form id="class-form" action="/add_student" method="POST">
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp" name="class_name" required>
+                    <label for="class_name">Tên lớp</label>
+                </div>
+
+                <div class="mt-1 mb-3">
+                    <select class="fieldset" id="grade" name="grade" required>
+                    <option value="">Chọn khối</option>
+                    <option value="Grade 1">Khối 10</option>
+                    <option value="Grade 2">Khối 11</option>
+                    <option value="Grade 3">Khối 12</option>
+                </select>
+                </div>
+                <div>
+                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">
+                </div>
+
+                <!-- Register Button -->
+                <div class="d-grid">
+                    <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="mt-5">
+    <div class="separator">
+        <span><h2 style="color:black">DANH SÁCH LỚP HỌC</h2></span>
+    </div>
+    <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
+        <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
+               placeholder="Tìm kiếm lớp học...">
+        <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
+            Tìm
+        </button>
+    </form>
+</div>
+    <table>
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên lớp</th>
+                <th>Khối</th>
+                <th>Sỉ số</th>
+            </tr>
+        </thead>
+        <tbody id="class-list">
+            <!-- Data will be dynamically rendered here -->
+        </tbody>
+    </table>
+</body>
+</html>
+{%endblock%}
