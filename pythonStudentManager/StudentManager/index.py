@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, logout_user
 from sqlalchemy.testing.provision import register
 
 import dao
-from StudentManager import app, login
+from StudentManager import app, login,admin
 
 
 
@@ -18,20 +18,20 @@ def index():
 
 
 #homepage
-@app.route("/home_page")
+@app.route("/employee/home_page_employee")
 def home_page():
-    return render_template('home_page.html')
+    return render_template('/employee/home_page_employee.html')
 
 
 #student_admission
-@app.route('/student_admission')
+@app.route('/employee/student_management')
 def student_admission():
-    return render_template("student_management.html")
+    return render_template("/employee/student_management.html")
 
 #class_management
-@app.route('/class_management')
+@app.route('/employee/class_management')
 def class_management():
-    return render_template("class_management.html")
+    return render_template("/employee/class_management.html")
 
 # register
 @app.route('/register', methods=["get", "post"])
@@ -59,7 +59,7 @@ def register_user():
 @app.route('/login', methods=['get', 'post'])
 def login_my_user():
     if current_user.is_authenticated:
-        return render_template("home_page.html")
+        return render_template("/employee/home_page_employee.html")
     err_msg = None
     if request.method.__eq__('POST'):
         username = request.form.get('username')
@@ -67,7 +67,7 @@ def login_my_user():
         user = dao.auth_user(username=username, password=password)
         if user:
             login_user(user)
-            return render_template('home_page.html')
+            return render_template('/employee/home_page_employee.html')
         else:
             err_msg = "Tài khoản hoặc mật khẩu không đúng!"
 
@@ -83,10 +83,10 @@ def logout_my_user():
     logout_user()
     return redirect('/login')
 
-#profile
-@app.route('/profile')
-def profile():
-    return render_template("profile.html")
+#employee_profile
+@app.route('/employee/employee_profile')
+def employee_profile():
+    return render_template("/employee/employee_profile.html")
 
 
 if __name__ == "__main__":

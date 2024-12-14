@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <a class="nav-link active" style="font-size:30px" href="/employee/home_page_employee"">2NT Edu</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/employee/student_management">Quản lý học sinh</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/employee/class_management">Quản lý lớp học</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/courses">Quản lý môn học</a>
+                </li>
+            </ul>
+            <!-- Phần nằm bên phải -->
+            <ul class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item me-2" >
+                    <a class="nav-link text-light d-flex align-items-center"
+                       href="/employee/employee_profile" style="font-weight: 500;">
+                        <img src="{{current_user.avatar}}" width="35" height="30" class="rounded-circle me-1 shadow-sm" alt="avatar">
+                         <span style="white-space: nowrap;">환영, {{current_user.name}}</span>
+                    </a>
+                </li>
+                <li class="nav-item mt-2">
+                     <a class="btn btn-outline-danger btn-sm px-3" href="/logout" style="font-weight: 500;">Đăng xuất</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-info" href="/login">Đăng nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-info" href="/register">Đăng ký</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

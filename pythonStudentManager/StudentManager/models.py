@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
     active = Column(Boolean, default=True)
-    avatar = Column(String(200), default="https://res.cloudinary.com/dy1unykph/image/upload/v1729842193/iPhone_15_Pro_Natural_1_ltf9vr.webp")
+    avatar = Column(String(200), default="https://vcdn1-vnexpress.vnecdn.net/2022/02/09/jack-6190-1627551850-6785-1644377647.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=zCBvN1V-Bqpp3xe5rmUFmg")
     def __str__(self):
         self.name
 
