@@ -4,7 +4,7 @@
 
 1. Tạo database
 Tạo database rỗng mới tên "educatedb" trong mysql workbench
-![Create db](images/createdb.png)
+![Create db](https://i.ibb.co/pLZS4Jb/Screenshot-2024-12-17-at-10-30-23.png)
 
 2. Đổi lại mật khẩu mysql
 Trong file init, đổi lại mật khẩu mysql cho khớp với sql của máy ( mật khẩu khi cài đặt mysql )
