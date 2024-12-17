@@ -1,20 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {%extends 'layout/base.html'%}
+{% extends "layout/base.html" %}
 
-    {%block title%} Quản lý học sinh {%endblock%}
+{%block title%} Quản Lý Lớp Học {%endblock%}
 
-    {%block content%}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class List Management</title>
-    <link rel="stylesheet" href="/static/css/class_management.css">
+{%block link_css%} <link href="../../static/css/class_management.css" rel="stylesheet"> {%endblock%}
 
-
-</head>
-<body>
-<div class="d-flex justify-content-center align-items-center">
+{%block content%}
+    <div class="d-flex justify-content-center align-items-center">
 
     <div class="card" style="width: 38rem;">
         <div class="card-body">
@@ -45,31 +36,33 @@
         </div>
     </div>
 </div>
-<div class="mt-5">
-    <div class="separator">
-        <span><h2 style="color:black">DANH SÁCH LỚP HỌC</h2></span>
+    <div class="mt-5">
+        <div class="separator">
+            <span><h2 style="color:black">DANH SÁCH LỚP HỌC</h2></span>
+        </div>
+        <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
+            <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
+                   placeholder="Tìm kiếm lớp học...">
+            <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
+                Tìm
+            </button>
+        </form>
     </div>
-    <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
-        <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
-               placeholder="Tìm kiếm lớp học...">
-        <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
-            Tìm
-        </button>
-    </form>
-</div>
     <table>
-        <thead>
-            <tr>
-                <th>STT</th>
-                <th>Tên lớp</th>
-                <th>Khối</th>
-                <th>Sỉ số</th>
-            </tr>
-        </thead>
-        <tbody id="class-list">
-            <!-- Data will be dynamically rendered here -->
-        </tbody>
-    </table>
-</body>
-</html>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên lớp</th>
+                    <th>Khối</th>
+                    <th>Sỉ số</th>
+                </tr>
+            </thead>
+            <tbody id="class-list">
+                <!-- Data will be dynamically rendered here -->
+            </tbody>
+        </table>
 {%endblock%}
+
+
+
+

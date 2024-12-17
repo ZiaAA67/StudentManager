@@ -1,27 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout/base.html" %}
 
-<head>
-    {% extends 'layout/base.html' %}
+{%block title%} Hồ Sơ {%endblock%}
 
-    {% block title %} Quản lý học sinh {% endblock %}
+{%block link_css%}
+  <link href="../../static/css/profile.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+{%endblock%}
 
-    {% block content %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-
-    <link rel="stylesheet" href="/static/css/profile.css">
-
-    <!-- FontAwesome 5 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-</head>
-
-<body>
+{%block content%}
   <!-- Main content section -->
   <div class="main-content">
     <!-- Profile phần bên trái -->
-
 
     <!-- Card chứa thông tin -->
     <div class="card" style="align-items:center">
@@ -75,7 +64,4 @@
     </div>
   </div>
   <!-- End Main content -->
-</body>
-
-</html>
-{% endblock %}
+{%endblock%}

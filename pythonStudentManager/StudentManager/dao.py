@@ -14,6 +14,7 @@ def add_user(name, username, password, avatar):
     db.session.add(u)
     db.session.commit()
 
+
 def get_user_by_id(user_id):
     return User.query.get(user_id)
 

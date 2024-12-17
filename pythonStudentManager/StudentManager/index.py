@@ -1,37 +1,35 @@
-from operator import index
-
+import dao
 import cloudinary.uploader
 from flask import render_template, request, redirect
 from flask_login import login_user, current_user, logout_user
-from sqlalchemy.testing.provision import register
-
-import dao
-from StudentManager import app, login,admin
-
-
+from StudentManager import app, login
 
 
 # index
 @app.route('/')
 def index():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return render_template('index.html')
+    return redirect('/login')
 
 
-#homepage
-@app.route("/employee/home_page_employee")
-def home_page():
-    return render_template('/employee/home_page_employee.html')
+# # homepage
+# @app.route("/employee/home_page_employee")
+# def home_page():
+#     return render_template('/employee/home_page_employee.html')
 
 
-#student_admission
-@app.route('/employee/student_management')
+# student_admission
+@app.route('/students')
 def student_admission():
     return render_template("/employee/student_management.html")
 
-#class_management
-@app.route('/employee/class_management')
+
+# class_management
+@app.route('/classes')
 def class_management():
     return render_template("/employee/class_management.html")
+
 
 # register
 @app.route('/register', methods=["get", "post"])
@@ -59,7 +57,7 @@ def register_user():
 @app.route('/login', methods=['get', 'post'])
 def login_my_user():
     if current_user.is_authenticated:
-        return render_template("/employee/home_page_employee.html")
+        return redirect('/')
     err_msg = None
     if request.method.__eq__('POST'):
         username = request.form.get('username')
@@ -67,26 +65,29 @@ def login_my_user():
         user = dao.auth_user(username=username, password=password)
         if user:
             login_user(user)
-            return render_template('/employee/home_page_employee.html')
+            return redirect('/')
         else:
             err_msg = "Tài khoản hoặc mật khẩu không đúng!"
 
-    return render_template('index.html', err_msg=err_msg)
+    return render_template('login.html', err_msg=err_msg)
+
 
 @login.user_loader
 def load_user(user_id):
     return dao.get_user_by_id(user_id=user_id)
 
-#logout
+
+# logout
 @app.route('/logout')
 def logout_my_user():
     logout_user()
     return redirect('/login')
 
-#employee_profile
-@app.route('/employee/employee_profile')
+
+# employee_profile
+@app.route('/profile')
 def employee_profile():
-    return render_template("/employee/employee_profile.html")
+    return render_template('/employee/employee_profile.html')
 
 
 if __name__ == "__main__":

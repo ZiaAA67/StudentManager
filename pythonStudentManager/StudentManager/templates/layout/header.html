@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
-        <a class="nav-link active" style="font-size:30px" href="/employee/home_page_employee"">2NT Edu</a>
+        <a class="nav-link active" style="font-size:30px" href="/">2NT Edu</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/employee/student_management">Quản lý học sinh</a>
+                    <a class="nav-link active" href="/students">Quản lý học sinh</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/employee/class_management">Quản lý lớp học</a>
+                    <a class="nav-link active" href="/classes">Quản lý lớp học</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/courses">Quản lý môn học</a>
@@ -21,7 +21,7 @@
                 {% if current_user.is_authenticated %}
                 <li class="nav-item me-2" >
                     <a class="nav-link text-light d-flex align-items-center"
-                       href="/employee/employee_profile" style="font-weight: 500;">
+                       href="/profile" style="font-weight: 500;">
                         <img src="{{current_user.avatar}}" width="35" height="30" class="rounded-circle me-1 shadow-sm" alt="avatar">
                          <span style="white-space: nowrap;">환영, {{current_user.name}}</span>
                     </a>
