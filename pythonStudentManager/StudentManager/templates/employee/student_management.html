@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {%extends 'layout/base.html'%}
+{% extends "layout/base.html" %}
 
-    {%block title%} Quản lý học sinh {%endblock%}
+{%block title%} Quản Lý Học Sinh {%endblock%}
 
-    {%block content%}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management</title>
-    <link href="/static/css/student_management.css" rel="stylesheet">
-</head>
-<body>
-<div class="d-flex justify-content-center align-items-center ">
+{%block link_css%} <link href="../../static/css/student_management.css" rel="stylesheet"> {%endblock%}
+
+{%block content%}
+    <div class="d-flex justify-content-center align-items-center ">
 
     <div class="card" style="width: 38rem; ">
         <h1 class="text-center mt-2" style="font-weight:bold">THÔNG TIN HỌC SINH</h1>
@@ -79,9 +72,7 @@
         </div>
     </div>
 </div>
-
-
-<div class="mt-5">
+    <div class="mt-5">
     <div class="separator">
         <span><h2 style="color:black">DANH SÁCH HỌC SINH</h2></span>
     </div>
@@ -93,7 +84,7 @@
         </button>
     </form>
 </div>
-<table>
+    <table>
     <thead>
     <tr>
         <th>STT.</th>
@@ -110,7 +101,4 @@
     <!-- Data will be dynamically rendered here -->
     </tbody>
 </table>
-</div>
-</body>
-</html>
 {%endblock%}

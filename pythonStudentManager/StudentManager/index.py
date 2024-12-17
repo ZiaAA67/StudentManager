@@ -1,17 +1,34 @@
-from operator import index
-
+import dao
 import cloudinary.uploader
 from flask import render_template, request, redirect
 from flask_login import login_user, current_user, logout_user
-from sqlalchemy.testing.provision import register
+from StudentManager import app, login
 
-import dao
-from StudentManager import app, login,admin
 
 # index
 @app.route('/')
 def index():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return render_template('index.html')
+    return redirect('/login')
+
+
+# # homepage
+# @app.route("/employee/home_page_employee")
+# def home_page():
+#     return render_template('/employee/home_page_employee.html')
+
+
+# student_admission
+@app.route('/students')
+def student_admission():
+    return render_template("/employee/student_management.html")
+
+
+# class_management
+@app.route('/classes')
+def class_management():
+    return render_template("/employee/class_management.html")
 
 
 # register
@@ -40,7 +57,7 @@ def register_user():
 @app.route('/login', methods=['get', 'post'])
 def login_my_user():
     if current_user.is_authenticated:
-        return render_template("/lecturer/lecturer_home_page.html")
+        return redirect('/')
     err_msg = None
     if request.method.__eq__('POST'):
         username = request.form.get('username')
@@ -48,71 +65,30 @@ def login_my_user():
         user = dao.auth_user(username=username, password=password)
         if user:
             login_user(user)
-            return render_template("/lecturer/lecturer_home_page.html")
+            return redirect('/')
         else:
             err_msg = "Tài khoản hoặc mật khẩu không đúng!"
 
-    return render_template('index.html', err_msg=err_msg)
+    return render_template('login.html', err_msg=err_msg)
+
 
 @login.user_loader
 def load_user(user_id):
     return dao.get_user_by_id(user_id=user_id)
 
-#logout
+
+# logout
 @app.route('/logout')
 def logout_my_user():
     logout_user()
     return redirect('/login')
 
 
-#---employee---#
-#homepage
-@app.route("/employee/home_page_employee")
-def home_page():
-    return render_template('/employee/employee_home_page.html')
-
-
-#student_admission
-@app.route('/employee/student_management')
-def student_admission():
-    return render_template("/employee/student_management.html")
-
-
-#class_management
-@app.route('/employee/class_management')
-def class_management():
-    return render_template("/employee/class_management.html")
-
-
-#employee_profile
-@app.route('/employee/employee_profile')
+# employee_profile
+@app.route('/profile')
 def employee_profile():
-    return render_template("/employee/employee_profile.html")
+    return render_template('/employee/employee_profile.html')
 
-
-#---lecturer---#
-#lecturer_home_page
-@app.route('/lecturer/lecturer_home_page')
-def lecturer_home_page():
-    return render_template("/lecturer/lecturer_home_page.html")
-
-
-#entry_score
-@app.route('/lecturer/entry_score')
-def entry_score():
-    return render_template("/lecturer/entry_score.html")
-
-
-#export_score
-@app.route('/lecturer/export_score')
-def export_score():
-    return render_template("/lecturer/export_score.html")
-
-
-#lecturer_profile
-@app.route('/lecturer/lecturer_profile')
-def lecturer_profile():
-    return render_template("/lecturer/lecturer_profile.html")
 
 if __name__ == "__main__":
     with app.app_context():
