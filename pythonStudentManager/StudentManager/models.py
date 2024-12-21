@@ -20,6 +20,12 @@ class Grade(enum):
     GRADE_12 = 3
 
 
+class ScoreType(enum):
+    EXAM_15_MINS = 1
+    EXAM_45_MINS = 2
+    EXAM_FINAL = 3
+
+
 class Base(db.Model):
     __abstract__ = True
     active = Column(Boolean, default=True)
@@ -50,7 +56,8 @@ class User(Base, UserMixin):
     password = Column(String(50), nullable=False)
     user_info_id = Column(Integer, ForeignKey(UserInformation.id), nullable=False)
 
-    user_info = relationship("UserInformation", backref="user", uselist=False)
+    user_info = relationship('UserInformation', backref='user', uselist=False)
+    notifications = relationship('Notification', backref='user', lazy=True)
 
     def __str__(self):
         return self.username
@@ -63,13 +70,77 @@ class Administrator(Base):
 class Teacher(Base):
     id = Column(Integer, ForeignKey(UserInformation.id), primary_key=True)
     degree = Column(String(50))
-    subject = Column(String(50))
+
+    teaching_plans = relationship('TeachingPlan', backref='teacher')
+
+
+class Class(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    grade = Column(Enum(Grade), nullable=False)
+
+    students = relationship('Student', backref='class', lazy=True)
+    teaching_plan = relationship('TeachingPlan', backref='class', uselist=False)
 
 
 class Student(Base):
     id = Column(Integer, ForeignKey(UserInformation.id), primary_key=True)
-    grade = Column(Enum(Grade))
+    class_id = Column(Integer, ForeignKey(Class.id), nullable=False)
     gpa = Column(Float, default=0)
+    scores = relationship('Score', backref='student')
+
+
+class Subject(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+
+    teaching_plans = relationship('TeachingPlan', backref='subject')
+    exam_quantity = relationship("ExamQuantity", backref="subject", lazy=True)
+
+
+class Semester(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    semester = Column(Integer, nullable=False)
+    year = Column(String(4), nullable=False)
+    teaching_plans = relationship('TeachingPlan', backref='semester', lazy=True)
+
+
+class TeachingPlan(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    teacher_id = Column(Integer, ForeignKey(Teacher.id), nullable=False)
+    subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
+    class_id = Column(Integer, ForeignKey(Class.id), nullable=False)
+    semester_id = Column(Integer, ForeignKey(Semester.id), nullable=False)
+
+    scores = relationship('Score', backref='teaching_plan', lazy=True)
+
+
+class Score(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    student_id = Column(Integer, ForeignKey(Student.id), nullable=False)
+    teaching_plan_id = Column(Integer, ForeignKey(TeachingPlan.id), nullable=False)
+    score_type = Column(Enum(ScoreType))
+    score = Column(Float, default=0)
+
+
+class ExamQuantity(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
+    exam_type = Column(Enum(ScoreType), nullable=False)
+    quantity = Column(Integer, default=1)
+
+
+class SchoolRules(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    min_age = Column(Integer, default=15)
+    max_age = Column(Integer, default=20)
+    max_students_in_class = Column(Integer, default=40)
+
+
+class Notification(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    content = Column(String(255), nullable=False)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
 
 
 if __name__ == "__main__":
@@ -77,24 +148,24 @@ if __name__ == "__main__":
         # tao bang
         db.create_all()
 
-        admin_user_info = UserInformation(full_name="ADMIN USER",
-                                          gender=True,
-                                          address="hcm city",
-                                          birth=datetime(1999, 2, 12),
-                                          phone="023675348",
-                                          email="nguyen@ou.com",
-                                          role=Role.ADMIN)
-        db.session.add(admin_user_info)
-        db.session.commit()
-
-        admin_detail = Administrator(id=admin_user_info.id)
-        db.session.add(admin_detail)
-        db.session.commit()
-
-        username = "admin"
-        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        account = User(username=username,
-                       password=password,
-                       user_info_id=admin_user_info.id)
-        db.session.add(account)
-        db.session.commit()
+        # admin_user_info = UserInformation(full_name="ADMIN USER",
+        #                                   gender=True,
+        #                                   address="hcm city",
+        #                                   birth=datetime(1999, 2, 12),
+        #                                   phone="023675348",
+        #                                   email="nguyen@ou.com",
+        #                                   role=Role.ADMIN)
+        # db.session.add(admin_user_info)
+        # db.session.commit()
+        #
+        # admin_detail = Administrator(id=admin_user_info.id)
+        # db.session.add(admin_detail)
+        # db.session.commit()
+        #
+        # username = "admin"
+        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        # account = User(username=username,
+        #                password=password,
+        #                user_info_id=admin_user_info.id)
+        # db.session.add(account)
+        # db.session.commit()
