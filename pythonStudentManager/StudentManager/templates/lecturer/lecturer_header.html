@@ -15,24 +15,28 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="/courses">Quản lý môn học</a>
                 </li>
-                {%if current_user.is_authenticated%}
-                <li class="nav-item">
-                    <a class="nav-link text-info" href="/profile">
-                        <img src="{{current_user.avatar}}" width="30" class="fluid rounded">
-                        환영 {{current_user.name}}
+            </ul>
+            <!-- Phần nằm bên phải -->
+            <ul class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item me-2" >
+                    <a class="nav-link text-light d-flex align-items-center"
+                       href="/lecturer/lecturer_profile" style="font-weight: 500;">
+                        <img src="{{current_user.avatar}}" width="35" height="30" class="rounded-circle me-1 shadow-sm" alt="avatar">
+                         <span style="white-space: nowrap;">환영, {{current_user.name}}</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-info" href="/logout">Đăng xuất</a>
+                <li class="nav-item mt-2">
+                     <a class="btn btn-outline-danger btn-sm px-3" href="/logout" style="font-weight: 500;">Đăng xuất</a>
                 </li>
-                {%else%}
-                <li class="nav-item ">
+                {% else %}
+                <li class="nav-item">
                     <a class="nav-link text-info" href="/login">Đăng nhập</a>
                 </li>
-                <li class="nav-item ">
+                <li class="nav-item">
                     <a class="nav-link text-info" href="/register">Đăng ký</a>
                 </li>
-                {%endif%}
+                {% endif %}
             </ul>
         </div>
     </div>

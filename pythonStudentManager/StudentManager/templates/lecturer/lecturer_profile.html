@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% extends 'layout/base.html' %}
+
+    {% block title %} Lecturer Profile {% endblock %}
+
+    {% block content %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Profile</title>
+
+    <link rel="stylesheet" href="/static/css/profile.css">
+
+    <!-- FontAwesome 5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+</head>
+
+<body>
+  <!-- Main content section -->
+  <div class="main-content">
+    <!-- Profile phần bên trái -->
+
+
+    <!-- Card chứa thông tin -->
+    <div class="card" style="align-items:center">
+       <div class="profile mt-1 ">
+      <img src="https://cdn.tuoitre.vn/thumb_w/480/471584752817336320/2024/11/21/465816940102212132794011136973301034509982091n-1732178828806687205181.jpg" alt="" width="100" height="100">
+      <div class="user_name">
+        Pickleball
+      </div>
+      <div class="job" >
+        Giảng viên
+      </div>
+    </div>
+
+      <div class="card-body" >
+        <i class="fa fa-pen fa-xs edit"></i>
+        <table>
+          <tbody>
+            <tr>
+              <td>Họ tên</td>
+              <td>:</td>
+              <td>Đỗ Phú Quí</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>:</td>
+              <td>nhaytetetrentiktok@gmail.com</td>
+            </tr>
+            <tr>
+              <td>Địa chỉ</td>
+              <td>:</td>
+              <td>Hồ Chí Minh</td>
+            </tr>
+            <tr>
+              <td>Ngày sinh</td>
+              <td>:</td>
+              <td>13-12-1993</td>
+            </tr>
+            <tr>
+              <td>Số điện thoại</td>
+              <td>:</td>
+              <td>0123456789</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- End Main content -->
+</body>
+
+</html>
+{% endblock %}
