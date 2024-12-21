@@ -3,6 +3,7 @@ import cloudinary.uploader
 from flask import render_template, request, redirect
 from flask_login import login_user, current_user, logout_user
 from StudentManager import app, login
+from models import *
 
 
 # index
@@ -57,6 +58,7 @@ def register_user():
 @app.route('/login', methods=['get', 'post'])
 def login_my_user():
     if current_user.is_authenticated:
+
         return redirect('/')
     err_msg = None
     if request.method.__eq__('POST'):
@@ -87,7 +89,9 @@ def logout_my_user():
 # employee_profile
 @app.route('/profile')
 def employee_profile():
-    return render_template('/employee/employee_profile.html')
+    user = dao.get_user_by_id(user_id=current_user.get_id())
+    print(user.name, user.username)
+    return render_template('/employee/employee_profile.html', user=user)
 
 
 if __name__ == "__main__":

@@ -3,64 +3,61 @@
 {%block title%} Hồ Sơ {%endblock%}
 
 {%block link_css%}
-  <link href="../../static/css/profile.css" rel="stylesheet">
+  <link href="{{url_for('static', filename='css/profile.css')}}" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
 {%endblock%}
 
 {%block content%}
-  <!-- Main content section -->
   <div class="main-content">
-    <!-- Profile phần bên trái -->
 
-    <!-- Card chứa thông tin -->
     <div class="card" style="align-items:center">
-       <div class="profile mt-1 ">
-      <img src="https://vcdn1-vnexpress.vnecdn.net/2022/02/09/jack-6190-1627551850-6785-1644377647.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=zCBvN1V-Bqpp3xe5rmUFmg" alt="" width="100" height="100">
-      <div class="user_name">
-        J97
+      <!-- Image, name and subname -->
+      <div class="profile mt-1 ">
+        <img src="https://vcdn1-vnexpress.vnecdn.net/2022/02/09/jack-6190-1627551850-6785-1644377647.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=zCBvN1V-Bqpp3xe5rmUFmg"
+             alt="" width="100" height="100">
+        <div class="user_name">{{user.username}}</div>
+        <div class="job">Great Father</div>
       </div>
-      <div class="job" >
-        Great Father
-      </div>
-    </div>
 
-      <div class="card-body" >
+      <!-- Info -->
+      <div class="card-body">
         <i class="fa fa-pen fa-xs edit"></i>
         <table>
           <tbody>
-            <tr>
-              <td>Họ tên</td>
-              <td>:</td>
-              <td>Trịnh Trần Phương Tuấn</td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td>:</td>
-              <td>jack5milions@gmail.com</td>
-            </tr>
-            <tr>
-              <td>Địa chỉ</td>
-              <td>:</td>
-              <td>Bến Tre</td>
-            </tr>
-            <tr>
-              <td>Ngày sinh</td>
-              <td>:</td>
-              <td>12/04/1997</td>
-            </tr>
-            <tr>
-              <td>Số điện thoại</td>
-              <td>:</td>
-              <td>0123456789</td>
-            </tr>
-            <tr>
-              <td>Khối</td>
-              <td>:</td>
-              <td>10</td>
-            </tr>
+          <tr>
+            <td>Họ tên</td>
+            <td>:</td>
+            <td>{{user.name}}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>:</td>
+            <td>jack5milions@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Địa chỉ</td>
+            <td>:</td>
+            <td>Bến Tre</td>
+          </tr>
+          <tr>
+            <td>Ngày sinh</td>
+            <td>:</td>
+            <td>12/04/1997</td>
+          </tr>
+          <tr>
+            <td>Số điện thoại</td>
+            <td>:</td>
+            <td>0123456789</td>
+          </tr>
+          <tr>
+            <td>Khối</td>
+            <td>:</td>
+            <td>10</td>
+          </tr>
           </tbody>
         </table>
       </div>
+
     </div>
   </div>
   <!-- End Main content -->
