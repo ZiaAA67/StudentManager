@@ -88,10 +88,15 @@ def logout_my_user():
 # employee_profile
 @app.route('/profile')
 def employee_profile():
-    user = dao.get_user_by_id(user_id=current_user.get_id())
-    user_info = dao.get_user_info_by_id(user.user_info_id)
-    print(user_info)
-    return render_template('/employee/employee_profile.html', username=user.username, user_info=user_info)
+    user = dao.get_user_by_id(current_user.get_id())
+    return render_template('/employee/employee_profile.html', username=user.username)
+
+
+@app.context_processor
+def common_attributes():
+    return {
+        "user_info": dao.get_user_info_by_user_id(user_id=current_user.get_id())
+    }
 
 
 if __name__ == "__main__":
