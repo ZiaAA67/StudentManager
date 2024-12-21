@@ -58,7 +58,6 @@ def register_user():
 @app.route('/login', methods=['get', 'post'])
 def login_my_user():
     if current_user.is_authenticated:
-
         return redirect('/')
     err_msg = None
     if request.method.__eq__('POST'):
@@ -90,8 +89,9 @@ def logout_my_user():
 @app.route('/profile')
 def employee_profile():
     user = dao.get_user_by_id(user_id=current_user.get_id())
-    print(user.name, user.username)
-    return render_template('/employee/employee_profile.html', user=user)
+    user_info = dao.get_user_info_by_id(user.user_info_id)
+    print(user_info)
+    return render_template('/employee/employee_profile.html', username=user.username, user_info=user_info)
 
 
 if __name__ == "__main__":

@@ -19,5 +19,9 @@ def get_user_by_id(user_id):
     return User.query.get(user_id)
 
 
+def get_user_info_by_id(user_info_id):
+    return UserInformation.query.get(user_info_id)
+
+
 if __name__ == "__main__":
     print()

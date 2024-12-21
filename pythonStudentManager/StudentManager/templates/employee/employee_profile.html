@@ -15,8 +15,8 @@
       <div class="profile mt-1 ">
         <img src="https://vcdn1-vnexpress.vnecdn.net/2022/02/09/jack-6190-1627551850-6785-1644377647.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=zCBvN1V-Bqpp3xe5rmUFmg"
              alt="" width="100" height="100">
-        <div class="user_name">{{user.username}}</div>
-        <div class="job">Great Father</div>
+        <div class="user_name">{{username}}</div>
+        <div class="job">{{user_info.role}}</div>
       </div>
 
       <!-- Info -->
@@ -27,27 +27,27 @@
           <tr>
             <td>Họ tên</td>
             <td>:</td>
-            <td>{{user.name}}</td>
+            <td>{{user_info.full_name}}</td>
           </tr>
           <tr>
             <td>Email</td>
             <td>:</td>
-            <td>jack5milions@gmail.com</td>
+            <td>{{user_info.email}}</td>
           </tr>
           <tr>
             <td>Địa chỉ</td>
             <td>:</td>
-            <td>Bến Tre</td>
+            <td>{{user_info.address}}</td>
           </tr>
           <tr>
             <td>Ngày sinh</td>
             <td>:</td>
-            <td>12/04/1997</td>
+            <td>{{user_info.birth}}</td>
           </tr>
           <tr>
             <td>Số điện thoại</td>
             <td>:</td>
-            <td>0123456789</td>
+            <td>{{user_info.phone}}</td>
           </tr>
           <tr>
             <td>Khối</td>
