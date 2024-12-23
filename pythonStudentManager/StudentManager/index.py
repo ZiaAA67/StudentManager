@@ -109,6 +109,14 @@ def common_attributes():
     return {
 
     }
+#lecturer
+@app.route('/entry_score')
+def entry_score():
+    return render_template('/lecturer/entry_score.html')
+
+@app.route('/export_score')
+def export_score():
+    return render_template('/lecturer/export_score.html')
 
 
 if __name__ == "__main__":
