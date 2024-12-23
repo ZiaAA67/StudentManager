@@ -27,8 +27,15 @@ def student_admission():
 
 
 # class_management
-@app.route('/classes')
+@app.route('/classes', methods=["get", "post"])
 def class_management():
+    if request.method.__eq__('POST'):
+        class_name = request.form.get('class_name')
+        grade_value = request.form.get('grade')
+        grade = Grade(int(grade_value))
+
+        print(class_name, grade)
+
     return render_template("/employee/class_management.html")
 
 
@@ -94,8 +101,13 @@ def employee_profile():
 
 @app.context_processor
 def common_attributes():
+    if current_user.is_authenticated:
+        return {
+            "user_info": dao.get_user_info_by_user_id(user_id=current_user.get_id())
+        }
+
     return {
-        "user_info": dao.get_user_info_by_user_id(user_id=current_user.get_id())
+
     }
 
 

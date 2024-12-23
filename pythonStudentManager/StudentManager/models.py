@@ -15,9 +15,9 @@ class Role(enum):
 
 
 class Grade(enum):
-    GRADE_10 = 1
-    GRADE_11 = 2
-    GRADE_12 = 3
+    GRADE_10 = 10
+    GRADE_11 = 11
+    GRADE_12 = 12
 
 
 class ScoreType(enum):
@@ -148,24 +148,24 @@ if __name__ == "__main__":
         # tao bang
         db.create_all()
 
-        # admin_user_info = UserInformation(full_name="ADMIN USER",
-        #                                   gender=True,
-        #                                   address="hcm city",
-        #                                   birth=datetime(1999, 2, 12),
-        #                                   phone="023675348",
-        #                                   email="nguyen@ou.com",
-        #                                   role=Role.ADMIN)
-        # db.session.add(admin_user_info)
-        # db.session.commit()
-        #
-        # admin_detail = Administrator(id=admin_user_info.id)
-        # db.session.add(admin_detail)
-        # db.session.commit()
-        #
-        # username = "admin"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=admin_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
+        admin_user_info = UserInformation(full_name="ADMIN USER",
+                                          gender=True,
+                                          address="hcm city",
+                                          birth=datetime(1999, 2, 12),
+                                          phone="023675348",
+                                          email="nguyen@ou.com",
+                                          role=Role.ADMIN)
+        db.session.add(admin_user_info)
+        db.session.commit()
+
+        admin_detail = Administrator(id=admin_user_info.id)
+        db.session.add(admin_detail)
+        db.session.commit()
+
+        username = "admin"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=admin_user_info.id)
+        db.session.add(account)
+        db.session.commit()
