@@ -1,6 +1,6 @@
 import dao
 import cloudinary.uploader
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session, jsonify
 from flask_login import login_user, current_user, logout_user
 from StudentManager import app, login
 from models import *
@@ -27,16 +27,11 @@ def student_admission():
 
 
 # class_management
-@app.route('/classes', methods=["get", "post"])
+@app.route('/classes', methods=['get', 'post'])
 def class_management():
-    if request.method.__eq__('POST'):
-        class_name = request.form.get('class_name')
-        grade_value = request.form.get('grade')
-        grade = Grade(int(grade_value))
+    classes = dao.get_all_classes()
 
-        print(class_name, grade)
-
-    return render_template("/employee/class_management.html")
+    return render_template("/employee/class_management.html", classes=classes)
 
 
 # register
@@ -109,14 +104,41 @@ def common_attributes():
     return {
 
     }
-#lecturer
+
+
+# lecturer
 @app.route('/entry_score')
 def entry_score():
     return render_template('/lecturer/entry_score.html')
 
+
 @app.route('/export_score')
 def export_score():
     return render_template('/lecturer/export_score.html')
+
+
+@app.route('/api/classes', methods=['post'])
+def add_class():
+    class_name = request.json.get('class_name')
+    grade_value = request.json.get('grade')
+
+    # chuyển giá trị lấy được sang enum
+    grade = Grade(int(grade_value))
+
+    if Class.query.filter_by(name=class_name, grade=grade).first():
+        return jsonify({"error": "Lớp đã tồn tại!"})
+
+    new_class = Class(name=class_name, grade=grade)
+
+    # Thêm vào database
+    db.session.add(new_class)
+    db.session.commit()
+
+    return jsonify({"class": {
+        "id": new_class.id,
+        "name": new_class.name,
+        "grade": new_class.grade.name
+    }})
 
 
 if __name__ == "__main__":

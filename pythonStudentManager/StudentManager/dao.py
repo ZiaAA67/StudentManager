@@ -28,8 +28,8 @@ def get_user_info_by_user_id(user_id):
     return UserInformation.query.get(user.user_info_id)
 
 
-def add_class(class_name, grade):
-    c = Class(class_name, grade)
+def get_all_classes():
+    return Class.query.all()
 
 
 if __name__ == "__main__":

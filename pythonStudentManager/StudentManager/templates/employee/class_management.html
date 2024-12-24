@@ -5,37 +5,36 @@
 {%block link_css%} <link href="{{url_for('static', filename='css/class_management.css')}}" rel="stylesheet"> {%endblock%}
 
 {%block content%}
+    <div class="alert" id="alert"></div>
     <div class="d-flex justify-content-center align-items-center">
+        <div class="card" style="width: 38rem;">
+            <div class="card-body">
+                <form id="class-form">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp" name="class_name" required>
+                        <label for="class_name">Tên lớp</label>
+                    </div>
 
-    <div class="card" style="width: 38rem;">
-        <div class="card-body">
-            <form id="class-form" action="/classes" method="POST">
+                    <div class="mt-1 mb-3">
+                        <select class="fieldset" id="grade" name="grade" required>
+                        <option value="">Chọn khối</option>
+                        <option value="10">Khối 10</option>
+                        <option value="11">Khối 11</option>
+                        <option value="12">Khối 12</option>
+                    </select>
+                    </div>
+    <!--                <div>-->
+    <!--                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">-->
+    <!--                </div>-->
 
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp" name="class_name" required>
-                    <label for="class_name">Tên lớp</label>
-                </div>
-
-                <div class="mt-1 mb-3">
-                    <select class="fieldset" id="grade" name="grade" required>
-                    <option value="">Chọn khối</option>
-                    <option value="10">Khối 10</option>
-                    <option value="11">Khối 11</option>
-                    <option value="12">Khối 12</option>
-                </select>
-                </div>
-<!--                <div>-->
-<!--                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">-->
-<!--                </div>-->
-
-                <!-- Register Button -->
-                <div class="d-grid">
-                    <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
-                </div>
-            </form>
+                    <!-- Register Button -->
+                    <div class="d-grid">
+                        <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
     <div class="mt-5">
         <div class="separator">
             <span><h2 style="color:black">DANH SÁCH LỚP HỌC</h2></span>
@@ -58,7 +57,14 @@
                 </tr>
             </thead>
             <tbody id="class-list">
-                <!-- Data will be dynamically rendered here -->
+                {%for c in classes%}
+                <tr>
+                    <td>{{c.id}}</td>
+                    <td>{{c.name}}</td>
+                    <td>{{c.grade.value}}</td>
+                    <td>0</td>
+                </tr>
+                {%endfor%}
             </tbody>
         </table>
 {%endblock%}

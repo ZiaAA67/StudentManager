@@ -6,15 +6,27 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/students">Quản lý học sinh</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/classes">Quản lý lớp học</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/courses">Quản lý môn học</a>
-                </li>
+                {%if user_info.role.name == 'ADMIN'%}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/students">Quản lý học sinh</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/classes">Quản lý lớp học</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/courses">Quản lý môn học</a>
+                    </li>
+                {%endif%}
+
+                {%if user_info.role.name == 'TEACHER'%}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/entry_score">Nhập điểm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/export_score">Xuất điểm</a>
+                    </li>
+                {%endif%}
+
             </ul>
             <!-- Phần nằm bên phải -->
             <ul class="navbar-nav ms-auto">
