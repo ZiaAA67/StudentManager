@@ -14,12 +14,6 @@ def index():
     return redirect('/login')
 
 
-# # homepage
-# @app.route("/employee/home_page_employee")
-# def home_page():
-#     return render_template('/employee/home_page_employee.html')
-
-
 # student_admission
 @app.route('/students')
 def student_admission():
