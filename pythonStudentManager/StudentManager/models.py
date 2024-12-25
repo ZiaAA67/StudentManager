@@ -146,8 +146,9 @@ class Notification(Base):
 if __name__ == "__main__":
     with app.app_context():
         # tao bang
-        # db.create_all()
-        #
+        db.create_all()
+
+        #Tạo ADMIN
         # admin_user_info = UserInformation(full_name="ADMIN USER",
         #                                   gender=True,
         #                                   address="hcm city",
@@ -170,44 +171,45 @@ if __name__ == "__main__":
         # db.session.add(account)
         # db.session.commit()
 
-        # teacher_user_info = UserInformation(full_name="Teacher User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023675344",
-        #                                     email="nguyenjss@ou.com",
-        #                                     role=Role.TEACHER)
-        # db.session.add(teacher_user_info)
-        # db.session.commit()
-        #
-        # teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
-        # db.session.add(teacher_detail)
-        # db.session.commit()
-        #
-        # username = "teacher"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=teacher_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-
-        # Tạo nhân viên
-        employee_user_info = UserInformation(full_name="Employee User",
-                                             gender=True,
-                                             address="hcm city",
-                                             birth=datetime(1999, 2, 12),
-                                             phone="023675343",
-                                             email="nguyenjsa@ou.com",
-                                             role=Role.STAFF)
-        db.session.add(employee_user_info)
+        #Tạo giảng viên
+        teacher_user_info = UserInformation(full_name="Teacher User",
+                                            gender=True,
+                                            address="hcm city",
+                                            birth=datetime(1999, 2, 12),
+                                            phone="023675344",
+                                            email="nguyenjss@ou.com",
+                                            role=Role.TEACHER)
+        db.session.add(teacher_user_info)
         db.session.commit()
 
-        username = "employee"
+        teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
+        db.session.add(teacher_detail)
+        db.session.commit()
+
+        username = "teacher"
         password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
         account = User(username=username,
                        password=password,
-                       user_info_id=employee_user_info.id)
+                       user_info_id=teacher_user_info.id)
         db.session.add(account)
         db.session.commit()
+
+
+        # Tạo nhân viên
+        # employee_user_info = UserInformation(full_name="Employee User",
+        #                                      gender=True,
+        #                                      address="hcm city",
+        #                                      birth=datetime(1999, 2, 12),
+        #                                      phone="023675343",
+        #                                      email="nguyenjsa@ou.com",
+        #                                      role=Role.STAFF)
+        # db.session.add(employee_user_info)
+        # db.session.commit()
+        #
+        # username = "employee"
+        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        # account = User(username=username,
+        #                password=password,
+        #                user_info_id=employee_user_info.id)
+        # db.session.add(account)
+        # db.session.commit()
