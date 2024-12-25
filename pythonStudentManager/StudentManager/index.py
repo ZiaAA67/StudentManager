@@ -1,6 +1,11 @@
+import re
+from turtledemo.penrose import start
+
+from flask_admin.model.typefmt import null_formatter
+
 import dao
 import cloudinary.uploader
-from flask import render_template, request, redirect, session, jsonify
+from flask import render_template, request, redirect, session, jsonify, flash
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 from StudentManager import app, login
@@ -19,7 +24,8 @@ def index():
 @app.route('/students', methods=['GET', 'POST'])
 def student_management():
     grades = Grade.choices()
-    students = dao.get_all_students()
+    page = request.args.get('page')
+    students = dao.get_all_students(page=page)
     return render_template('employee/student_management.html', grades=grades, students=students)
 
 
@@ -136,6 +142,61 @@ def add_class():
         "name": new_class.name,
         "grade": new_class.grade.name
     }})
+
+
+@app.route('/api/students/', methods=['POST'])
+def add_student():
+    try:
+        # Tạo UserInformation
+        gender = True if request.form.get('gender') == "Male" else False
+        date_of_birth = request.form.get('date_of_birth')
+        dob = datetime.strptime(date_of_birth, '%Y-%m-%d')
+
+        phone = request.form.get('phone')
+        if not is_valid_phone(phone):
+            flash("Số điện thoại phải có 10 chữ số!", "error")
+            return redirect('/students')
+
+        if not is_valid_age(dob):
+            flash("Độ tuổi phải từ 15 đến 20!", "error")
+            return redirect('/students')
+
+        user_info = UserInformation(
+            full_name=request.form['name'],
+            gender=gender,
+            address=request.form['address'],
+            birth=dob,
+            phone=request.form['phone'],
+            email=request.form['email'],
+            role=Role.STUDENT
+        )
+        db.session.add(user_info)
+        db.session.commit()
+
+        grade_value = request.form.get('grade')
+        grade = Grade(int(grade_value))
+        student = Student(id=user_info.id, grade=grade)
+        db.session.add(student)
+        db.session.commit()
+
+        flash("Thêm sinh viên thành công!", "success")
+        return redirect('/students')
+
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Lỗi xảy ra: {str(e)}", "error")
+        return redirect('/students')
+
+
+def is_valid_phone(phone):
+    return bool(re.match(r'^\d{10}$', phone))
+
+
+def is_valid_age(birthdate):
+    today = datetime.today()
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    return 15 <= age <= 20
 
 
 if __name__ == "__main__":

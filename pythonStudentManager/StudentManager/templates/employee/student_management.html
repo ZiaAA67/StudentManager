@@ -12,61 +12,63 @@
         <h1 class="text-center mt-2" style="font-weight:bold">THÔNG TIN HỌC SINH</h1>
         <div class="card-body">
 
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control shadow-sm" id="name" placeholder="Họ tên" name="name"
-                       required>
-                <label for="name">Họ tên</label>
-            </div>
-
-            <label>* Giới tính</label>
-            <div class="fieldset mt-1 mb-3">
-                <div class="gender">
-                    <input type="radio" id="male" name="gender" value="Male" required>
-                    <label for="male">Nam</label>
-                    <input type="radio" id="female" name="gender" value="Female" required>
-                    <label for="female">Nữ</label>
+            <form id="student-form" method="post" enctype="multipart/form-data" action="/api/students">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-sm" id="name" placeholder="Họ tên" name="name"
+                           required>
+                    <label for="name">Họ tên</label>
                 </div>
-            </div>
 
-            <label for="dob">* Ngày sinh</label>
-            <div class="mt-1 mb-3">
-                <input class="fieldset" type="date" id="dob" name="date_of_birth" required>
-            </div>
+                <label>* Giới tính</label>
+                <div class="fieldset mt-1 mb-3">
+                    <div class="gender">
+                        <input type="radio" id="male" name="gender" value="Male" required>
+                        <label for="male">Nam</label>
+                        <input type="radio" id="female" name="gender" value="Female" required>
+                        <label for="female">Nữ</label>
+                    </div>
+                </div>
+
+                <label for="dob">* Ngày sinh</label>
+                <div class="mt-1 mb-3">
+                    <input class="fieldset" type="date" id="dob" name="date_of_birth" required>
+                </div>
 
 
-            <div class="mb-3">
+                <div class="mb-3">
                     <textarea class="form-control shadow-sm" id="address" name="address" rows="3" placeholder="Địa chỉ"
                               required></textarea>
-            </div>
+                </div>
 
 
-            <div class="form-floating mb-3 ">
-                <input type="tel" class="form-control shadow-sm" id="phone" placeholder="Số điện thoại" name="phone"
-                       required>
-                <label for="phone">Số điện thoại</label>
-            </div>
+                <div class="form-floating mb-3 ">
+                    <input type="tel" class="form-control shadow-sm" id="phone" placeholder="Số điện thoại" name="phone"
+                           required>
+                    <label for="phone">Số điện thoại</label>
+                </div>
 
-            <div class="form-floating mb-3 ">
-                <input type="email" class="form-control shadow-sm" id="email" placeholder="Email" name="email"
-                       required>
-                <label for="email">Email</label>
-            </div>
+                <div class="form-floating mb-3 ">
+                    <input type="email" class="form-control shadow-sm" id="email" placeholder="Email" name="email"
+                           required>
+                    <label for="email">Email</label>
+                </div>
 
-            <label for="grade">* Khối lớp</label>
-            <div class="mt-1 mb-3">
-                <select class="fieldset" id="grade" name="grade" required>
-                    <option value="">Chọn khối</option>
-                    {% for grade_name, grade_value in grades %}
-                    <option value="{{ grade_value }}">{{ grade_name.replace('_', ' ').title() }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+                <label for="grade">* Khối lớp</label>
+                <div class="mt-1 mb-3">
+                    <select class="fieldset" id="grade" name="grade" required>
+                        <option value="">Chọn khối</option>
+                        {% for grade_name, grade_value in grades %}
+                        <option value="{{ grade_value }}">{{ grade_name.replace('_', ' ').title() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
+                <!-- Register Button -->
+                <div class="d-flex justify-content-center mt-3">
+                    <input type="submit" value="Lưu thông tin" class="btn btn-red shadow">
+                </div>
 
-            <!-- Register Button -->
-            <div class="d-grid">
-                <button class="btn btn-red shadow" type="submit">Lưu thông tin</button>
-            </div>
+                <div class="alert" id="alert"></div>
             </form>
         </div>
     </div>
@@ -98,15 +100,15 @@
     </thead>
     <tbody id="class-list">
     {% for student in students %}
-    <tr>
-        <td>{{ student.id }}</td>
+    <tr class="align-middle">
+        <td class="text-center">{{ student.id }}</td>
         <td>{{ student.user_information.full_name }}</td>
-        <td>{{ 'Nam' if student.user_information.gender else 'Nữ' }}</td>
-        <td>{{ student.user_information.birth.strftime('%d-%m-%Y') }}</td>
+        <td class="text-center">{{ 'Nam' if student.user_information.gender else 'Nữ' }}</td>
+        <td class="text-center">{{ student.user_information.birth.strftime('%d-%m-%Y') }}</td>
         <td>{{ student.user_information.address }}</td>
-        <td>{{ student.user_information.phone }}</td>
+        <td class="text-center">{{ student.user_information.phone }}</td>
         <td>{{ student.user_information.email }}</td>
-        <td>{{ student.grade }}</td>
+        <td class="text-center">{{ student.grade }}</td>
     </tr>
     {% endfor %}
     </tbody>

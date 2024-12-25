@@ -32,8 +32,25 @@ def get_all_classes():
     return Class.query.all()
 
 
-def get_all_students():
+def get_all_students(page=None):
+    if page:
+        page_size = app.config['PAGE_SIZE']
+        start = (int(page) - 1) * page_size
+        return Student.query.slice(start, start + page_size)
     return Student.query.all()
+
+
+def add_user_info(full_name, gender, address, birth, phone, email, avatar, role):
+    full_name = str(full_name.strip())
+    email = email.strip()
+    user_information = UserInformation(full_name=full_name, gender=gender, address=address, birth=birth,
+                                       phone=phone, email=email, avatar=avatar, role=role)
+    db.session.add(user_information)
+    db.session.commit()
+
+
+def add_student(id, grade):
+    student = Student(id=id, grade=grade)
 
 
 if __name__ == "__main__":

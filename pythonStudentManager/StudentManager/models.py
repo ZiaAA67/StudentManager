@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, DateTime, Enum, Date
+from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, DateTime, Enum, Date, CheckConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from StudentManager import app, db
@@ -22,6 +22,7 @@ class Grade(enum):
     @classmethod
     def choices(cls):
         return [(grade.name, grade.value) for grade in cls]
+
     def __str__(self):
         return f"Khối {self.value}"
 
@@ -51,6 +52,9 @@ class UserInformation(Base):
     avatar = Column(String(255),
                     default="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=")
     role = Column(Enum(Role), default=Role.STAFF)
+    # Ràng buộc số điện thoại phải có đúng 10 số
+    __table_args__ = (
+        CheckConstraint('LENGTH(phone) = 10', name='check_phone_length'),)
 
     def __str__(self):
         return self.full_name
