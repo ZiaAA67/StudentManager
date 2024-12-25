@@ -2,6 +2,7 @@ import dao
 import cloudinary.uploader
 from flask import render_template, request, redirect, session, jsonify
 from flask_login import login_user, current_user, logout_user
+from datetime import datetime
 from StudentManager import app, login
 from models import *
 
@@ -15,9 +16,11 @@ def index():
 
 
 # student_admission
-@app.route('/students')
-def student_admission():
-    return render_template("/employee/student_management.html")
+@app.route('/students', methods=['GET', 'POST'])
+def student_management():
+    grades = Grade.choices()
+    students = dao.get_all_students()
+    return render_template('employee/student_management.html', grades=grades, students=students)
 
 
 # class_management

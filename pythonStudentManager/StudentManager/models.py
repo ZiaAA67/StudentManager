@@ -19,6 +19,12 @@ class Grade(enum):
     GRADE_11 = 11
     GRADE_12 = 12
 
+    @classmethod
+    def choices(cls):
+        return [(grade.name, grade.value) for grade in cls]
+    def __str__(self):
+        return f"Khối {self.value}"
+
 
 class ScoreType(enum):
     EXAM_15_MINS = 1
@@ -35,7 +41,7 @@ class Base(db.Model):
 
 class UserInformation(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    full_name = Column(String(20), nullable=False)
+    full_name = Column(String(50), nullable=False)
     # True = male ; False = female
     gender = Column(Boolean, nullable=False)
     address = Column(String(100), nullable=False)
@@ -85,9 +91,12 @@ class Class(Base):
 
 class Student(Base):
     id = Column(Integer, ForeignKey(UserInformation.id), primary_key=True)
-    class_id = Column(Integer, ForeignKey(Class.id), nullable=False)
+    class_id = Column(Integer, ForeignKey(Class.id), nullable=True)
+    grade = Column(Enum(Grade), nullable=False)
     gpa = Column(Float, default=0)
     scores = relationship('Score', backref='student')
+
+    user_information = relationship('UserInformation', backref='students', uselist=False)
 
 
 class Subject(Base):
@@ -146,8 +155,8 @@ class Notification(Base):
 if __name__ == "__main__":
     with app.app_context():
         # tao bang
-        # db.create_all()
-        #
+        db.create_all()
+
         # admin_user_info = UserInformation(full_name="ADMIN USER",
         #                                   gender=True,
         #                                   address="hcm city",
@@ -169,7 +178,7 @@ if __name__ == "__main__":
         #                user_info_id=admin_user_info.id)
         # db.session.add(account)
         # db.session.commit()
-
+        #
         # teacher_user_info = UserInformation(full_name="Teacher User",
         #                                     gender=True,
         #                                     address="hcm city",
@@ -192,22 +201,34 @@ if __name__ == "__main__":
         # db.session.add(account)
         # db.session.commit()
         #
+        # employee_user_info = UserInformation(full_name="Employee User",
+        #                                      gender=True,
+        #                                      address="hcm city",
+        #                                      birth=datetime(1999, 2, 12),
+        #                                      phone="023675343",
+        #                                      email="nguyenjsa@ou.com",
+        #                                      role=Role.STAFF)
+        # db.session.add(employee_user_info)
+        # db.session.commit()
+        #
+        # username = "employee"
+        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        # account = User(username=username,
+        #                password=password,
+        #                user_info_id=employee_user_info.id)
+        # db.session.add(account)
+        # db.session.commit()
 
-        # Tạo nhân viên
-        employee_user_info = UserInformation(full_name="Employee User",
-                                             gender=True,
-                                             address="hcm city",
-                                             birth=datetime(1999, 2, 12),
-                                             phone="023675343",
-                                             email="nguyenjsa@ou.com",
-                                             role=Role.STAFF)
-        db.session.add(employee_user_info)
-        db.session.commit()
-
-        username = "employee"
-        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        account = User(username=username,
-                       password=password,
-                       user_info_id=employee_user_info.id)
-        db.session.add(account)
-        db.session.commit()
+        # student_user_info = UserInformation(full_name="Student User",
+        #                                     gender=True,
+        #                                     address="hcm city",
+        #                                     birth=datetime(1999, 2, 12),
+        #                                     phone="023695343",
+        #                                     email="nguynjsa@ou.com",
+        #                                     role=Role.STUDENT)
+        # db.session.add(student_user_info)
+        # db.session.commit()
+        #
+        # student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
+        # db.session.add(student_detail)
+        # db.session.commit()

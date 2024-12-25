@@ -32,5 +32,9 @@ def get_all_classes():
     return Class.query.all()
 
 
+def get_all_students():
+    return Student.query.all()
+
+
 if __name__ == "__main__":
     print()
