@@ -12,7 +12,7 @@ document.getElementById('student-form').addEventListener('submit', function (eve
     };
 
     fetch('/api/students', {
-        method: 'post',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },

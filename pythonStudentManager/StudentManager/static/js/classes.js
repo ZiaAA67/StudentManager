@@ -1,5 +1,5 @@
 //add class
-document.getElementById('class-form').addEventListener('submit', function(e) {
+document.getElementById('class-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
     const className = document.querySelector('input[name="class_name"]').value;
@@ -32,7 +32,7 @@ function deleteClass(classId) {
     console.log(classId)
     fetch(`/api/classes/delete/${classId}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({}),
     }).then(response => response.json()).then(data => {
         if (data.success) {

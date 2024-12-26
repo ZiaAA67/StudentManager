@@ -164,42 +164,65 @@ def delete_class(class_id):
         return jsonify({"success": False})
 
 
-@app.route('/api/students/', methods=['POST'])
+@app.route('/api/students', methods=['POST'])
 def add_student():
     data = request.get_json()
+
     if not data:
-        return jsonify({"error": "No data"}), 400
+        return jsonify({"error": "No data provided"}), 400
 
     name = data.get('name')
     gender = True if data.get('gender') == "Male" else False
     date_of_birth = data.get('date_of_birth')
-    dob = datetime.strptime(date_of_birth, '%Y-%m-%d')
+    dob = datetime.strptime(date_of_birth, '%Y-%m-%d') if date_of_birth else None
     address = data.get('address')
     phone = data.get('phone')
     email = data.get('email')
     grade_value = data.get('grade')
-    grade = Grade(int(grade_value))
 
     if not name or not date_of_birth or not address or not phone or not email or not grade_value:
-        return jsonify({"error": "Lack of information"}), 400
+        return jsonify({"error": "Lack of required information"}), 400
 
     if not is_valid_phone(phone):
-        return jsonify({"error": "Number phone must be 10 numbers"}), 400
+        return jsonify({"error": "Phone number must be 10 digits"}), 400
 
-    if not is_valid_age(dob):
-        return jsonify({"error": "Age between 15 - 20"}), 400
+    age_validation = is_valid_age(dob)
+    if age_validation is not True:
+        return jsonify({"error": age_validation}), 400
 
-    new_user_info = UserInformation(full_name=name, gender=gender, address=address, birth=dob, phone=phone,
-                                    email=email, role=Role.STUDENT);
+    try:
+        new_user_info = UserInformation(
+            full_name=name,
+            gender=gender,
+            address=address,
+            birth=dob,
+            phone=phone,
+            email=email,
+            role=Role.STUDENT
+        )
+        db.session.add(new_user_info)
+        db.session.commit()
 
-    db.session.add(new_user_info)
-    db.session.commit()
+        grade = Grade(int(grade_value))
+        new_student = Student(id=new_user_info.id, grade=grade)
+        db.session.add(new_student)
+        db.session.commit()
 
-    new_student = Student(id=new_user_info.id, grade=grade)
-    db.session.add(new_student)
-    db.session.commit()
+        return jsonify({
+            "student": {
+                "name": name,
+                "gender": "Male" if gender else "Female",
+                "date_of_birth": dob.strftime('%Y-%m-%d'),
+                "address": address,
+                "phone": phone,
+                "email": email,
+                "grade": grade.name
+            }
+        }), 201
 
-    return jsonify({"student": {"name": name, "gender": gender, "date_of_birth": dob.strftime('%Y-%m-%d')}})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
 def is_valid_phone(phone):
@@ -209,7 +232,19 @@ def is_valid_phone(phone):
 def is_valid_age(birthdate):
     today = datetime.today()
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-    return 15 <= age <= 20
+
+    rule = SchoolRules.query.order_by(SchoolRules.id.desc()).first()
+    if rule:
+        min_age = rule.min_age
+        max_age = rule.max_age
+    else:
+        min_age = 15
+        max_age = 20
+
+    if not (min_age <= age <= max_age):
+        return f"Age must be between {min_age} and {max_age} years old."
+
+    return True
 
 
 if __name__ == "__main__":

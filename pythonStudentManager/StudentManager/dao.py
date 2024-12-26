@@ -42,9 +42,16 @@ def get_all_classes(page=None):
     return query.all()
 
 
-def get_all_students(page=1):
-    page_size = app.config.get('PAGE_SIZE')
+def get_all_students(page=None):
+    page_size = app.config.get('STUDENTS_PAGE_SIZE')
     return Student.query.paginate(page=page, per_page=page_size, error_out=False)
+
+
+def init_school_rules():
+    if not SchoolRules.query.first():
+        new_rule = SchoolRules()
+        db.session.add(new_rule)
+        db.session.commit()
 
 
 if __name__ == "__main__":
