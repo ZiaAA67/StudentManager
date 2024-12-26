@@ -1,4 +1,6 @@
 import re
+from email.policy import default
+from mmap import PAGESIZE
 from turtledemo.penrose import start
 
 from flask_admin.model.typefmt import null_formatter
@@ -21,12 +23,16 @@ def index():
 
 
 # student_admission
-@app.route('/students', methods=['GET', 'POST'])
+@app.route('/students', methods=['get', 'post'])
 def student_management():
+    page = request.args.get('page', 1, type=int)
+    students_paginated = dao.get_all_students(page)
     grades = Grade.choices()
-    page = request.args.get('page')
-    students = dao.get_all_students(page=page)
-    return render_template('employee/student_management.html', grades=grades, students=students)
+
+    return render_template('employee/student_management.html',
+                           students=students_paginated.items,
+                           grades=grades,
+                           pagination=students_paginated)
 
 
 # class_management
@@ -144,49 +150,42 @@ def add_class():
     }})
 
 
-@app.route('/api/students/', methods=['POST'])
+@app.route('/api/students/', methods=['post'])
 def add_student():
-    try:
-        # Tạo UserInformation
-        gender = True if request.form.get('gender') == "Male" else False
-        date_of_birth = request.form.get('date_of_birth')
-        dob = datetime.strptime(date_of_birth, '%Y-%m-%d')
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data"}), 400
 
-        phone = request.form.get('phone')
-        if not is_valid_phone(phone):
-            flash("Số điện thoại phải có 10 chữ số!", "error")
-            return redirect('/students')
+    name = data.get('name')
+    gender = True if data.get('gender') == "Male" else False
+    date_of_birth = data.get('date_of_birth')
+    dob = datetime.strptime(date_of_birth, '%Y-%m-%d')
+    address = data.get('address')
+    phone = data.get('phone')
+    email = data.get('email')
+    grade_value = data.get('grade')
+    grade = Grade(int(grade_value))
 
-        if not is_valid_age(dob):
-            flash("Độ tuổi phải từ 15 đến 20!", "error")
-            return redirect('/students')
+    if not name or not date_of_birth or not address or not phone or not email or not grade_value:
+        return jsonify({"error": "Lack of information"}), 400
 
-        user_info = UserInformation(
-            full_name=request.form['name'],
-            gender=gender,
-            address=request.form['address'],
-            birth=dob,
-            phone=request.form['phone'],
-            email=request.form['email'],
-            role=Role.STUDENT
-        )
-        db.session.add(user_info)
-        db.session.commit()
+    if not is_valid_phone(phone):
+        return jsonify({"error": "Number phone must be 10 numbers"}), 400
 
-        grade_value = request.form.get('grade')
-        grade = Grade(int(grade_value))
-        student = Student(id=user_info.id, grade=grade)
-        db.session.add(student)
-        db.session.commit()
+    if not is_valid_age(dob):
+        return jsonify({"error": "Age between 15 - 20"}), 400
 
-        flash("Thêm sinh viên thành công!", "success")
-        return redirect('/students')
+    new_user_info = UserInformation(full_name=name, gender=gender, address=address, birth=dob, phone=phone,
+                                    email=email, role=Role.STUDENT);
 
+    db.session.add(new_user_info)
+    db.session.commit()
 
-    except Exception as e:
-        db.session.rollback()
-        flash(f"Lỗi xảy ra: {str(e)}", "error")
-        return redirect('/students')
+    new_student = Student(id=new_user_info.id, grade=grade)
+    db.session.add(new_student)
+    db.session.commit()
+
+    return jsonify({"student": {"name": name, "gender": gender, "date_of_birth": dob.strftime('%Y-%m-%d')}})
 
 
 def is_valid_phone(phone):

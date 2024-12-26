@@ -21,7 +21,7 @@ class Grade(enum):
 
     @classmethod
     def choices(cls):
-        return [(grade.name, grade.value) for grade in cls]
+        return [(grade.value, str(grade)) for grade in cls]
 
     def __str__(self):
         return f"Khối {self.value}"
