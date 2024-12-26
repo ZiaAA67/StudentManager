@@ -1,3 +1,4 @@
+import math
 import re
 from email.policy import default
 from mmap import PAGESIZE
@@ -38,9 +39,11 @@ def student_management():
 # class_management
 @app.route('/classes', methods=['get', 'post'])
 def class_management():
-    classes = dao.get_all_classes()
-
-    return render_template("/employee/class_management.html", classes=classes)
+    page = request.args.get('page')
+    pages = dao.count_classes()
+    classes = dao.get_all_classes(page)
+    return render_template("/employee/class_management.html", classes=classes,
+                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]), current_page=int(page))
 
 
 # register
@@ -150,7 +153,18 @@ def add_class():
     }})
 
 
-@app.route('/api/students/', methods=['post'])
+@app.route('/api/classes/delete/<int:class_id>', methods=['POST'])
+def delete_class(class_id):
+    cls = Class.query.get(class_id)
+    if cls:
+        cls.active = False
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
+
+@app.route('/api/students/', methods=['POST'])
 def add_student():
     data = request.get_json()
     if not data:

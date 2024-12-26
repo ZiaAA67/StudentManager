@@ -53,8 +53,8 @@ class UserInformation(Base):
                     default="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=")
     role = Column(Enum(Role), default=Role.STAFF)
     # Ràng buộc số điện thoại phải có đúng 10 số
-    __table_args__ = (
-        CheckConstraint('LENGTH(phone) = 10', name='check_phone_length'),)
+    # __table_args__ = (
+    #     CheckConstraint('LENGTH(phone) = 10', name='check_phone_length'),)
 
     def __str__(self):
         return self.full_name
@@ -161,78 +161,78 @@ if __name__ == "__main__":
         # tao bang
         db.create_all()
 
-        # admin_user_info = UserInformation(full_name="ADMIN USER",
-        #                                   gender=True,
-        #                                   address="hcm city",
-        #                                   birth=datetime(1999, 2, 12),
-        #                                   phone="023675348",
-        #                                   email="nguyen@ou.com",
-        #                                   role=Role.ADMIN)
-        # db.session.add(admin_user_info)
-        # db.session.commit()
-        #
-        # admin_detail = Administrator(id=admin_user_info.id)
-        # db.session.add(admin_detail)
-        # db.session.commit()
-        #
-        # username = "admin"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=admin_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # teacher_user_info = UserInformation(full_name="Teacher User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023675344",
-        #                                     email="nguyenjss@ou.com",
-        #                                     role=Role.TEACHER)
-        # db.session.add(teacher_user_info)
-        # db.session.commit()
-        #
-        # teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
-        # db.session.add(teacher_detail)
-        # db.session.commit()
-        #
-        # username = "teacher"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=teacher_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # employee_user_info = UserInformation(full_name="Employee User",
-        #                                      gender=True,
-        #                                      address="hcm city",
-        #                                      birth=datetime(1999, 2, 12),
-        #                                      phone="023675343",
-        #                                      email="nguyenjsa@ou.com",
-        #                                      role=Role.STAFF)
-        # db.session.add(employee_user_info)
-        # db.session.commit()
-        #
-        # username = "employee"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=employee_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
+        admin_user_info = UserInformation(full_name="ADMIN USER",
+                                          gender=True,
+                                          address="hcm city",
+                                          birth=datetime(1999, 2, 12),
+                                          phone="023675348",
+                                          email="nguyen@ou.com",
+                                          role=Role.ADMIN)
+        db.session.add(admin_user_info)
+        db.session.commit()
 
-        # student_user_info = UserInformation(full_name="Student User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023695343",
-        #                                     email="nguynjsa@ou.com",
-        #                                     role=Role.STUDENT)
-        # db.session.add(student_user_info)
-        # db.session.commit()
-        #
-        # student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
-        # db.session.add(student_detail)
-        # db.session.commit()
+        admin_detail = Administrator(id=admin_user_info.id)
+        db.session.add(admin_detail)
+        db.session.commit()
+
+        username = "admin"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=admin_user_info.id)
+        db.session.add(account)
+        db.session.commit()
+
+        teacher_user_info = UserInformation(full_name="Teacher User",
+                                            gender=True,
+                                            address="hcm city",
+                                            birth=datetime(1999, 2, 12),
+                                            phone="023675344",
+                                            email="nguyenjss@ou.com",
+                                            role=Role.TEACHER)
+        db.session.add(teacher_user_info)
+        db.session.commit()
+
+        teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
+        db.session.add(teacher_detail)
+        db.session.commit()
+
+        username = "teacher"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=teacher_user_info.id)
+        db.session.add(account)
+        db.session.commit()
+
+        employee_user_info = UserInformation(full_name="Employee User",
+                                             gender=True,
+                                             address="hcm city",
+                                             birth=datetime(1999, 2, 12),
+                                             phone="023675343",
+                                             email="nguyenjsa@ou.com",
+                                             role=Role.STAFF)
+        db.session.add(employee_user_info)
+        db.session.commit()
+
+        username = "employee"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=employee_user_info.id)
+        db.session.add(account)
+        db.session.commit()
+
+        student_user_info = UserInformation(full_name="Student User",
+                                            gender=True,
+                                            address="hcm city",
+                                            birth=datetime(1999, 2, 12),
+                                            phone="023695343",
+                                            email="nguynjsa@ou.com",
+                                            role=Role.STUDENT)
+        db.session.add(student_user_info)
+        db.session.commit()
+
+        student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
+        db.session.add(student_detail)
+        db.session.commit()

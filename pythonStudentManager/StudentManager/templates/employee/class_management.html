@@ -55,7 +55,8 @@
         <th>STT</th>
         <th>Tên lớp</th>
         <th>Khối</th>
-        <th>Sỉ số</th>
+        <th>Sĩ số</th>
+        <th></th>
     </tr>
     </thead>
     <tbody id="class-list">
@@ -65,10 +66,33 @@
         <td>{{c.name}}</td>
         <td>{{c.grade.value}}</td>
         <td>0</td>
+        <td width="200" class="text-center">
+            <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
+            <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{c.id}})">Xoá</button>
+        </td>
     </tr>
     {%endfor%}
     </tbody>
 </table>
+
+
+    <ul class="pagination d-flex align-items-center justify-content-center mt-3">
+      <li class="page-item {%if current_page == 1%} disabled {%endif%}">
+          <a class="page-link" href="/classes?page={{current_page - 1}}">Previous</a>
+      </li>
+
+      {%for p in range(1, pages+1)%}
+      <li class="page-item {%if p == current_page%} active {%endif%}">
+          <a class="page-link" href="/classes?page={{p}}">{{p}}</a>
+      </li>
+      {%endfor%}
+
+      <li class="page-item {%if current_page == pages%} disabled {%endif%}">
+          <a class="page-link" href="/classes?page={{current_page + 1}}">Next</a>
+      </li>
+    </ul>
+
+
 {%endblock%}
 
 
