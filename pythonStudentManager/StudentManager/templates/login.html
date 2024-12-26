@@ -1,27 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-{%extends 'layout/base.html'%}
+{% extends "layout/base.html" %}
 
-{%block title%} Đăng nhập {%endblock%}
+{%block title%} Đăng Nhập {%endblock%}
+
+{%block header%} {%endblock%}
 
 {%block content%}
+    <div class="d-flex justify-content-center align-items-center vh-100 ">
 
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="d-flex justify-content-center align-items-center vh-100 ">
-
-    <div class="card" style="width: 35rem; ">
+    <div class="card" style="width: 30rem; ">
         <div class="card-body">
-            <p class="text-center" style="font-weight: bold;font-size:30px">2NT Edu</p>
+            <p class="text-center" style="font-weight: bold;font-size:20px">2NT Edu</p>
             <div class="d-flex justify-content-center align-items-center">
                 <!-- Image next to the text -->
-                <img src="static/images/LogoRBG.png" alt="Logo" style="width: 200px; height: 200px;">
+                <img src="static/images/LogoRBG.png" alt="Logo" style="width: 170px; height: 170px;">
             </div>
 
-            <h2 class="text-center" style="font-weight:bold">ĐĂNG NHẬP</h2>
+            <h3 class="text-center" style="font-weight:bold">ĐĂNG NHẬP</h3>
 
             <form method="post" action="/login" class="mt-4">
                 <!-- Username -->
@@ -65,23 +59,21 @@
                 </div>
                 <!-- Login Button -->
                 <div class="d-grid mt-3 mb-3">
-                    <button class="btn btn-lightseagreen shadow" type="submit ">
-                        Đăng nhập
-                    </button>
+                    <button class="btn btn-lightseagreen shadow" type="submit ">Đăng nhập</button>
                 </div>
 
-                <div class="d-grid mb-3">
-                    <button class="btn btn-lightseagreen shadow" onclick="goToRegisterPage()">
-                        Đăng ký
-                    </button>
+                <div class="separator">
+                    <span>Bạn chưa có tài khoản?</span>
+                </div>
+
+                <div class="d-grid mt-3">
+                    <button class="btn btn-lightseagreen shadow" onclick="goToRegisterPage()">Đăng ký</button>
                     <script src="static/js/script.js"></script>
                 </div>
-
 
             </form>
         </div>
     </div>
 </div>
-</body>
-</html>
 {%endblock%}
+

@@ -1,3 +1,4 @@
+
 /* General Body Styles */
 body {
     background-color: #2f353b;
@@ -6,11 +7,8 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
 }
 
-.h1{
-}
 
 /* Card Styles */
 .card {
@@ -37,7 +35,10 @@ body {
 .card-body {
     padding: 20px;
 }
-
+.d-grid {
+    display: flex;
+    justify-content: center; /* Horizontally centers the button */
+}
 /* Form Fields: Border on Hover */
 .form-control {
     transition: border-color 0.3s ease; /* Smooth transition */
@@ -81,10 +82,7 @@ textarea::placeholder {
     background-color: #2e8b57;
     transform: translateY(0);
 }
-.d-grid {
-    display: flex;
-    justify-content: center; /* Horizontally centers the button */
-}
+
 
 /* Responsive Design */
 @media (max-width: 767px) {
@@ -113,3 +111,45 @@ textarea::placeholder {
         padding: 14px 20px;
     }
 }
+/* css đường gạch */
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+    margin: 0 10px;
+}
+
+.separator span {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Căn chỉnh thanh đo độ mạnh mật khẩu */
+.progress {
+    background-color: #e9ecef; /* Màu nền mặc định */
+}
+
+.progress-bar {
+    transition: width 0.3s ease; /* Hiệu ứng tăng chiều rộng */
+}
+
+.input-group input[type="file"] {
+    padding-right: 10px;
+}
+#avatarPreview {
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        padding: 3px;
+    }
+
+
+
+

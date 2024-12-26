@@ -1,7 +1,47 @@
-{% extends 'layout/base.html' %}
+{% extends "layout/base.html" %}
 
+{% block title %} Trang Chủ {% endblock %}
+{%block link_css%}
+<link href="{{url_for('static', filename='css/index.css')}}" rel="stylesheet">
+{%endblock%}
 {% block content %}
-<div class="row">
+<html>
+<head>
+</head>
+<body>
+<div class="container">
+    <div class="left-panel">
+        <img class="img" src="/static/images/Notification.png"  alt="avatar">
+    </div>
+    <div class="right-panel">
+        <div class="announcement">
+            <h2 style="color:red">THÔNG BÁO</h2>
 
+            <ul class="announcement-list">
+                <li>
+                    <a href="#"> >> </a>
+                    <a href="#">Lê</a>
+                    <span>02/12/2024 12:12</span>
+                </li>
+                <li>
+                    <a href="#"> >> </a>
+                    <a href="#">Nguyễn</a>
+                    <span>02/12/2024 22:22</span>
+                </li>
+                <li>
+                    <a href="#"> >> </a>
+                    <a href="#">Trọng</a>
+                    <span>24/08/2023 11:11</span>
+                </li>
+                <li>
+                    <a href="#"> >> </a>
+                    <a href="#">Đỉnh</a>
+                    <span>19/07/2024 00:00</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
+</body>
+</html>
 {% endblock %}

@@ -1,31 +1,90 @@
+<style>
+    /* Cách đều các mục */
+    .navbar-nav .nav-item {
+        margin-right: 5px; /* Khoảng cách giữa các mục */
+        border-left:1px solid grey;
+    }
+
+    /* Không áp dụng cho danh sách bên phải */
+    .navbar-nav.ms-auto .nav-item {
+        border-left: none;
+        margin-right: 0;
+    }
+
+    /* Làm nổi chữ khi hover */
+    .navbar-nav .nav-link {
+        transition: all 0.3s ease; /* Thêm hiệu ứng mượt */
+        padding: 5px 10px; /* Thêm khoảng cách cố định cho các chữ */
+    }
+    .navbar-nav .nav-link:hover {
+        color: lightseagreen !important; /* Đổi màu chữ */
+    }
+</style>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Quản Lý Sinh Viên</a>
+        <img src="https://cdn-icons-png.freepik.com/512/6785/6785648.png"
+             width="50" height="50" class="rounded-circle shadow-sm">
+        <a class="nav-link active" style="font-size:30px;color:#FADBD8" href="/">2NT Edu</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
+
+                {%if user_info.role.name == 'ADMIN'%}
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Trang chủ</a>
+                    <a class="nav-link active" href="/">Thông báo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/students">Danh sách sinh viên</a>
+                    <a class="nav-link active" href="/">Thay đổi quy định</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/classes">Quản lý lớp học</a>
+                    <a class="nav-link active" href="/couses">Thống kê</a>
+                </li>
+                {%endif%}
+
+                {%if user_info.role.name == 'STAFF'%}
+                <li class="nav-item">
+                    <a class="nav-link active" href="/students">Quản lý học sinh</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/courses">Quản lý môn học</a>
+                    <a class="nav-link active" href="/classes?page=1">Quản lí lớp</a>
+                </li>
+                {%endif%}
+
+                {%if user_info.role.name == 'TEACHER'%}
+                <li class="nav-item">
+                    <a class="nav-link active" href="/entry_score">Nhập điểm</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-info" href="/login">&#128110; Đăng nhập</a>
+                    <a class="nav-link active" href="/export_score">Xuất điểm</a>
                 </li>
+                {%endif%}
+
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" name="q" type="text" placeholder="Tìm kiếm sinh viên...">
-                <button class="btn btn-primary" type="submit">Tìm</button>
-            </form>
+            <!-- Phần nằm bên phải -->
+            <ul class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item " >
+                    <a class="nav-link text-light d-flex align-items-center"
+                       href="/profile" style="font-weight: 500;">
+                        <img src="{{user_info.avatar}}" width="35" height="30" class="rounded-circle me-1 shadow-sm"
+                             alt="avatar">
+                        <span style="white-space: nowrap;">환영, {{current_user.username}}</span>
+                    </a>
+                </li>
+                <li class="nav-item" style="margin-left:3px" >
+                    <a class="btn btn-outline-danger btn-sm px-4 py-2" href="/logout" style="font-weight: 500;">Đăng xuất</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-info" href="/login">Đăng nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-info" href="/register">Đăng ký</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>
