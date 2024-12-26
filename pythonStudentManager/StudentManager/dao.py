@@ -28,8 +28,18 @@ def get_user_info_by_user_id(user_id):
     return UserInformation.query.get(user.user_info_id)
 
 
-def get_all_classes():
-    return Class.query.all()
+def count_classes():
+    return db.session.query(db.func.count(Class.id)).filter(Class.active == True).scalar()
+
+
+def get_all_classes(page=None):
+    query = Class.query
+    if page:
+        page_size = app.config["CLASSES_PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.filter_by(active=True).slice(start, start + page_size)
+
+    return query.all()
 
 
 def get_all_students(page=None):
