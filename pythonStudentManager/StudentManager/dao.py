@@ -43,8 +43,20 @@ def get_all_classes(page=None):
 
 
 def get_all_students(page=None):
-    page_size = app.config.get('STUDENTS_PAGE_SIZE')
+    page_size = app.config.get("PAGE_SIZE")
     return Student.query.paginate(page=page, per_page=page_size, error_out=False)
+
+
+def check_phone_unique(phone):
+    user_info = UserInformation.query.filter(UserInformation.phone.__eq__(phone),
+                                             UserInformation.active == True).first()
+    return user_info is None
+
+
+def check_email_unique(email):
+    user_info = UserInformation.query.filter(UserInformation.email.__eq__(email),
+                                             UserInformation.active == True).first()
+    return user_info is None
 
 
 def init_school_rules():
