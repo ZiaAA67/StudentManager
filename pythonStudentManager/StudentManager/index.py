@@ -52,6 +52,12 @@ def subject_management():
     return render_template('/employee/subject_management.html')
 
 
+# rules
+@app.route('/rules')
+def rules():
+    return render_template('/admin/rules.html')
+
+
 # register
 @app.route('/register', methods=["get", "post"])
 def register_user():
