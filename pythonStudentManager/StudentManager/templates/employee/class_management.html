@@ -6,7 +6,6 @@
 <link href="{{url_for('static', filename='css/class_management.css')}}" rel="stylesheet"> {%endblock%}
 
 {%block content%}
-<div class="alert" id="alert"></div>
 <div class="d-flex justify-content-center align-items-center">
     <div class="card" style="width: 38rem;">
         <div class="card-body">
@@ -30,6 +29,19 @@
                 <!--                </div>-->
 
                 <!-- Register Button -->
+
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <div id="flash-messages" style="display:none;">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{category}}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
                 <div class="d-grid">
                     <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
                 </div>
@@ -76,7 +88,7 @@
 </table>
 
 
-    <ul class="pagination d-flex align-items-center justify-content-center mt-3">
+    <ul class="pagination d-flex align-items-center justify-content-center mt-3" id="pagination" page-data="{{total_classes}}">
       <li class="page-item {%if current_page == 1%} disabled {%endif%}">
           <a class="page-link" href="/classes?page={{current_page - 1}}">Previous</a>
       </li>

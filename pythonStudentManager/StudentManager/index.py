@@ -8,7 +8,7 @@ from flask_admin.model.typefmt import null_formatter
 
 import dao
 import cloudinary.uploader
-from flask import render_template, request, redirect, session, jsonify, flash
+from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 from StudentManager import app, login
@@ -39,11 +39,12 @@ def student_management():
 # class_management
 @app.route('/classes', methods=['get', 'post'])
 def class_management():
-    page = request.args.get('page')
+    page = request.args.get('page', 1)
+    page = int(page)
     pages = dao.count_classes()
     classes = dao.get_all_classes(page)
     return render_template("/employee/class_management.html", classes=classes,
-                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]), current_page=int(page))
+                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]), current_page=int(page), total_classes=pages)
 
 
 # register
@@ -137,8 +138,9 @@ def add_class():
     # chuyển giá trị lấy được sang enum
     grade = Grade(int(grade_value))
 
-    if Class.query.filter_by(name=class_name, grade=grade).first():
-        return jsonify({"error": "Lớp đã tồn tại!"})
+    if Class.query.filter_by(name=class_name, grade=grade, active=True).first():
+        flash("Lớp đã tồn tại!", "danger")
+        return jsonify({"success": False})
 
     new_class = Class(name=class_name, grade=grade)
 
@@ -146,11 +148,8 @@ def add_class():
     db.session.add(new_class)
     db.session.commit()
 
-    return jsonify({"class": {
-        "id": new_class.id,
-        "name": new_class.name,
-        "grade": new_class.grade.name
-    }})
+    flash("Thêm lớp thành công!", "success")
+    return jsonify({"success": True})
 
 
 @app.route('/api/classes/delete/<int:class_id>', methods=['POST'])
@@ -159,8 +158,10 @@ def delete_class(class_id):
     if cls:
         cls.active = False
         db.session.commit()
+        flash("Xoá thành công!", "success")
         return jsonify({"success": True})
     else:
+        flash("Xoá thất bại!", "danger")
         return jsonify({"success": False})
 
 
