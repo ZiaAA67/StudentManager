@@ -86,7 +86,7 @@ class Class(Base):
     name = Column(String(50), nullable=False)
     grade = Column(Enum(Grade), nullable=False)
 
-    students = relationship('Student', backref='class', lazy=True)
+    students = relationship('Student', backref='class', lazy='dynamic')
     teaching_plan = relationship('TeachingPlan', backref='class', uselist=False)
 
 
@@ -103,6 +103,8 @@ class Student(Base):
 class Subject(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
+    desc = Column(String(255))
+    grade = Column(Enum(Grade), nullable=False)
 
     teaching_plans = relationship('TeachingPlan', backref='subject')
     exam_quantity = relationship("ExamQuantity", backref="subject", lazy=True)

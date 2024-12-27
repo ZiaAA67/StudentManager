@@ -43,6 +43,7 @@ def class_management():
     page = int(page)
     pages = dao.count_classes()
     classes = dao.get_all_classes(page)
+    print(pages)
     return render_template("/employee/class_management.html",
                            classes=classes,
                            pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
@@ -53,7 +54,15 @@ def class_management():
 # subject
 @app.route('/subjects')
 def subject_management():
-    return render_template('/employee/subject_management.html')
+    page = request.args.get('page', 1)
+    page = int(page)
+    pages = dao.count_subjects()
+    subjects = dao.get_all_subjects(page)
+    return render_template('/employee/subject_management.html',
+                           subjects=subjects,
+                           pages=math.ceil(pages / app.config["SUBJECTS_PAGE_SIZE"]),
+                           current_page=int(page),
+                           total_subjects=pages)
 
 
 # rules
@@ -231,10 +240,9 @@ def add_student():
         db.session.commit()
 
         grade = Grade(int(grade_value))
+        cls = dao.get_classes_by_grade(grade)
 
-        # xu ly class o day
-
-        new_student = Student(id=new_user_info.id, grade=grade)
+        new_student = Student(id=new_user_info.id, grade=grade, class_id=cls.id)
         db.session.add(new_student)
         db.session.commit()
 
@@ -245,6 +253,20 @@ def add_student():
         db.session.rollback()
         flash(f"Đã có lỗi xảy ra: {str(e)}", "danger")
         return jsonify({"success": False}), 500
+
+
+@app.route('/api/students/delete/<int:student_id>', methods=['POST'])
+def delete_student(student_id):
+    student = Student.query.get(student_id)
+    print(student)
+    if student:
+        student.active = False
+        db.session.commit()
+        flash("Xoá thành công!", "success")
+        return jsonify({"success": True})
+    else:
+        flash("Xoá thất bại!", "danger")
+        return jsonify({"success": False})
 
 
 def is_valid_phone(phone):
@@ -267,6 +289,44 @@ def is_valid_age(birthdate):
         return f"Tuổi phải trong độ tuổi quy định ( {min_age} - {max_age} )"
 
     return True
+
+
+@app.route('/api/subjects', methods=['post'])
+def add_subjects():
+    subject_name = request.json.get('subject_name')
+    desc = request.json.get('desc')
+    if not desc:
+        desc = ""
+    grade_value = request.json.get('grade')
+
+    # chuyển giá trị lấy được sang enum
+    grade = Grade(int(grade_value))
+
+    if Subject.query.filter_by(name=subject_name, grade=grade, active=True).first():
+        flash("Môn học đã tồn tại!", "danger")
+        return jsonify({"success": False})
+
+    new_subject = Subject(name=subject_name, desc=desc, grade=grade)
+
+    # Thêm vào database
+    db.session.add(new_subject)
+    db.session.commit()
+
+    flash("Thêm môn học thành công!", "success")
+    return jsonify({"success": True})
+
+
+@app.route('/api/subjects/delete/<int:subject_id>', methods=['POST'])
+def delete_subject(subject_id):
+    subject = Subject.query.get(subject_id)
+    if subject:
+        subject.active = False
+        db.session.commit()
+        flash("Xoá thành công!", "success")
+        return jsonify({"success": True})
+    else:
+        flash("Xoá thất bại!", "danger")
+        return jsonify({"success": False})
 
 
 if __name__ == "__main__":

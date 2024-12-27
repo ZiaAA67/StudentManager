@@ -62,32 +62,33 @@
 </div>
 <table>
     <thead>
-    <tr>
-    <th>STT</th>
-    <th>Tên lớp</th>
-    <th>Khối</th>
-    <th>Sĩ số</th>
-    <th>Tùy chọn</th>
-</tr>
+        <tr>
+            <th>STT</th>
+            <th>Tên lớp</th>
+            <th>Khối</th>
+            <th>Sĩ số</th>
+            <th>Tùy chọn</th>
+        </tr>
     </thead>
     <tbody id="class-list">
-    {%for c in classes%}
-    <tr>
-        <td>{{c.id}}</td>
-        <td>{{c.name}}</td>
-        <td>{{c.grade.value}}</td>
-        <td>0</td>
-        <td width="200" class="text-center">
-            <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
-            <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{c.id}})">Xoá</button>
-        </td>
-    </tr>
-    {%endfor%}
+        {%for c in classes%}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{c.class.name}}</td>
+            <td>Khối {{c.class.grade.value}}</td>
+            <td>{{c.student_count}}</td>
+            <td width="200" class="text-center">
+                <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
+                <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{c.class.id}})">Xoá</button>
+            </td>
+        </tr>
+        {%endfor%}
     </tbody>
 </table>
 
 
     <ul class="pagination d-flex align-items-center justify-content-center mt-3" id="pagination" page-data="{{total_classes}}">
+        {%if pages > 1%}
       <li class="page-item {%if current_page == 1%} disabled {%endif%}">
           <a class="page-link" href="/classes?page={{current_page - 1}}">Previous</a>
       </li>
@@ -101,6 +102,7 @@
       <li class="page-item {%if current_page == pages%} disabled {%endif%}">
           <a class="page-link" href="/classes?page={{current_page + 1}}">Next</a>
       </li>
+        {%endif%}
     </ul>
 
 

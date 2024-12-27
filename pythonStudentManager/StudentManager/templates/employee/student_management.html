@@ -106,10 +106,8 @@
         <th>Họ tên</th>
         <th>Giới tính</th>
         <th>Ngày sinh</th>
-        <th>Địa chỉ</th>
-        <th>SĐT</th>
-        <th>Email</th>
         <th>Khối</th>
+        <th>Tuỳ chọn</th>
     </tr>
     </thead>
     <tbody>
@@ -119,10 +117,11 @@
         <td>{{ student.user_information.full_name }}</td>
         <td>{{ 'Nam' if student.user_information.gender else 'Nữ' }}</td>
         <td>{{ student.user_information.birth.strftime('%d-%m-%Y') }}</td>
-        <td>{{ student.user_information.address }}</td>
-        <td>{{ student.user_information.phone }}</td>
-        <td>{{ student.user_information.email }}</td>
         <td>{{ student.grade }}</td>
+        <td width="200" class="text-center">
+            <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
+            <button class="btn btn-danger mt-1 mb-1" onclick="deleteStudent({{student.id}})">Xoá</button>
+        </td>
     </tr>
     {% endfor %}
     </tbody>
@@ -133,12 +132,12 @@
         {% if pagination.has_prev %}
         <li class="page-item">
             <a class="page-link" href="?page={{ pagination.prev_num }}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
+                <span aria-hidden="true">Previous</span>
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">&laquo;</span>
+            <span class="page-link">Previous</span>
         </li>
         {% endif %}
 
@@ -151,12 +150,12 @@
         {% if pagination.has_next %}
         <li class="page-item">
             <a class="page-link" href="?page={{ pagination.next_num }}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
+                <span aria-hidden="true">Next</span>
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">&raquo;</span>
+            <span class="page-link">Next</span>
         </li>
         {% endif %}
     </ul>

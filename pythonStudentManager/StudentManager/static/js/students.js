@@ -65,35 +65,32 @@ document.getElementById('student-form').addEventListener('submit', function (eve
 
             if(data.success) {
                 location.reload()
-                // const totalClasses = document.getElementById('pagination').getAttribute('page-data')
-                // if(totalClasses%4 === 0) {
-                //     window.location.href = `/classes?page=${(parseInt(totalClasses)/4)+1}`;
-                // }
             } else {
                 localStorage.setItem('studentInfo', JSON.stringify(formData))
                 location.reload()
             }
-
-            // if (data.error) {
-            //     document.getElementById('error-message').innerText = data.error;
-            //     document.getElementById('error-message').style.display = 'block';
-            // } else {
-            //     document.getElementById('student-form').reset();
-            //     document.getElementById('error-message').style.display = 'none';
-            //
-            //     var successMessage = document.createElement('div');
-            //     successMessage.classList.add('alert', 'alert-success');
-            //     successMessage.innerText = 'Thông tin học sinh đã được lưu thành công!';
-            //     document.getElementById('student-form').appendChild(successMessage);
-            //
-            //     setTimeout(function () {
-            //         successMessage.style.display = 'none';
-            //     }, 5000);
-            // }
         })
-        // .catch((error) => {
-        //     console.error('Lỗi:', error);
-        //     document.getElementById('error-message').innerText = 'Đã xảy ra lỗi, vui lòng thử lại!';
-        //     document.getElementById('error-message').style.display = 'block';
-        // });
 });
+
+
+
+//delete class
+function deleteStudent(studentId) {
+    fetch(`/api/students/delete/${studentId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    }).then(response => response.json()).then(data => {
+        if (data.success) {
+            location.reload();
+            // const totalClasses = document.getElementById('pagination').getAttribute('page-data')
+            // if(totalClasses%4 === 1) {
+            //     window.location.href = `/classes?page=${(parseInt(totalClasses)-1)/4}`;
+            // }
+        } else {
+            location.reload();
+        }
+    })
+}

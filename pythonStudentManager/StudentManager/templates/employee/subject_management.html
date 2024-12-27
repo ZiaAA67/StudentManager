@@ -10,11 +10,15 @@
 <div class="d-flex justify-content-center align-items-center">
     <div class="card" style="width: 38rem;">
         <div class="card-body">
-            <form id="class-form">
+            <form id="subject-form">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp"
                            name="class_name" required>
                     <label for="class_name">Tên môn học</label>
+                </div>
+
+                 <div class="mb-3">
+                    <textarea class="form-control shadow-sm" id="description" name="description" rows="3" placeholder="Mô tả"></textarea>
                 </div>
 
                 <div class="mt-1 mb-3">
@@ -25,9 +29,18 @@
                         <option value="12">Khối 12</option>
                     </select>
                 </div>
-                <!--                <div>-->
-                <!--                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">-->
-                <!--                </div>-->
+
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <div id="flash-messages" style="display:none;">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{category}}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
 
                 <!-- Register Button -->
                 <div class="d-grid">
@@ -51,19 +64,51 @@
 </div>
 <table>
     <thead>
-    <tr>
-        <th>STT</th>
-        <th>Tên môn học</th>
-        <th>Khối</th>
-        <th>Tùy chọn</th>
-    </tr>
+        <tr>
+            <th>STT</th>
+            <th>Tên môn học</th>
+            <th>Khối</th>
+            <th>Tùy chọn</th>
+        </tr>
     </thead>
-    <tr>
-    </tr>
+    <tbody id="class-list">
+        {%for s in subjects%}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{s.name}}</td>
+            <td>Khối {{s.grade.value}}</td>
+            <td width="300" class="text-center">
+                <button class="btn btn-success mt-1 mb-1 me-4">Chi tiết</button>
+                <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{s.id}})">Xoá</button>
+            </td>
+        </tr>
+        {%endfor%}
+    </tbody>
 </table>
+
+
+    <ul class="pagination d-flex align-items-center justify-content-center mt-3" id="pagination" page-data="{{total_subjects}}">
+        {%if pages > 1%}
+        <li class="page-item {%if current_page == 1%} disabled {%endif%}">
+          <a class="page-link" href="/subjects?page={{current_page - 1}}">Previous</a>
+        </li>
+
+        {%for p in range(1, pages+1)%}
+        <li class="page-item {%if p == current_page%} active {%endif%}">
+          <a class="page-link" href="/subjects?page={{p}}">{{p}}</a>
+        </li>
+        {%endfor%}
+
+        <li class="page-item {%if current_page == pages%} disabled {%endif%}">
+          <a class="page-link" href="/subjects?page={{current_page + 1}}">Next</a>
+        </li>
+        {%endif%}
+    </ul>
+
 
 {%endblock%}
 
+{%block link_js%} <script src="{{url_for('static', filename='js/subjects.js')}}"></script> {%endblock%}
 
 
 

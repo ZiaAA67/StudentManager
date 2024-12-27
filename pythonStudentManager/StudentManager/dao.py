@@ -38,13 +38,36 @@ def get_all_classes(page=None):
         page_size = app.config["CLASSES_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
         query = query.filter_by(active=True).slice(start, start + page_size)
+    classes = query.all()
 
-    return query.all()
+    class_data = []
+    for cls in classes:
+        student_count = cls.students.filter(Student.active == True).count()
+        class_data.append({
+            "class": cls,
+            "student_count": student_count
+        })
+
+    return class_data
+
+
+def get_classes_by_grade(grade):
+    return Class.query.filter(Class.grade.__eq__(grade),
+                              Class.active == True).first()
+
+
+def count_students_in_class(class_id):
+    cls = Class.query.filter(Class.id == class_id,
+                             Class.active == True).first()
+
+    if cls:
+        return len(cls.students)
+    return 0
 
 
 def get_all_students(page=None):
     page_size = app.config.get("PAGE_SIZE")
-    return Student.query.paginate(page=page, per_page=page_size, error_out=False)
+    return Student.query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
 
 
 def check_phone_unique(phone):
@@ -64,6 +87,20 @@ def init_school_rules():
         new_rule = SchoolRules()
         db.session.add(new_rule)
         db.session.commit()
+
+
+def count_subjects():
+    return db.session.query(db.func.count(Subject.id)).filter(Subject.active == True).scalar()
+
+
+def get_all_subjects(page=None):
+    query = Subject.query
+    if page:
+        page_size = app.config["SUBJECTS_PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.filter_by(active=True).slice(start, start + page_size)
+
+    return query.all()
 
 
 if __name__ == "__main__":
