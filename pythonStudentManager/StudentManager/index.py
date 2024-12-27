@@ -46,6 +46,11 @@ def class_management():
     return render_template("/employee/class_management.html", classes=classes,
                            pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]), current_page=int(page), total_classes=pages)
 
+# subject
+@app.route('/subjects')
+def subject_management():
+    return render_template('/employee/subject_management.html')
+
 
 # register
 @app.route('/register', methods=["get", "post"])
@@ -115,7 +120,6 @@ def common_attributes():
         }
 
     return {
-
     }
 
 
@@ -128,7 +132,6 @@ def entry_score():
 @app.route('/export_score')
 def export_score():
     return render_template('/lecturer/export_score.html')
-
 
 @app.route('/api/classes', methods=['post'])
 def add_class():
