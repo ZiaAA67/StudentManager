@@ -123,10 +123,12 @@ table {
     table, th, td {
     border: 1px solid black;
 }
-th, td {
+
+th,td {
     padding: 8px;
     text-align: left;
 }
+
 
 
 /*separator*/

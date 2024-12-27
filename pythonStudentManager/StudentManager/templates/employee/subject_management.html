@@ -1,6 +1,6 @@
 {% extends "layout/base.html" %}
 
-{%block title%} Quản Lý Lớp Học {%endblock%}
+{%block title%} Quản Lý Môn Học {%endblock%}
 
 {%block link_css%}
 <link href="{{url_for('static', filename='css/class_management.css')}}" rel="stylesheet"> {%endblock%}
@@ -14,7 +14,7 @@
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp"
                            name="class_name" required>
-                    <label for="class_name">Tên lớp</label>
+                    <label for="class_name">Tên môn học</label>
                 </div>
 
                 <div class="mt-1 mb-3">
@@ -31,7 +31,7 @@
 
                 <!-- Register Button -->
                 <div class="d-grid">
-                    <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
+                    <button class="btn btn-red shadow" type="submit">Thêm môn học</button>
                 </div>
             </form>
         </div>
@@ -39,11 +39,11 @@
 </div>
 <div class="mt-5">
     <div class="separator">
-        <span><h2 style="color:black">DANH SÁCH LỚP HỌC</h2></span>
+        <span><h2 style="color:black">DANH SÁCH MÔN HỌC</h2></span>
     </div>
     <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
         <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
-               placeholder="Tìm kiếm lớp học...">
+               placeholder="Tìm kiếm môn học...">
         <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
             Tìm
         </button>
@@ -52,46 +52,15 @@
 <table>
     <thead>
     <tr>
-    <th>STT</th>
-    <th>Tên lớp</th>
-    <th>Khối</th>
-    <th>Sĩ số</th>
-    <th>Tùy chọn</th>
-</tr>
-    </thead>
-    <tbody id="class-list">
-    {%for c in classes%}
-    <tr>
-        <td>{{c.id}}</td>
-        <td>{{c.name}}</td>
-        <td>{{c.grade.value}}</td>
-        <td>0</td>
-        <td width="200" class="text-center">
-            <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
-            <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{c.id}})">Xoá</button>
-        </td>
+        <th>STT</th>
+        <th>Tên môn học</th>
+        <th>Khối</th>
+        <th>Tùy chọn</th>
     </tr>
-    {%endfor%}
-    </tbody>
+    </thead>
+    <tr>
+    </tr>
 </table>
-
-
-    <ul class="pagination d-flex align-items-center justify-content-center mt-3">
-      <li class="page-item {%if current_page == 1%} disabled {%endif%}">
-          <a class="page-link" href="/classes?page={{current_page - 1}}">Previous</a>
-      </li>
-
-      {%for p in range(1, pages+1)%}
-      <li class="page-item {%if p == current_page%} active {%endif%}">
-          <a class="page-link" href="/classes?page={{p}}">{{p}}</a>
-      </li>
-      {%endfor%}
-
-      <li class="page-item {%if current_page == pages%} disabled {%endif%}">
-          <a class="page-link" href="/classes?page={{current_page + 1}}">Next</a>
-      </li>
-    </ul>
-
 
 {%endblock%}
 
