@@ -11,7 +11,7 @@ import cloudinary.uploader
 from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
-from StudentManager import app, login
+from StudentManager import app, login,admin
 from models import *
 
 
@@ -57,6 +57,10 @@ def subject_management():
 def rules():
     return render_template('/admin/rules.html')
 
+# rules
+@app.route('/stats')
+def stats():
+    return render_template('/admin/stats.html')
 
 # register
 @app.route('/register', methods=["get", "post"])
