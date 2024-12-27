@@ -62,14 +62,26 @@
                     </select>
                 </div>
 
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <div id="flash-messages" style="display:none;">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{category}}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
                 <!-- Register Button -->
                 <div class="d-flex justify-content-center mt-3">
                     <input type="submit" value="Lưu thông tin" class="btn btn-red shadow">
                 </div>
 
-                <div class="alert alert-danger" id="error-message" style="display: none;">Please check the form
-                    inputs.
-                </div>
+<!--                <div class="alert alert-danger" id="error-message" style="display: none;">Please check the form-->
+<!--                    inputs.-->
+<!--                </div>-->
 
             </form>
         </div>
@@ -150,3 +162,6 @@
     </ul>
 </nav>
 {%endblock%}
+
+
+{%block link_js%} <script src="{{url_for('static', filename='js/students.js')}}"></script> {%endblock%}
