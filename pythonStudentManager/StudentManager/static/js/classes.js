@@ -53,7 +53,7 @@ function deleteClass(classId) {
         if (data.success) {
             location.reload();
             const totalClasses = document.getElementById('pagination').getAttribute('page-data')
-            if(totalClasses%4 === 1) {
+            if(totalClasses%4 === 1 && ((parseInt(totalClasses)-1)/4) > 0) {
                 window.location.href = `/classes?page=${(parseInt(totalClasses)-1)/4}`;
             }
         } else {

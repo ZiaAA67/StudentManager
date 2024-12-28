@@ -56,6 +56,10 @@ def get_classes_by_grade(grade):
                               Class.active == True).first()
 
 
+def get_class_by_id(class_id):
+    return Class.query.get(class_id)
+
+
 def count_students_in_class(class_id):
     cls = Class.query.filter(Class.id == class_id,
                              Class.active == True).first()
@@ -101,6 +105,10 @@ def get_all_subjects(page=None):
         query = query.filter_by(active=True).slice(start, start + page_size)
 
     return query.all()
+
+
+def get_subject_by_id(subject_id):
+    return Subject.query.get(subject_id)
 
 
 if __name__ == "__main__":

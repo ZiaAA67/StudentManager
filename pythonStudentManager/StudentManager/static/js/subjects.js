@@ -55,7 +55,7 @@ function deleteClass(subjectId) {
         if (data.success) {
             location.reload();
             const totalSubject = document.getElementById('pagination').getAttribute('page-data')
-            if(totalSubject%4 === 1) {
+            if(totalSubject%4 === 1 && ((parseInt(totalSubject)-1)/4) > 0) {
                 window.location.href = `/subjects?page=${(parseInt(totalSubject)-1)/4}`;
             }
         } else {

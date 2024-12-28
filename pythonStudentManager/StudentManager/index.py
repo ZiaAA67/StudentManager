@@ -181,7 +181,7 @@ def add_class():
 
 @app.route('/api/classes/delete/<int:class_id>', methods=['POST'])
 def delete_class(class_id):
-    cls = Class.query.get(class_id)
+    cls = dao.get_class_by_id(class_id)
     if cls:
         cls.active = False
         db.session.commit()
@@ -246,7 +246,11 @@ def add_student():
         grade = Grade(int(grade_value))
         cls = dao.get_classes_by_grade(grade)
 
-        new_student = Student(id=new_user_info.id, grade=grade, class_id=cls.id)
+        if cls:
+            new_student = Student(id=new_user_info.id, grade=grade, class_id=cls.id)
+        else:
+            new_student = Student(id=new_user_info.id, grade=grade)
+
         db.session.add(new_student)
         db.session.commit()
 
@@ -322,7 +326,7 @@ def add_subjects():
 
 @app.route('/api/subjects/delete/<int:subject_id>', methods=['POST'])
 def delete_subject(subject_id):
-    subject = Subject.query.get(subject_id)
+    subject = dao.get_subject_by_id(subject_id)
     if subject:
         subject.active = False
         db.session.commit()
