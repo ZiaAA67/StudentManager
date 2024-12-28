@@ -11,27 +11,29 @@ window.onload = function() {
 
 
 //add class
-document.getElementById('class-form').addEventListener('submit', function (e) {
+document.getElementById('subject-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const className = document.querySelector('input[name="class_name"]').value;
+    const subjectName = document.querySelector('input[name="class_name"]').value;
+    const desc = document.getElementById('description').value;
     const grade = document.getElementById('grade').value;
 
-    fetch("/api/classes", {
+    fetch("/api/subjects", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            "class_name": className,
-            "grade": grade,
+            "subject_name": subjectName,
+            "desc": desc,
+            "grade": grade
         })
     }).then(res => res.json()).then(data => {
         if(data.success) {
-            // location.reload()
-            const totalClasses = document.getElementById('pagination').getAttribute('page-data')
-            if(totalClasses%4 === 0) {
-                window.location.href = `/classes?page=${(parseInt(totalClasses)/4)+1}`;
+            location.reload()
+            const totalSubject = document.getElementById('pagination').getAttribute('page-data')
+            if(totalSubject%4 === 0) {
+                window.location.href = `/subjects?page=${(parseInt(totalSubject)/4)+1}`;
             }
         } else {
             location.reload()
@@ -42,8 +44,8 @@ document.getElementById('class-form').addEventListener('submit', function (e) {
 
 
 //delete class
-function deleteClass(classId) {
-    fetch(`/api/classes/delete/${classId}`, {
+function deleteClass(subjectId) {
+    fetch(`/api/subjects/delete/${subjectId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -52,9 +54,9 @@ function deleteClass(classId) {
     }).then(response => response.json()).then(data => {
         if (data.success) {
             location.reload();
-            const totalClasses = document.getElementById('pagination').getAttribute('page-data')
-            if(totalClasses%4 === 1 && ((parseInt(totalClasses)-1)/4) > 0) {
-                window.location.href = `/classes?page=${(parseInt(totalClasses)-1)/4}`;
+            const totalSubject = document.getElementById('pagination').getAttribute('page-data')
+            if(totalSubject%4 === 1 && ((parseInt(totalSubject)-1)/4) > 0) {
+                window.location.href = `/subjects?page=${(parseInt(totalSubject)-1)/4}`;
             }
         } else {
             location.reload();

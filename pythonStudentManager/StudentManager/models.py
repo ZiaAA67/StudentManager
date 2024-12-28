@@ -52,9 +52,6 @@ class UserInformation(Base):
     avatar = Column(String(255),
                     default="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=")
     role = Column(Enum(Role), default=Role.STAFF)
-    # Ràng buộc số điện thoại phải có đúng 10 số
-    # __table_args__ = (
-    #     CheckConstraint('LENGTH(phone) = 10', name='check_phone_length'),)
 
     def __str__(self):
         return self.full_name
@@ -89,7 +86,7 @@ class Class(Base):
     name = Column(String(50), nullable=False)
     grade = Column(Enum(Grade), nullable=False)
 
-    students = relationship('Student', backref='class', lazy=True)
+    students = relationship('Student', backref='class', lazy='dynamic')
     teaching_plan = relationship('TeachingPlan', backref='class', uselist=False)
 
 
@@ -106,6 +103,8 @@ class Student(Base):
 class Subject(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
+    desc = Column(String(255))
+    grade = Column(Enum(Grade), nullable=False)
 
     teaching_plans = relationship('TeachingPlan', backref='subject')
     exam_quantity = relationship("ExamQuantity", backref="subject", lazy=True)
