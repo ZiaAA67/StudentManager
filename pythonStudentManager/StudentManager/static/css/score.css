@@ -36,9 +36,11 @@ h1 {
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng nhẹ khi hover */
 }
 .form-section {
+    width: 90%;
     display: flex;
     flex-wrap: wrap;
-    gap: 100px;
+    justify-content: space-between;
+    /*gap: 100px;*/
     margin-bottom: 20px;
 }
 

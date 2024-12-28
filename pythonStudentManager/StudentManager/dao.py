@@ -1,5 +1,6 @@
 from models import *
 import hashlib
+from sqlalchemy import func
 
 
 def auth_user(username, password):
@@ -38,13 +39,100 @@ def get_all_classes(page=None):
         page_size = app.config["CLASSES_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
         query = query.filter_by(active=True).slice(start, start + page_size)
+    classes = query.all()
+
+    class_data = []
+    for cls in classes:
+        student_count = cls.students.filter(Student.active == True).count()
+        class_data.append({
+            "class": cls,
+            "student_count": student_count
+        })
+
+    return class_data
+
+
+def get_class_by_grade(grade):
+    return Class.query.filter(Class.grade.__eq__(grade), Class.active == True).first()
+
+
+def get_classes_by_grade(grade):
+    return Class.query.filter(Class.grade.__eq__(grade), Class.active == True).all()
+
+
+def get_class_by_id(class_id):
+    return Class.query.get(class_id)
+
+
+def count_students_in_class(class_id):
+    cls = Class.query.filter(Class.id == class_id, Class.active == True).first()
+
+    if cls:
+        return len(cls.students)
+    return 0
+
+
+def get_students_by_class(class_id):
+    students = Student.query.filter(Student.active == True, Student.class_id == class_id).all()
+    return [
+        {
+            "id": student.id,
+            "full_name": student.user_information.full_name,
+            "grade": student.grade.value,
+            "address": student.user_information.address,
+            "birth": student.user_information.birth.strftime('%d-%m-%Y'),
+            "phone": student.user_information.phone,
+            "email": student.user_information.email
+        }
+        for student in students
+    ]
+
+
+def get_all_students(page=None):
+    page_size = app.config.get("PAGE_SIZE")
+    return Student.query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
+
+
+def check_phone_unique(phone):
+    user_info = UserInformation.query.filter(UserInformation.phone.__eq__(phone),
+                                             UserInformation.active == True).first()
+    return user_info is None
+
+
+def check_email_unique(email):
+    user_info = UserInformation.query.filter(UserInformation.email.__eq__(email),
+                                             UserInformation.active == True).first()
+    return user_info is None
+
+
+def init_school_rules():
+    if not SchoolRules.query.first():
+        new_rule = SchoolRules()
+        db.session.add(new_rule)
+        db.session.commit()
+
+
+def count_subjects():
+    return db.session.query(db.func.count(Subject.id)).filter(Subject.active == True).scalar()
+
+
+def get_all_subjects(page=None):
+    query = Subject.query
+    if page:
+        page_size = app.config["SUBJECTS_PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.filter_by(active=True).slice(start, start + page_size)
 
     return query.all()
 
 
-def get_all_students(page=1):
-    page_size = app.config.get('PAGE_SIZE')
-    return Student.query.paginate(page=page, per_page=page_size, error_out=False)
+def get_subject_by_id(subject_id):
+    return Subject.query.get(subject_id)
+
+
+def get_subjects_by_grade(grade):
+    return Subject.query.filter(Subject.grade.__eq__(grade),
+                                Subject.active == True).all()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,107 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+{% block content %}
+<div class="card align-items-center">
+    <h1 class="text-center mt-2" style="font-weight: bold;">BÁO CÁO TỔNG KẾT MÔN HỌC</h1>
+
+    <div class="mt-4 mb-4" style="width: 80%;">
+        <form method="POST" action="{{ url_for('entry_score') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="subject" class="form-label">Môn:</label>
+                    <input type="text" id="subject" name="subject" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="semester" class="form-label">Học kỳ:</label>
+                    <input type="text" id="semester" name="semester" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="year" class="form-label">Năm học:</label>
+                    <input type="text" id="year" name="year" class="form-control" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Xem Báo Cáo</button>
+        </form>
+    </div>
+
+    <table class="table table-bordered mt-4" style="width: 80%;">
+        <thead class="table-dark text-center">
+        <tr>
+            <th>STT</th>
+            <th>Lớp</th>
+            <th>Sĩ số</th>
+            <th>Số lượng đạt</th>
+            <th>Tỷ lệ (%)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Dữ liệu mẫu -->
+        <tr class="text-center">
+            <td>1</td>
+            <td>10A1</td>
+            <td>40</td>
+            <td>35</td>
+            <td>87.5</td>
+        </tr>
+        <tr class="text-center">
+            <td>2</td>
+            <td>10A2</td>
+            <td>42</td>
+            <td>38</td>
+            <td>90.5</td>
+        </tr>
+        <!-- Dữ liệu từ backend sẽ được thêm vào đây -->
+        </tbody>
+    </table>
+
+    <div class="mt-4" style="width: 80%;">
+        <canvas id="reportChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dữ liệu mẫu cho biểu đồ
+    const labels = ['10A1', '10A2']; // Tên lớp
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Tỷ lệ đạt (%)',
+            data: [87.5, 90.5], // Tỷ lệ đạt của các lớp
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Tỷ lệ đạt (%) theo từng lớp'
+                }
+            }
+        }
+    };
+
+    const reportChart = new Chart(
+        document.getElementById('reportChart'),
+        config
+    );
+</script>
+{% endblock %}
+{% endblock %}

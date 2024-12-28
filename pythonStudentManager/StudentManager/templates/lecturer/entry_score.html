@@ -1,6 +1,6 @@
 {% extends "layout/base.html" %}
 
-{%block title%} Quản Lý Lớp Học {%endblock%}
+{%block title%} NHẬP ĐIỂM {%endblock%}
 
 {%block link_css%}<link href="{{url_for('static', filename='css/score.css')}}" rel="stylesheet"> {%endblock%}
 
@@ -10,55 +10,53 @@
 
     <div class="form-section">
         <div class="form-group">
+            <label for="grade">*Khối:</label>
+            <select class="fieldset" id="grade">
+                <option value="">Chọn khối</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="class">*Lớp:</label>
             <select class="fieldset" id="class">
                 <option value="">Chọn lớp</option>
-                <option value="10A1">10A1</option>
-                <option value="10A2">10A2</option>
-                <option value="10A3">10A3</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="mon">*Môn:</label>
-            <select class="fieldset" id="mon">
+            <label for="subject">*Môn:</label>
+            <select class="fieldset" id="subject">
                 <option value="">Chọn môn học</option>
-                <option value="toan">Toán</option>
-                <option value="ly">Lý</option>
-                <option value="hoa">Hóa</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="hoc-ky">*Học kỳ:</label>
-            <select class="fieldset" id="hoc-ky">
+            <label for="semester">*Học kỳ:</label>
+            <select class="fieldset" id="semester">
                 <option value="">Chọn học kỳ</option>
                 <option value="1">Học kỳ 1</option>
                 <option value="2">Học kỳ 2</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="nam-hoc">*Năm học:</label>
-            <select class="fieldset" id="nam-hoc">
-                <option value="">Chọn năm học</option>
-                <option value="2023-2024">2023-2024</option>
-                <option value="2024-2025">2024-2025</option>
-                <option value="2025-2026">2025-2026</option>
-            </select>
-        </div>
+<!--        <div>-->
+<!--            <button id="confirm">Xác nhận</button>-->
+<!--        </div>-->
     </div>
 
-    <table>
+    <table id="table-student">
         <thead>
         <tr>
-            <th colspan="2">Lớp: </th>
-            <th colspan="3">Học kỳ: </th>
+            <th colspan="3" id="label-class">Lớp: </th>
+            <th colspan="3" id="label-semester">Học kỳ: </th>
         </tr>
         <tr>
-            <th colspan="2">Môn: </th>
-            <th colspan="3">Năm học: </th>
+            <th colspan="3" id="label-subject">Môn: </th>
+            <th colspan="3" id="label-year">Năm học: </th>
         </tr>
         <tr>
             <th>STT</th>
             <th>Họ tên</th>
+            <th>Ngày sinh</th>
             <th>Điểm 15’</th>
             <th>Điểm 1 tiết</th>
             <th>Điểm thi</th>
@@ -66,14 +64,8 @@
         </thead>
         <tbody>
         <tr>
-            <td>1</td>
-            <td>{{user_info.full_name}}</td>
-            <td><input type="number" step="0.1" min="0" max="10"></td>
-            <td><input type="number" step="0.1" min="0" max="10"></td>
-            <td><input type="number" step="0.1" min="0" max="10"></td>
-        </tr>
-        <tr>
-            <td>2</td>
+            <td></td>
+            <td></td>
             <td></td>
             <td><input type="number" step="0.1" min="0" max="10"></td>
             <td><input type="number" step="0.1" min="0" max="10"></td>
@@ -87,4 +79,6 @@
 </div>
 
 {%endblock%}
+
+{%block link_js%} <script src="{{url_for('static', filename='js/entry_score.js')}}"></script> {%endblock%}
 

@@ -12,7 +12,6 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
     <script src="{{url_for('static', filename='js/script.js')}}"></script>
-    <script src="{{url_for('static', filename='js/students.js')}}"></script>
 
     <title>{%block title%} {%endblock%}</title>
     {%block link_css%} {%endblock%}
@@ -31,7 +30,9 @@
 {%block footer%}
 {%include 'layout/footer.html'%}
 {%endblock%}
-<script src="{{url_for('static', filename='js/classes.js')}}"></script>
+
+{%block link_js%} {%endblock%}
+
 </body>
 
 

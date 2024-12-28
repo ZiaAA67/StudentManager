@@ -8,10 +8,10 @@ from flask_admin.model.typefmt import null_formatter
 
 import dao
 import cloudinary.uploader
-from flask import render_template, request, redirect, session, jsonify, flash
+from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
-from StudentManager import app, login
+from StudentManager import app, login, admin
 from models import *
 
 
@@ -30,7 +30,7 @@ def student_management():
     students_paginated = dao.get_all_students(page)
     grades = Grade.choices()
 
-    return render_template('employee/student_management.html',
+    return render_template('/employee/student_management.html',
                            students=students_paginated.items,
                            grades=grades,
                            pagination=students_paginated)
@@ -39,11 +39,42 @@ def student_management():
 # class_management
 @app.route('/classes', methods=['get', 'post'])
 def class_management():
-    page = request.args.get('page')
+    page = request.args.get('page', 1)
+    page = int(page)
     pages = dao.count_classes()
     classes = dao.get_all_classes(page)
-    return render_template("/employee/class_management.html", classes=classes,
-                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]), current_page=int(page))
+    print(pages)
+    return render_template("/employee/class_management.html",
+                           classes=classes,
+                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
+                           current_page=int(page),
+                           total_classes=pages)
+
+
+# subject
+@app.route('/subjects')
+def subject_management():
+    page = request.args.get('page', 1)
+    page = int(page)
+    pages = dao.count_subjects()
+    subjects = dao.get_all_subjects(page)
+    return render_template('/employee/subject_management.html',
+                           subjects=subjects,
+                           pages=math.ceil(pages / app.config["SUBJECTS_PAGE_SIZE"]),
+                           current_page=int(page),
+                           total_subjects=pages)
+
+
+# rules
+@app.route('/rules')
+def rules():
+    return render_template('/admin/rules.html')
+
+
+# rules
+@app.route('/stats')
+def stats():
+    return render_template('/admin/stats.html')
 
 
 # register
@@ -80,6 +111,8 @@ def login_my_user():
         user = dao.auth_user(username=username, password=password)
         if user:
             login_user(user)
+            if user.user_info.role == Role.ADMIN:
+                return redirect('/admin/')
             return redirect('/')
         else:
             err_msg = "Tài khoản hoặc mật khẩu không đúng!"
@@ -114,19 +147,7 @@ def common_attributes():
         }
 
     return {
-
     }
-
-
-# lecturer
-@app.route('/entry_score')
-def entry_score():
-    return render_template('/lecturer/entry_score.html')
-
-
-@app.route('/export_score')
-def export_score():
-    return render_template('/lecturer/export_score.html')
 
 
 @app.route('/api/classes', methods=['post'])
@@ -137,8 +158,9 @@ def add_class():
     # chuyển giá trị lấy được sang enum
     grade = Grade(int(grade_value))
 
-    if Class.query.filter_by(name=class_name, grade=grade).first():
-        return jsonify({"error": "Lớp đã tồn tại!"})
+    if Class.query.filter_by(name=class_name, grade=grade, active=True).first():
+        flash("Lớp đã tồn tại!", "danger")
+        return jsonify({"success": False})
 
     new_class = Class(name=class_name, grade=grade)
 
@@ -146,70 +168,208 @@ def add_class():
     db.session.add(new_class)
     db.session.commit()
 
-    return jsonify({"class": {
-        "id": new_class.id,
-        "name": new_class.name,
-        "grade": new_class.grade.name
-    }})
+    flash("Thêm lớp thành công!", "success")
+    return jsonify({"success": True})
 
 
 @app.route('/api/classes/delete/<int:class_id>', methods=['POST'])
 def delete_class(class_id):
-    cls = Class.query.get(class_id)
+    cls = dao.get_class_by_id(class_id)
     if cls:
         cls.active = False
         db.session.commit()
+        flash("Xoá thành công!", "success")
         return jsonify({"success": True})
     else:
+        flash("Xoá thất bại!", "danger")
         return jsonify({"success": False})
 
 
-@app.route('/api/students/', methods=['POST'])
+@app.route('/api/students', methods=['POST'])
 def add_student():
     data = request.get_json()
+
     if not data:
-        return jsonify({"error": "No data"}), 400
+        flash("Lớp đã tồn tại!", "danger")
+        return jsonify({"success": False}), 400
 
     name = data.get('name')
     gender = True if data.get('gender') == "Male" else False
     date_of_birth = data.get('date_of_birth')
-    dob = datetime.strptime(date_of_birth, '%Y-%m-%d')
+    dob = datetime.strptime(date_of_birth, '%Y-%m-%d') if date_of_birth else None
     address = data.get('address')
     phone = data.get('phone')
     email = data.get('email')
     grade_value = data.get('grade')
-    grade = Grade(int(grade_value))
 
     if not name or not date_of_birth or not address or not phone or not email or not grade_value:
-        return jsonify({"error": "Lack of information"}), 400
+        flash("Vui lòng nhập đầy đủ thông tin!", "danger")
+        return jsonify({"success": False}), 400
+
+    if dao.check_phone_unique(phone) is False:
+        flash("Số điện thoại đã tồn tại!", "danger")
+        return jsonify({"success": False}), 400
+
+    if dao.check_email_unique(email) is False:
+        flash("Địa chỉ email đã tồn tại!", "danger")
+        return jsonify({"success": False}), 400
 
     if not is_valid_phone(phone):
-        return jsonify({"error": "Number phone must be 10 numbers"}), 400
+        flash("Số điện thoại phải có 10 hoặc 11 chữ số!", "danger")
+        return jsonify({"success": False}), 400
 
-    if not is_valid_age(dob):
-        return jsonify({"error": "Age between 15 - 20"}), 400
+    age_validation = is_valid_age(dob)
+    if age_validation is not True:
+        flash(age_validation, "danger")
+        return jsonify({"success": False}), 400
 
-    new_user_info = UserInformation(full_name=name, gender=gender, address=address, birth=dob, phone=phone,
-                                    email=email, role=Role.STUDENT);
+    try:
+        new_user_info = UserInformation(
+            full_name=name,
+            gender=gender,
+            address=address,
+            birth=dob,
+            phone=phone,
+            email=email,
+            role=Role.STUDENT
+        )
+        db.session.add(new_user_info)
+        db.session.commit()
 
-    db.session.add(new_user_info)
-    db.session.commit()
+        grade = Grade(int(grade_value))
+        cls = dao.get_class_by_grade(grade)
 
-    new_student = Student(id=new_user_info.id, grade=grade)
-    db.session.add(new_student)
-    db.session.commit()
+        if cls:
+            new_student = Student(id=new_user_info.id, grade=grade, class_id=cls.id)
+        else:
+            new_student = Student(id=new_user_info.id, grade=grade)
 
-    return jsonify({"student": {"name": name, "gender": gender, "date_of_birth": dob.strftime('%Y-%m-%d')}})
+        db.session.add(new_student)
+        db.session.commit()
+
+        flash("Thêm học sinh thành công!", "success")
+        return jsonify({"success": True}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Đã có lỗi xảy ra: {str(e)}", "danger")
+        return jsonify({"success": False}), 500
+
+
+@app.route('/api/students/delete/<int:student_id>', methods=['POST'])
+def delete_student(student_id):
+    student = Student.query.get(student_id)
+    print(student)
+    if student:
+        student.active = False
+        db.session.commit()
+        flash("Xoá thành công!", "success")
+        return jsonify({"success": True})
+    else:
+        flash("Xoá thất bại!", "danger")
+        return jsonify({"success": False})
 
 
 def is_valid_phone(phone):
-    return bool(re.match(r'^\d{10}$', phone))
+    return bool(re.match(r'^0\d{9,10}$', phone))
 
 
 def is_valid_age(birthdate):
     today = datetime.today()
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-    return 15 <= age <= 20
+
+    rule = SchoolRules.query.order_by(SchoolRules.id.desc()).first()
+    if rule:
+        min_age = rule.min_age
+        max_age = rule.max_age
+    else:
+        min_age = 15
+        max_age = 20
+
+    if not (min_age <= age <= max_age):
+        return f"Tuổi phải trong độ tuổi quy định ( {min_age} - {max_age} )"
+
+    return True
+
+
+@app.route('/api/subjects', methods=['post'])
+def add_subjects():
+    subject_name = request.json.get('subject_name')
+    desc = request.json.get('desc')
+    if not desc:
+        desc = ""
+    grade_value = request.json.get('grade')
+
+    # chuyển giá trị lấy được sang enum
+    grade = Grade(int(grade_value))
+
+    if Subject.query.filter_by(name=subject_name, grade=grade, active=True).first():
+        flash("Môn học đã tồn tại!", "danger")
+        return jsonify({"success": False})
+
+    new_subject = Subject(name=subject_name, desc=desc, grade=grade)
+
+    # Thêm vào database
+    db.session.add(new_subject)
+    db.session.commit()
+
+    flash("Thêm môn học thành công!", "success")
+    return jsonify({"success": True})
+
+
+@app.route('/api/subjects/delete/<int:subject_id>', methods=['POST'])
+def delete_subject(subject_id):
+    subject = dao.get_subject_by_id(subject_id)
+    if subject:
+        subject.active = False
+        db.session.commit()
+        flash("Xoá thành công!", "success")
+        return jsonify({"success": True})
+    else:
+        flash("Xoá thất bại!", "danger")
+        return jsonify({"success": False})
+
+
+# lecturer
+@app.route('/entry_score')
+def entry_score():
+    subjects = dao.get_all_subjects()
+    return render_template('/lecturer/entry_score.html',
+                           subjects=subjects)
+
+
+@app.route('/get_classes/<grade>', methods=['GET'])
+def get_classes(grade):
+    grade = Grade(int(grade))
+    classes = dao.get_classes_by_grade(grade)
+    if classes:
+        return jsonify([{"id": cls.id, "name": cls.name} for cls in classes])
+
+    return jsonify([])
+
+
+@app.route('/get_subjects/<grade>', methods=['GET'])
+def get_subjects(grade):
+    grade = Grade(int(grade))
+    subjects = dao.get_subjects_by_grade(grade)
+    if subjects:
+        return jsonify([{"id": subject.id, "name": subject.name} for subject in subjects])
+
+    return jsonify([])
+
+
+@app.route('/get_students', methods=['POST'])
+def get_students():
+    class_id = request.json.get('classId')
+
+    students = dao.get_students_by_class(class_id)
+    print(students)
+    return jsonify({"students": students})
+
+
+@app.route('/export_score')
+def export_score():
+    return render_template('/lecturer/export_score.html')
 
 
 if __name__ == "__main__":
