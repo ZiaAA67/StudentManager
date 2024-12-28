@@ -28,7 +28,7 @@ document.getElementById('class-form').addEventListener('submit', function (e) {
         })
     }).then(res => res.json()).then(data => {
         if(data.success) {
-            // location.reload()
+            location.reload()
             const totalClasses = document.getElementById('pagination').getAttribute('page-data')
             if(totalClasses%4 === 0) {
                 window.location.href = `/classes?page=${(parseInt(totalClasses)/4)+1}`;

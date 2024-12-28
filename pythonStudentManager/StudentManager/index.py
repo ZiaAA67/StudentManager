@@ -150,17 +150,6 @@ def common_attributes():
     }
 
 
-# lecturer
-@app.route('/entry_score')
-def entry_score():
-    return render_template('/lecturer/entry_score.html')
-
-
-@app.route('/export_score')
-def export_score():
-    return render_template('/lecturer/export_score.html')
-
-
 @app.route('/api/classes', methods=['post'])
 def add_class():
     class_name = request.json.get('class_name')
@@ -248,7 +237,7 @@ def add_student():
         db.session.commit()
 
         grade = Grade(int(grade_value))
-        cls = dao.get_classes_by_grade(grade)
+        cls = dao.get_class_by_grade(grade)
 
         if cls:
             new_student = Student(id=new_user_info.id, grade=grade, class_id=cls.id)
@@ -339,6 +328,48 @@ def delete_subject(subject_id):
     else:
         flash("Xoá thất bại!", "danger")
         return jsonify({"success": False})
+
+
+# lecturer
+@app.route('/entry_score')
+def entry_score():
+    subjects = dao.get_all_subjects()
+    return render_template('/lecturer/entry_score.html',
+                           subjects=subjects)
+
+
+@app.route('/get_classes/<grade>', methods=['GET'])
+def get_classes(grade):
+    grade = Grade(int(grade))
+    classes = dao.get_classes_by_grade(grade)
+    if classes:
+        return jsonify([{"id": cls.id, "name": cls.name} for cls in classes])
+
+    return jsonify([])
+
+
+@app.route('/get_subjects/<grade>', methods=['GET'])
+def get_subjects(grade):
+    grade = Grade(int(grade))
+    subjects = dao.get_subjects_by_grade(grade)
+    if subjects:
+        return jsonify([{"id": subject.id, "name": subject.name} for subject in subjects])
+
+    return jsonify([])
+
+
+@app.route('/get_students', methods=['POST'])
+def get_students():
+    class_id = request.json.get('classId')
+
+    students = dao.get_students_by_class(class_id)
+    print(students)
+    return jsonify({"students": students})
+
+
+@app.route('/export_score')
+def export_score():
+    return render_template('/lecturer/export_score.html')
 
 
 if __name__ == "__main__":
