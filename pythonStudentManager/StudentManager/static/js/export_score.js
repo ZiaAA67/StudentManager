@@ -113,11 +113,11 @@ classElement.addEventListener('change', () => {
                             <td>${student.birth}</td>`
 
                     for(const subject_id of subject_ids) {
-                        html += `<td><input type="number" step="0.1" min="0" max="10" data-subject-id=${subject_id}></td>`
+                        html += `<td><input type="number" step="0.1" min="0" max="10" data-subject-id=${subject_id} readonly></td>`
                     }
 
                     html += `
-                        <td><input type="number" step="0.1" min="0" max="10" data-subject-id=0></td>
+                        <td><input type="number" step="0.1" min="0" max="10" data-subject-id=0 readonly></td>
                         </tr>`
                     tbody.innerHTML += html;
                 });
