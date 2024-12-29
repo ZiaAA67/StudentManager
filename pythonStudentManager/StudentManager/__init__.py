@@ -13,6 +13,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["PAGE_SIZE"] = 8
 app.config["CLASSES_PAGE_SIZE"] = 4
 app.config["SUBJECTS_PAGE_SIZE"] = 4
+app.config["NOTIFICATIONS_PAGE_SIZE"]=4
 
 db = SQLAlchemy(app)
 login = LoginManager(app=app)
