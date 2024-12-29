@@ -294,12 +294,36 @@ def get_semester(semester_value):
     return semester
 
 
+def get_semesters_by_year(year):
+    return Semester.query.filter(Semester.active == True, Semester.year == year).all()
+
+
 def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, class_id, teacher_id):
     teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
                                       teacher_id=teacher_id)
 
     scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id) \
         .order_by(Score.create_date.desc()).all()
+
+    return scores
+
+
+def get_scores_by_year(student_ids, subject_id, year, class_id, teacher_id):
+    teaching_plans = (
+        TeachingPlan.query
+        .join(Semester, TeachingPlan.semester_id == Semester.id)
+        .filter(
+            TeachingPlan.class_id == class_id,
+            TeachingPlan.subject_id == subject_id,
+            Semester.year == year,
+            TeachingPlan.teacher_id == teacher_id
+        )
+        .all())
+
+    scores = Score.query.filter(
+        Score.student_id.in_(student_ids),
+        Score.teaching_plan_id.in_([plan.id for plan in teaching_plans])
+    ).all()
 
     return scores
 

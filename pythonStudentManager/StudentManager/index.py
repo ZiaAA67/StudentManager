@@ -446,11 +446,19 @@ def get_avg_scores():
     semester_value = request.json.get('semester')
     class_id = request.json.get('classId')
 
-    semester = dao.get_semester(semester_value)
+    if int(semester_value) == 3:
+        year = date.today().year
+        semesters = dao.get_semesters_by_year(year)
+    else:
+        semester = dao.get_semester(semester_value)
+        semesters = [semester]
 
     averages = {}
+
     for subject_id in subjects:
-        scores = dao.get_scores_by_subject_and_semester(students, subject_id, semester.id, class_id, current_user.get_id())
+        scores = []
+        for semester in semesters:
+            scores += dao.get_scores_by_subject_and_semester(students, subject_id, semester.id, class_id, current_user.get_id())
 
         # Tạo obj lưu điểm theo hs
         scores_by_student = {}

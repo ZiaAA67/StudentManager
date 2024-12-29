@@ -72,10 +72,18 @@ gradeElement.addEventListener('change', function () {
 
 
 semesterElement.addEventListener('change', () => {
-    document.getElementById('label-semester').innerText = "Học kỳ: Học kỳ " + semesterElement.value;
+    if(parseInt(semesterElement.value) ===  3) {
+        document.getElementById('label-semester').innerText = "Tổng kết năm học";
+    } else {
+        document.getElementById('label-semester').innerText = "Học kỳ: Học kỳ " + semesterElement.value;
+    }
 
     if(semesterElement.value) {
         classElement.disabled = false;
+    }
+
+    if(classElement.value) {
+        loadAvgScores(student_ids, subject_ids)
     }
 })
 
@@ -123,6 +131,9 @@ classElement.addEventListener('change', () => {
 function loadAvgScores(student_ids, subject_ids) {
     const classId = classElement.value;
     const semester = semesterElement.value;
+
+    const inputs = document.querySelectorAll("input[data-subject-id]")
+    inputs.forEach(i => i.value = '')
 
     fetch('/get_avg_scores', {
         method: 'POST',
