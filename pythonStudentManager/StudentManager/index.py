@@ -17,10 +17,16 @@ from models import *
 
 
 # index
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     if current_user.is_authenticated:
-        return render_template('index.html')
+        page = request.args.get('page', 1)
+        page = int(page)
+        pages = dao.count_notifications()
+        notifications = dao.get_all_notifications()
+        return render_template('index.html', pages=math.ceil(pages / app.config["NOTIFICATIONS_PAGE_SIZE"]),
+                               current_page=int(page),
+                               notifications=notifications)
     return redirect('/login')
 
 
@@ -408,7 +414,8 @@ def get_scores():
     class_id = request.json.get('classId')
 
     semester = dao.get_semester(semester_value)
-    scores = dao.get_scores_by_subject_and_semester(student_ids, subject_id, semester.id, class_id, current_user.get_id())
+    scores = dao.get_scores_by_subject_and_semester(student_ids, subject_id, semester.id, class_id,
+                                                    current_user.get_id())
 
     result = {}
     for student_id in student_ids:
