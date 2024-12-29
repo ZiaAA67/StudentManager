@@ -2,7 +2,7 @@ from datetime import date
 
 from models import *
 import hashlib
-from sqlalchemy import func
+from sqlalchemy import func, case
 
 
 def auth_user(username, password):
@@ -133,12 +133,29 @@ def count_subjects():
     return db.session.query(db.func.count(Subject.id)).filter(Subject.active == True).scalar()
 
 
+def count_notifications():
+    return db.session.query(db.func.count(Notification.id)).filter(Subject.active == True).scalar()
+
+
 def get_all_subjects(page=None):
     query = Subject.query
     if page:
         page_size = app.config["SUBJECTS_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
         query = query.filter_by(active=True).slice(start, start + page_size)
+
+    return query.all()
+
+
+def get_all_notifications(page=None):
+    query = Notification.query.filter_by(active=True)
+
+    if page:
+        page_size = app.config["NOTIFICATIONS_PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.order_by(Notification.create_date.desc()).slice(start, start + page_size)
+    else:
+        query = query.order_by(Notification.create_date.desc())
 
     return query.all()
 
@@ -150,6 +167,67 @@ def get_subject_by_id(subject_id):
 def get_subjects_by_grade(grade):
     return Subject.query.filter(Subject.grade.__eq__(grade),
                                 Subject.active == True).all()
+
+
+def get_years_semesters():
+    years = db.session.query(Semester.year).group_by(Semester.year).all()
+    return [year[0] for year in years]
+
+
+def get_student_in_class():
+    return db.session.query(Class.id, Class.name, func.count(Student.id)) \
+        .join(Student, Student.class_id.__eq__(Class.id)).group_by(Class.id).all()
+
+
+def get_class_statistics(year, semester, subject_id, grade=None):
+    avg_scores = (
+        db.session.query(
+            Score.student_id,
+            func.avg(Score.score).label("avg_score")
+        )
+        .join(TeachingPlan, Score.teaching_plan_id == TeachingPlan.id)
+        .join(Semester, TeachingPlan.semester_id == Semester.id)
+        .filter(
+            Semester.year == year,
+            Semester.semester == semester,
+            TeachingPlan.subject_id == subject_id
+        )
+        .group_by(Score.student_id)
+        .subquery()
+    )
+
+    query = (
+        db.session.query(
+            Class.id,
+            Class.name.label("class_name"),
+            func.count(Student.id).label("total_students"),
+            func.sum(
+                case(
+                    (avg_scores.c.avg_score >= 5, 1),
+                    else_=0
+                )
+            ).label("num_passed"),
+            (
+                    func.sum(
+                        case(
+                            (avg_scores.c.avg_score >= 5, 1),
+                            else_=0
+                        )
+                    ) / func.count(Student.id) * 100
+            ).label("pass_rate"),
+        )
+        .join(Student, Student.class_id == Class.id)
+        .outerjoin(avg_scores, avg_scores.c.student_id == Student.id)
+    )
+
+    if grade:
+        query = query.filter(Class.grade == grade)
+
+    results = query.group_by(Class.id).all()
+
+    print(f"Parameters -> Year: {year}, Semester: {semester}, Subject: {subject_id}, Grade: {grade}")
+
+    return results
 
 
 def get_lastest_exam_quantities(subject_id):
@@ -172,9 +250,11 @@ def get_lastest_exam_quantities(subject_id):
 
 
 def get_teaching_plan(class_id, subject_id, semester_id, teacher_id):
-    teaching = TeachingPlan.query.filter_by(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id).first()
+    teaching = TeachingPlan.query.filter_by(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
+                                            teacher_id=teacher_id).first()
     if not teaching:
-        teaching = TeachingPlan(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id)
+        teaching = TeachingPlan(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
+                                teacher_id=teacher_id)
         db.session.add(teaching)
         db.session.commit()
     return teaching
@@ -205,7 +285,8 @@ def save_score(student_id, teaching_plan_id, score_type, score_value, index):
 
 def get_semester(semester_value):
     year = date.today().year
-    semester = Semester.query.filter(Semester.active == True, Semester.semester == semester_value, Semester.year == year).first()
+    semester = Semester.query.filter(Semester.active == True, Semester.semester == semester_value,
+                                     Semester.year == year).first()
     if not semester:
         semester = Semester(semester=semester_value, year=year)
         db.session.add(semester)
@@ -214,13 +295,16 @@ def get_semester(semester_value):
 
 
 def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, class_id, teacher_id):
-    teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id)
+    teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
+                                      teacher_id=teacher_id)
 
-    scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id)\
-                        .order_by(Score.create_date.desc()).all()
+    scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id) \
+        .order_by(Score.create_date.desc()).all()
 
     return scores
 
 
 if __name__ == "__main__":
-    print()
+    with app.app_context():
+        print("Hello world!")
+        print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))

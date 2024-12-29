@@ -1,5 +1,12 @@
 {% extends 'admin/master.html' %}
-
+{% block header %}
+<div class="header bg-primary text-white py-3">
+    <div class="container">
+        <h1 class="text-center">Quản Trị Học Sinh</h1>
+        <p class="text-center mb-0">Chào mừng {{ current_user.username }} đến trang quản trị.</p>
+    </div>
+</div>
+{% endblock %}}
 {% block body %}
 <h1 class="text-center text-info mb-5">TRANG CHỦ QUẢN TRỊ HỌC SINH</h1>
 
