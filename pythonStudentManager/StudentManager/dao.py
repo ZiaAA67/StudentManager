@@ -291,4 +291,5 @@ def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, cla
 
 if __name__ == "__main__":
     with app.app_context():
-        print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))
+        print("Hello world!")
+        # print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))
