@@ -1,3 +1,17 @@
+:root {
+    --white: white;
+    --light-gray: #ddd;
+    --dark-gray: #4E4E4E;
+    --light-green: #cbf5f3;
+    --lighter-gray: #888888;
+}
+.darkmode{
+ --dark-bg: #181818; /* Nền tối */
+    --dark-text: #e0e0e0; /* Văn bản sáng */
+    --dark-light-gray: #333333; /* Màu xám cho các phần tử */
+    --dark-light-green: #7fd1d1; /* Màu xanh sáng cho dark mode */
+    --dark-border: #444444; /* Viền tối */
+    }
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -11,7 +25,7 @@ body {
     border-radius: 10px;
     align-items: center;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); /* Light-colored shadow (white with opacity) */
-    background-color: white;
+   background-color: var(--white);
     transition: box-shadow 0.3s ease;
 }
 .container:hover {
@@ -22,7 +36,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-right: 1px solid #ddd;
+      border-right: 1px solid var(--light-gray);
     padding-right: 20px;
 }
 .right-panel {
@@ -34,7 +48,7 @@ body {
 }
 .announcement h2 {
     margin-bottom: 15px;
-    border-bottom: 2px solid #4E4E4E ;
+   border-bottom: 2px solid var(--dark-gray);
     display: inline-block;
     padding-bottom: 5px;
 }
@@ -53,16 +67,16 @@ body {
 
 }
 .announcement-list li:hover {
-    background-color: #cbf5f3; /* light green hover */
+   background-color: var(--light-green);
 }
 .announcement-list li a {
     text-decoration: none;
-    color: #4E4E4E;
+       color: var(--dark-gray);
     font-weight: bold;
     font-size: 1em;
 }
 .announcement-list li span {
-    color: #888888;
+    color: var(--lighter-gray);
     font-size: 0.9em;
 }
 .img {
