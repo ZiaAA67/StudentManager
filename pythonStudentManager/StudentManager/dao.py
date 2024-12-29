@@ -133,12 +133,29 @@ def count_subjects():
     return db.session.query(db.func.count(Subject.id)).filter(Subject.active == True).scalar()
 
 
+def count_notifications():
+    return db.session.query(db.func.count(Notification.id)).filter(Subject.active == True).scalar()
+
+
 def get_all_subjects(page=None):
     query = Subject.query
     if page:
         page_size = app.config["SUBJECTS_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
         query = query.filter_by(active=True).slice(start, start + page_size)
+
+    return query.all()
+
+
+def get_all_notifications(page=None):
+    query = Notification.query.filter_by(active=True)
+
+    if page:
+        page_size = app.config["NOTIFICATIONS_PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.order_by(Notification.create_date.desc()).slice(start, start + page_size)
+    else:
+        query = query.order_by(Notification.create_date.desc())
 
     return query.all()
 
@@ -292,4 +309,4 @@ def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, cla
 if __name__ == "__main__":
     with app.app_context():
         print("Hello world!")
-        # print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))
+        print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))
