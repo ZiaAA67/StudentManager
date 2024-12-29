@@ -228,34 +228,34 @@ if __name__ == "__main__":
         student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
         db.session.add(student_detail)
         db.session.commit()
-
-from random import choice, randint
-from faker import Faker
-from datetime import datetime, timedelta
-from sqlalchemy.exc import IntegrityError
-
-fake = Faker()
-
-
-def generate_random_birth(min_age=15, max_age=20):
-    today = datetime.today()
-    start_date = today - timedelta(days=365 * max_age)
-    end_date = today - timedelta(days=365 * min_age)
-    return fake.date_between(start_date=start_date, end_date=end_date)
-
-
-def generate_unique_phone():
-    while True:
-        phone = ''.join([str(randint(0, 9)) for _ in range(10)])
-        if not UserInformation.query.filter_by(phone=phone).first():
-            return phone
-
-
-def generate_unique_email():
-    while True:
-        email = fake.unique.email()
-        if not UserInformation.query.filter_by(email=email).first():
-            return email
+#
+# from random import choice, randint
+# from faker import Faker
+# from datetime import datetime, timedelta
+# from sqlalchemy.exc import IntegrityError
+#
+# fake = Faker()
+#
+#
+# def generate_random_birth(min_age=15, max_age=20):
+#     today = datetime.today()
+#     start_date = today - timedelta(days=365 * max_age)
+#     end_date = today - timedelta(days=365 * min_age)
+#     return fake.date_between(start_date=start_date, end_date=end_date)
+#
+#
+# def generate_unique_phone():
+#     while True:
+#         phone = ''.join([str(randint(0, 9)) for _ in range(10)])
+#         if not UserInformation.query.filter_by(phone=phone).first():
+#             return phone
+#
+#
+# def generate_unique_email():
+#     while True:
+#         email = fake.unique.email()
+#         if not UserInformation.query.filter_by(email=email).first():
+#             return email
 
 
 if __name__ == "__main__":

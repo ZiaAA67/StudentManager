@@ -16,65 +16,54 @@
     <div class="d-flex justify-content-center">
 <h1 class="text-center mt-2" style="font-weight:bold">XUẤT ĐIỂM</h1>
 </div>
-    <div class="form-section">
-        <div class="form-group">
-            <label for="class">*Lớp:</label>
-            <select class="fieldset" id="class">
-                <option value="">Chọn lớp</option>
-                <option value="10A1">10A1</option>
-                <option value="10A2">10A2</option>
-                <option value="10A3">10A3</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="hoc-ky">*Học kỳ:</label>
-            <select class="fieldset" id="hoc-ky">
-                <option value="">Chọn học kỳ</option>
-                <option value="1">Học kỳ 1</option>
-                <option value="2">Học kỳ 2</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="nam-hoc">*Năm học:</label>
-            <select class="fieldset" id="nam-hoc">
-                <option value="">Chọn năm học</option>
-                <option value="2023-2024">2023-2024</option>
-                <option value="2024-2025">2024-2025</option>
-                <option value="2025-2026">2025-2026</option>
-            </select>
-        </div>
+<div class="form-section">
+    <div class="form-group">
+        <label for="grade">*Khối:</label>
+        <select class="fieldset" id="grade">
+            <option value="">Chọn khối</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
     </div>
+    <div class="form-group">
+        <label for="semester">*Học kỳ:</label>
+        <select class="fieldset" id="semester">
+            <option value="">Chọn học kỳ</option>
+            <option value="1">Học kỳ 1</option>
+            <option value="2">Học kỳ 2</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="class">*Lớp:</label>
+        <select class="fieldset" id="class">
+            <option value="">Chọn lớp</option>
+        </select>
+    </div>
+</div>
 <div class="separator mt-5">
         <span><h2>BẢNG ĐIỂM</h2></span>
     </div>
-    <table>
+    <table id="table-student">
         <thead>
         <tr>
-            <th colspan="5">Năm học: </th>
+            <th colspan="3" id="label-class">Lớp: </th>
+            <th colspan="1" id="label-semester">Học kỳ: </th>
         </tr>
         <tr>
+            <th colspan="3" id="label-teacher">GVCN: </th>
+            <th colspan="1" id="label-year">Năm học: </th>
+        </tr>
+        <tr id="label-header">
             <th>STT</th>
             <th>Họ tên</th>
-            <th>Lớp</th>
-            <th>Điểm trung bình HK1</th>
-            <th>Điểm trung bình HK2</th>
+            <th>Ngày sinh</th>
+            <th>Môn học</th>
         </tr>
         </thead>
+
         <tbody>
-        <tr>
-            <td>1</td>
-            <td>{{user_info.full_name}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+
         </tbody>
     </table>
     <div class="d-flex justify-content-center">
@@ -85,4 +74,5 @@
 {%endblock%}
 {%block link_js%}
 <script src="{{url_for('static', filename='js/darkmode.js')}}"></script>
+<script src="{{url_for('static', filename='js/export_score.js')}}"></script>
 {%endblock%}

@@ -166,7 +166,7 @@ semesterElement.addEventListener('change', () => {
 
 const d = new Date();
 let year = d.getFullYear();
-document.getElementById('label-year').innerText = "Năm học: " + year + " " + (year + 1);
+document.getElementById('label-year').innerText = "Năm học: " + year + " - " + (year + 1);
 
 
 document.getElementById('btn-submit').addEventListener('click', async (e) => {
@@ -261,8 +261,6 @@ function loadScores(student_ids) {
             if (studentRow) {
                 for (const scoreType in scoreData) {
                     const scoresArray = scoreData[scoreType];
-
-                    // const reversedScores = [...scoresArray].reverse();
 
                     studentRow.querySelectorAll(`input[class="${scoreType}"]`).forEach((input, index) => {
                         if (index < scoresArray.length) {

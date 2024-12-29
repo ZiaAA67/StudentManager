@@ -432,6 +432,59 @@ def export_score():
     return render_template('/lecturer/export_score.html')
 
 
+@app.route('/get_avg_scores', methods=['POST'])
+def get_avg_scores():
+    students = request.json.get('students', [])
+    subjects = request.json.get('subjects')
+    semester_value = request.json.get('semester')
+    class_id = request.json.get('classId')
+
+    semester = dao.get_semester(semester_value)
+
+    averages = {}
+    for subject_id in subjects:
+        scores = dao.get_scores_by_subject_and_semester(students, subject_id, semester.id, class_id, current_user.get_id())
+
+        # Tạo obj lưu điểm theo hs
+        scores_by_student = {}
+        for score in scores:
+            student_id = score.student_id
+            if student_id not in scores_by_student:
+                scores_by_student[student_id] = []
+            scores_by_student[student_id].append(score.score)
+
+        # Tính điểm trung bình
+        for student_id, scores_list in scores_by_student.items():
+            avg_score = sum(scores_list) / len(scores_list) if scores_list else 0
+
+            # Thêm kết quả vào cấu trúc
+            if student_id not in averages:
+                averages[student_id] = {"subjects": {}, "overall_average": 0}
+            averages[student_id]["subjects"][subject_id] = {
+                "average": round(avg_score, 2)
+            }
+
+    # Tính điểm trung bình tất cả các môn
+    for student_id, data in averages.items():
+        subject_averages = [subject["average"] for subject in data["subjects"].values()]
+        overall_avg = sum(subject_averages) / len(subject_averages) if subject_averages else 0
+        data["overall_average"] = round(overall_avg, 2)
+
+    # "averages": {
+    #     "student_id": {
+    #         "subjects": {
+    #             "subject_id": {
+    #                 "average": 8.3
+    #             },
+    #             "subject_id": {
+    #                 "average": 9.1
+    #             }
+    #         },
+    #         "overall_average": 8.7
+
+    return jsonify(averages)
+
+
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)

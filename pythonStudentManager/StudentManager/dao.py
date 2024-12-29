@@ -215,8 +215,6 @@ def get_semester(semester_value):
 
 def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, class_id, teacher_id):
     teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id)
-    print(subject_id, semester_id, class_id)
-    print(teaching_plan)
 
     scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id)\
                         .order_by(Score.create_date.desc()).all()

@@ -220,5 +220,6 @@ input[type="number"] {
 }
 
 input[type="number"] {
+    text-align: center;
     width: 50%;
 }
