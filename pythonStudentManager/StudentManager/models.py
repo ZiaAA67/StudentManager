@@ -1,3 +1,5 @@
+from random import choice, uniform
+
 from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, DateTime, Enum, Date, CheckConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -383,7 +385,7 @@ if __name__ == "__main__":
         #         db.session.add(subject)
         # db.session.commit()
         #
-        # print("Successfully added subjects for all grades.")
+        print("Successfully added subjects for all grades.")
 
         # new_semester = Semester(semester=1, year="2024")
         # db.session.add(new_semester)
@@ -402,4 +404,29 @@ if __name__ == "__main__":
         # )
         # db.session.add(new_teaching_plan)
         # db.session.commit()
-        print("New teaching plan created successfully!")
+        # print("New teaching plan created successfully!")
+
+        # student_ids = list(range(11, 201))
+        #
+        # # Các kiểu điểm
+        # score_types = [ScoreType.EXAM_15_MINS, ScoreType.EXAM_45_MINS, ScoreType.EXAM_FINAL]
+        #
+        # # Tạo 400 điểm ngẫu nhiên
+        # scores = []
+        # for _ in range(400):
+        #     student_id = choice(student_ids)
+        #     score_type = choice(score_types)
+        #     score_value = round(uniform(1, 10), 2)  # Tạo số thực ngẫu nhiên từ 1 đến 10 với 2 chữ số thập phân
+        #
+        #     new_score = Score(
+        #         student_id=student_id,
+        #         teaching_plan_id=1, # lỗi thì sửa teaching_plan
+        #         score_type=score_type,
+        #         score=score_value
+        #     )
+        #     scores.append(new_score)
+        #
+        # # Lưu các điểm vào cơ sở dữ liệu
+        # db.session.bulk_save_objects(scores)
+        # db.session.commit()
+        # print(f"Tạo thành công {len(scores)} điểm.")

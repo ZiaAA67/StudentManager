@@ -1,6 +1,6 @@
 from models import *
 import hashlib
-from sqlalchemy import func
+from sqlalchemy import func, case
 
 
 def auth_user(username, password):
@@ -135,5 +135,67 @@ def get_subjects_by_grade(grade):
                                 Subject.active == True).all()
 
 
+def get_years_semesters():
+    years = db.session.query(Semester.year).group_by(Semester.year).all()
+    return [year[0] for year in years]
+
+
+def get_student_in_class():
+    return db.session.query(Class.id, Class.name, func.count(Student.id)) \
+        .join(Student, Student.class_id.__eq__(Class.id)).group_by(Class.id).all()
+
+
+def get_class_statistics(year, semester, subject_id, grade=None):
+    avg_scores = (
+        db.session.query(
+            Score.student_id,
+            func.avg(Score.score).label("avg_score")
+        )
+        .join(TeachingPlan, Score.teaching_plan_id == TeachingPlan.id)
+        .join(Semester, TeachingPlan.semester_id == Semester.id)
+        .filter(
+            Semester.year == year,
+            Semester.semester == semester,
+            TeachingPlan.subject_id == subject_id
+        )
+        .group_by(Score.student_id)
+        .subquery()
+    )
+
+    query = (
+        db.session.query(
+            Class.id,
+            Class.name.label("class_name"),
+            func.count(Student.id).label("total_students"),
+            func.sum(
+                case(
+                    (avg_scores.c.avg_score >= 5, 1),
+                    else_=0
+                )
+            ).label("num_passed"),
+            (
+                    func.sum(
+                        case(
+                            (avg_scores.c.avg_score >= 5, 1),
+                            else_=0
+                        )
+                    ) / func.count(Student.id) * 100
+            ).label("pass_rate"),
+        )
+        .join(Student, Student.class_id == Class.id)
+        .outerjoin(avg_scores, avg_scores.c.student_id == Student.id)
+    )
+
+    if grade:
+        query = query.filter(Class.grade == grade)
+
+    results = query.group_by(Class.id).all()
+
+    print(f"Parameters -> Year: {year}, Semester: {semester}, Subject: {subject_id}, Grade: {grade}")
+
+    return results
+
+
 if __name__ == "__main__":
-    print()
+    with app.app_context():
+        print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))
