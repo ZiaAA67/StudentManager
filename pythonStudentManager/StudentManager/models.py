@@ -9,9 +9,6 @@ from enum import Enum as enum
 import hashlib
 
 
-# from StudentManager.dao import count_students_in_class, get_all_subjects
-
-
 class Role(enum):
     STAFF = 1
     ADMIN = 2
@@ -52,7 +49,7 @@ class UserInformation(Base):
     gender = Column(Boolean, nullable=False)
     address = Column(String(100), nullable=False)
     birth = Column(Date, nullable=False)
-    phone = Column(String(10), nullable=False, unique=True)
+    phone = Column(String(12), nullable=False, unique=True)
     email = Column(String(50), nullable=False, unique=True)
     avatar = Column(String(255),
                     default="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=")
@@ -98,7 +95,6 @@ class Student(Base):
     id = Column(Integer, ForeignKey(UserInformation.id), primary_key=True)
     class_id = Column(Integer, ForeignKey(Class.id), nullable=True)
     grade = Column(Enum(Grade), nullable=False)
-    gpa = Column(Float, default=0)
     scores = relationship('Score', backref='student')
 
     user_information = relationship('UserInformation', backref='students', uselist=False)
@@ -111,7 +107,7 @@ class Subject(Base):
     grade = Column(Enum(Grade), nullable=False)
 
     teaching_plans = relationship('TeachingPlan', backref='subject')
-    exam_quantity = relationship("ExamQuantity", backref="subject", lazy=True)
+    exam_quantities = relationship("ExamQuantity", backref="subject", lazy=True)
 
 
 class Semester(Base):
@@ -136,6 +132,7 @@ class Score(Base):
     student_id = Column(Integer, ForeignKey(Student.id), nullable=False)
     teaching_plan_id = Column(Integer, ForeignKey(TeachingPlan.id), nullable=False)
     score_type = Column(Enum(ScoreType))
+    index = Column(Integer, default=0)
     score = Column(Float, default=0)
 
 
@@ -164,103 +161,103 @@ if __name__ == "__main__":
         # tao bang
         db.create_all()
 
-        # admin_user_info = UserInformation(full_name="ADMIN USER",
-        #                                   gender=True,
-        #                                   address="hcm city",
-        #                                   birth=datetime(1999, 2, 12),
-        #                                   phone="023675348",
-        #                                   email="nguyen@ou.com",
-        #                                   role=Role.ADMIN)
-        # db.session.add(admin_user_info)
-        # db.session.commit()
-        # admin_detail = Administrator(id=admin_user_info.id)
-        # db.session.add(admin_detail)
-        # db.session.commit()
-        # username = "admin"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=admin_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # teacher_user_info = UserInformation(full_name="Teacher User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023675344",
-        #                                     email="nguyenjss@ou.com",
-        #                                     role=Role.TEACHER)
-        # db.session.add(teacher_user_info)
-        # db.session.commit()
-        # teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
-        # db.session.add(teacher_detail)
-        # db.session.commit()
-        # username = "teacher"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=teacher_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # employee_user_info = UserInformation(full_name="Employee User",
-        #                                      gender=True,
-        #                                      address="hcm city",
-        #                                      birth=datetime(1999, 2, 12),
-        #                                      phone="023675343",
-        #                                      email="nguyenjsa@ou.com",
-        #                                      role=Role.STAFF)
-        # db.session.add(employee_user_info)
-        # db.session.commit()
-        # username = "employee"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=employee_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # student_user_info = UserInformation(full_name="Student User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023695343",
-        #                                     email="nguynjsa@ou.com",
-        #                                     role=Role.STUDENT)
-        # db.session.add(student_user_info)
-        # db.session.commit()
-        # student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
-        # db.session.add(student_detail)
-        # db.session.commit()
+        admin_user_info = UserInformation(full_name="ADMIN USER",
+                                          gender=True,
+                                          address="hcm city",
+                                          birth=datetime(1999, 2, 12),
+                                          phone="023675348",
+                                          email="nguyen@ou.com",
+                                          role=Role.ADMIN)
+        db.session.add(admin_user_info)
+        db.session.commit()
+        admin_detail = Administrator(id=admin_user_info.id)
+        db.session.add(admin_detail)
+        db.session.commit()
+        username = "admin"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=admin_user_info.id)
+        db.session.add(account)
+        db.session.commit()
 
-# from random import choice, randint
-# from faker import Faker
-# from datetime import datetime, timedelta
-# from sqlalchemy.exc import IntegrityError
-#
-# fake = Faker()
-#
-#
-# def generate_random_birth(min_age=15, max_age=20):
-#     today = datetime.today()
-#     start_date = today - timedelta(days=365 * max_age)
-#     end_date = today - timedelta(days=365 * min_age)
-#     return fake.date_between(start_date=start_date, end_date=end_date)
-#
-#
-# def generate_unique_phone():
-#     while True:
-#         phone = ''.join([str(randint(0, 9)) for _ in range(10)])
-#         if not UserInformation.query.filter_by(phone=phone).first():
-#             return phone
-#
-#
-# def generate_unique_email():
-#     while True:
-#         email = fake.unique.email()
-#         if not UserInformation.query.filter_by(email=email).first():
-#             return email
+        teacher_user_info = UserInformation(full_name="Teacher User",
+                                            gender=True,
+                                            address="hcm city",
+                                            birth=datetime(1999, 2, 12),
+                                            phone="023675344",
+                                            email="nguyenjss@ou.com",
+                                            role=Role.TEACHER)
+        db.session.add(teacher_user_info)
+        db.session.commit()
+        teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
+        db.session.add(teacher_detail)
+        db.session.commit()
+        username = "teacher"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=teacher_user_info.id)
+        db.session.add(account)
+        db.session.commit()
+
+        employee_user_info = UserInformation(full_name="Employee User",
+                                             gender=True,
+                                             address="hcm city",
+                                             birth=datetime(1999, 2, 12),
+                                             phone="023675343",
+                                             email="nguyenjsa@ou.com",
+                                             role=Role.STAFF)
+        db.session.add(employee_user_info)
+        db.session.commit()
+        username = "employee"
+        password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+        account = User(username=username,
+                       password=password,
+                       user_info_id=employee_user_info.id)
+        db.session.add(account)
+        db.session.commit()
+
+        student_user_info = UserInformation(full_name="Student User",
+                                            gender=True,
+                                            address="hcm city",
+                                            birth=datetime(1999, 2, 12),
+                                            phone="023695343",
+                                            email="nguynjsa@ou.com",
+                                            role=Role.STUDENT)
+        db.session.add(student_user_info)
+        db.session.commit()
+        student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
+        db.session.add(student_detail)
+        db.session.commit()
+
+from random import choice, randint
+from faker import Faker
+from datetime import datetime, timedelta
+from sqlalchemy.exc import IntegrityError
+
+fake = Faker()
+
+
+def generate_random_birth(min_age=15, max_age=20):
+    today = datetime.today()
+    start_date = today - timedelta(days=365 * max_age)
+    end_date = today - timedelta(days=365 * min_age)
+    return fake.date_between(start_date=start_date, end_date=end_date)
+
+
+def generate_unique_phone():
+    while True:
+        phone = ''.join([str(randint(0, 9)) for _ in range(10)])
+        if not UserInformation.query.filter_by(phone=phone).first():
+            return phone
+
+
+def generate_unique_email():
+    while True:
+        email = fake.unique.email()
+        if not UserInformation.query.filter_by(email=email).first():
+            return email
 
 
 if __name__ == "__main__":
@@ -430,3 +427,4 @@ if __name__ == "__main__":
         # db.session.bulk_save_objects(scores)
         # db.session.commit()
         # print(f"Tạo thành công {len(scores)} điểm.")
+        print("New teaching plan created successfully!")

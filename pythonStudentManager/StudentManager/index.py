@@ -1,5 +1,6 @@
 import math
 import re
+from datetime import date
 from email.policy import default
 from mmap import PAGESIZE
 from turtledemo.penrose import start
@@ -190,7 +191,7 @@ def add_student():
     data = request.get_json()
 
     if not data:
-        flash("Lớp đã tồn tại!", "danger")
+        flash("Có lỗi xảy ra!", "danger")
         return jsonify({"success": False}), 400
 
     name = data.get('name')
@@ -238,6 +239,7 @@ def add_student():
 
         grade = Grade(int(grade_value))
         cls = dao.get_class_by_grade(grade)
+        print(cls)
 
         if cls:
             new_student = Student(id=new_user_info.id, grade=grade, class_id=cls.id)
@@ -361,10 +363,68 @@ def get_subjects(grade):
 @app.route('/get_students', methods=['POST'])
 def get_students():
     class_id = request.json.get('classId')
-
     students = dao.get_students_by_class(class_id)
-    print(students)
     return jsonify({"students": students})
+
+
+@app.route('/get_exam_quantities/<int:subject_id>', methods=['GET'])
+def get_exam_quantities(subject_id):
+    exam_quantities = dao.get_lastest_exam_quantities(subject_id)
+    return jsonify(exam_quantities)
+
+
+@app.route('/save_scores', methods=['POST'])
+def save_scores():
+    try:
+        class_id = request.json.get('classId')
+        subject_id = request.json.get('subjectId')
+        scores = request.json.get('scores')
+
+        semester_value = request.json.get('semester')
+        semester = dao.get_semester(semester_value)
+
+        teaching_plan = dao.get_teaching_plan(class_id, subject_id, semester.id, current_user.get_id())
+
+        for score_data in scores:
+            student_id = score_data.get('studentId')
+            score_type = score_data.get('scoreType')
+            score_value = score_data.get('score')
+            index = score_data.get('index')
+
+            dao.save_score(student_id, teaching_plan.id, score_type, score_value, index)
+
+        return jsonify({'success': True, 'message': 'Lưu điểm thành công!'})
+
+    except Exception as e:
+        print(f"Lỗi: {e}")
+        return jsonify({'error': 'Đã xảy ra lỗi!'})
+
+
+@app.route('/get_scores', methods=['POST'])
+def get_scores():
+    student_ids = request.json.get('student_ids', [])
+    subject_id = request.json.get('subjectId')
+    semester_value = request.json.get('semester')
+    class_id = request.json.get('classId')
+
+    semester = dao.get_semester(semester_value)
+    scores = dao.get_scores_by_subject_and_semester(student_ids, subject_id, semester.id, class_id, current_user.get_id())
+
+    result = {}
+    for student_id in student_ids:
+        student_scores = [score for score in scores if score.student_id == student_id]
+
+        scores_by_type = {
+            score_type.name: [] for score_type in ScoreType
+        }
+
+        for score in student_scores:
+            score_type = score.score_type.name
+            scores_by_type[score_type].append(score.score)
+
+        result[str(student_id)] = scores_by_type
+
+    return jsonify(result)
 
 
 @app.route('/export_score')
