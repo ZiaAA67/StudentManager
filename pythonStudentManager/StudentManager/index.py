@@ -12,7 +12,7 @@ import cloudinary.uploader
 from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
-from StudentManager import app, login,admin
+from StudentManager import app, login, admin
 from models import *
 
 
@@ -112,6 +112,8 @@ def login_my_user():
         user = dao.auth_user(username=username, password=password)
         if user:
             login_user(user)
+            if user.user_info.role == Role.ADMIN:
+                return redirect('/admin/')
             return redirect('/')
         else:
             err_msg = "Tài khoản hoặc mật khẩu không đúng!"

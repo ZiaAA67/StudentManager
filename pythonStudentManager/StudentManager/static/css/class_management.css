@@ -118,15 +118,22 @@ button:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
-}
-    table, th, td {
-    border: 1px solid black;
+    margin-top: 20px;
 }
 
-th,td {
-    padding: 8px;
+table td {
+    border: 1px solid #ddd;
+    padding: 12px;
     text-align: left;
+}
+
+table th {
+    background-color: #f5f7fa;
+    color: #555;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
 }
 
 
@@ -136,7 +143,7 @@ th,td {
 .separator::after {
     content: "";
     flex: 1;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 2px solid lightseagreen;
     margin: 0 10px;
 }
 

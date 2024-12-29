@@ -2,6 +2,7 @@ from datetime import date
 
 from models import *
 import hashlib
+from sqlalchemy import func
 
 
 def auth_user(username, password):

@@ -1,0 +1,26 @@
+#theme-switch{
+    position: fixed;
+    top: 65px;        /* Cách cạnh trên 10px */
+    right: 10px;      /* Cách cạnh phải 10px */
+    z-index: 1000;
+    height:50px;
+    width:50px;
+    padding:0;
+    border-radius:50%;
+    background-color:grey;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+#theme-switch svg:last-child{
+    display:none;
+}
+#theme-switch svg{
+fill:var(--primary-color);
+}
+.darkmode #theme-switch svg:first-child{
+display:none;
+}
+.darkmode #theme-switch svg:last-child{
+display:block;
+}
