@@ -1,3 +1,5 @@
+from datetime import date
+
 from models import *
 import hashlib
 
@@ -52,7 +54,19 @@ def get_all_classes(page=None):
 
 
 def get_class_by_grade(grade):
-    return Class.query.filter(Class.grade.__eq__(grade), Class.active == True).first()
+    school_rule = init_school_rules()
+    max_students = school_rule.max_students_in_class
+
+    classes = Class.query.filter(
+        Class.grade == grade,
+        Class.active == True
+    ).all()
+
+    for cls in classes:
+        if cls.students.count() < max_students:
+            return cls
+
+    return None
 
 
 def get_classes_by_grade(grade):
@@ -67,7 +81,7 @@ def count_students_in_class(class_id):
     cls = Class.query.filter(Class.id == class_id, Class.active == True).first()
 
     if cls:
-        return len(cls.students)
+        return cls.students.count()
     return 0
 
 
@@ -105,10 +119,13 @@ def check_email_unique(email):
 
 
 def init_school_rules():
-    if not SchoolRules.query.first():
-        new_rule = SchoolRules()
-        db.session.add(new_rule)
+    rule = SchoolRules.query.order_by(SchoolRules.create_date.desc()).first()
+    if not rule:
+        rule = SchoolRules()
+        db.session.add(rule)
         db.session.commit()
+
+    return rule
 
 
 def count_subjects():
@@ -132,6 +149,78 @@ def get_subject_by_id(subject_id):
 def get_subjects_by_grade(grade):
     return Subject.query.filter(Subject.grade.__eq__(grade),
                                 Subject.active == True).all()
+
+
+def get_lastest_exam_quantities(subject_id):
+    default_quantities = {
+        ScoreType.EXAM_15_MINS.name: 2,
+        ScoreType.EXAM_45_MINS.name: 1,
+        ScoreType.EXAM_FINAL.name: 1
+    }
+
+    for score_type in ScoreType:
+        latest_record = ExamQuantity.query.filter(ExamQuantity.active == True,
+                                                  ExamQuantity.subject_id == subject_id,
+                                                  ExamQuantity.exam_type == score_type,
+                                                  ).order_by(ExamQuantity.update_date.desc()).first()
+
+        if latest_record:
+            default_quantities[score_type.name] = latest_record.quantity
+
+    return default_quantities
+
+
+def get_teaching_plan(class_id, subject_id, semester_id, teacher_id):
+    teaching = TeachingPlan.query.filter_by(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id).first()
+    if not teaching:
+        teaching = TeachingPlan(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id)
+        db.session.add(teaching)
+        db.session.commit()
+    return teaching
+
+
+def save_score(student_id, teaching_plan_id, score_type, score_value, index):
+    existing_score = Score.query.filter_by(
+        student_id=student_id,
+        teaching_plan_id=teaching_plan_id,
+        score_type=score_type,
+        index=index
+    ).first()
+
+    if existing_score:
+        existing_score.score = score_value
+    else:
+        new_score = Score(
+            student_id=student_id,
+            teaching_plan_id=teaching_plan_id,
+            score_type=score_type,
+            index=index,
+            score=score_value
+        )
+        db.session.add(new_score)
+
+    db.session.commit()
+
+
+def get_semester(semester_value):
+    year = date.today().year
+    semester = Semester.query.filter(Semester.active == True, Semester.semester == semester_value, Semester.year == year).first()
+    if not semester:
+        semester = Semester(semester=semester_value, year=year)
+        db.session.add(semester)
+        db.session.commit()
+    return semester
+
+
+def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, class_id, teacher_id):
+    teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id, teacher_id=teacher_id)
+    print(subject_id, semester_id, class_id)
+    print(teaching_plan)
+
+    scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id)\
+                        .order_by(Score.create_date.desc()).all()
+
+    return scores
 
 
 if __name__ == "__main__":

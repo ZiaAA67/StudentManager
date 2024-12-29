@@ -19,12 +19,6 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="class">*Lớp:</label>
-            <select class="fieldset" id="class">
-                <option value="">Chọn lớp</option>
-            </select>
-        </div>
-        <div class="form-group">
             <label for="subject">*Môn:</label>
             <select class="fieldset" id="subject">
                 <option value="">Chọn môn học</option>
@@ -38,25 +32,29 @@
                 <option value="2">Học kỳ 2</option>
             </select>
         </div>
-<!--        <div>-->
-<!--            <button id="confirm">Xác nhận</button>-->
-<!--        </div>-->
+        <div class="form-group">
+            <label for="class">*Lớp:</label>
+            <select class="fieldset" id="class">
+                <option value="">Chọn lớp</option>
+            </select>
+        </div>
     </div>
 
     <table id="table-student">
         <thead>
         <tr>
             <th colspan="3" id="label-class">Lớp: </th>
-            <th colspan="3" id="label-semester">Học kỳ: </th>
+            <th colspan="4" id="label-semester">Học kỳ: </th>
         </tr>
         <tr>
             <th colspan="3" id="label-subject">Môn: </th>
-            <th colspan="3" id="label-year">Năm học: </th>
+            <th colspan="4" id="label-year">Năm học: </th>
         </tr>
-        <tr>
+        <tr id="label">
             <th>STT</th>
             <th>Họ tên</th>
             <th>Ngày sinh</th>
+            <th>Điểm 15’</th>
             <th>Điểm 15’</th>
             <th>Điểm 1 tiết</th>
             <th>Điểm thi</th>
@@ -64,17 +62,12 @@
         </thead>
         <tbody>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><input type="number" step="0.1" min="0" max="10"></td>
-            <td><input type="number" step="0.1" min="0" max="10"></td>
-            <td><input type="number" step="0.1" min="0" max="10"></td>
+
         </tr>
         </tbody>
     </table>
 
-    <button class="btn btn-red shadow">Lưu điểm</button>
+    <button class="btn btn-red shadow" id="btn-submit">Lưu điểm</button>
     <p class="note">* Vui lòng kiểm tra kỹ trước khi lưu.</p>
 </div>
 

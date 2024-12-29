@@ -94,7 +94,6 @@ class Student(Base):
     id = Column(Integer, ForeignKey(UserInformation.id), primary_key=True)
     class_id = Column(Integer, ForeignKey(Class.id), nullable=True)
     grade = Column(Enum(Grade), nullable=False)
-    gpa = Column(Float, default=0)
     scores = relationship('Score', backref='student')
 
     user_information = relationship('UserInformation', backref='students', uselist=False)
@@ -107,7 +106,7 @@ class Subject(Base):
     grade = Column(Enum(Grade), nullable=False)
 
     teaching_plans = relationship('TeachingPlan', backref='subject')
-    exam_quantity = relationship("ExamQuantity", backref="subject", lazy=True)
+    exam_quantities = relationship("ExamQuantity", backref="subject", lazy=True)
 
 
 class Semester(Base):
@@ -132,6 +131,7 @@ class Score(Base):
     student_id = Column(Integer, ForeignKey(Student.id), nullable=False)
     teaching_plan_id = Column(Integer, ForeignKey(TeachingPlan.id), nullable=False)
     score_type = Column(Enum(ScoreType))
+    index = Column(Integer, default=0)
     score = Column(Float, default=0)
 
 
@@ -235,3 +235,5 @@ if __name__ == "__main__":
         student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
         db.session.add(student_detail)
         db.session.commit()
+
+
