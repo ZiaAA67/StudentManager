@@ -179,39 +179,26 @@ def get_student_in_class():
         .join(Student, Student.class_id.__eq__(Class.id)).group_by(Class.id).all()
 
 
-def calculate_average_score(scores):
-    """
-    - 15 phút: hệ số 1
-    - 45 phút: hệ số 2
-    - Thi cuối kỳ: hệ số 3
-    """
-    total_score = 0
-    total_weight = 0
-
-    for score in scores:
-        if score.score_type == ScoreType.EXAM_15_MINS:
-            weight = 1  # hệ số cho 15 phút
-        elif score.score_type == ScoreType.EXAM_45_MINS:
-            weight = 2  # hệ số cho 45 phút
-        elif score.score_type == ScoreType.EXAM_FINAL:
-            weight = 3  # hệ số cho thi cuối kỳ
-        else:
-            weight = 1  # mặc định nếu không thuộc loại trên
-
-        total_score += score.score * weight
-        total_weight += weight
-
-    if total_weight == 0:
-        return 0  # tránh chia cho 0 nếu không có điểm
-
-    return total_score / total_weight
-
-
 def get_class_statistics(year, semester, subject_id, grade=None):
-    avg_scores = (
+    avg_scores_query = (
         db.session.query(
             Score.student_id,
-            func.avg(Score.score).label("avg_score")
+            func.sum(
+                case(
+                    (Score.score_type == ScoreType.EXAM_15_MINS, Score.score * 1),
+                    (Score.score_type == ScoreType.EXAM_45_MINS, Score.score * 2),
+                    (Score.score_type == ScoreType.EXAM_FINAL, Score.score * 3),
+                    else_=0
+                )
+            ).label('total_score'),
+            func.sum(
+                case(
+                    (Score.score_type == ScoreType.EXAM_15_MINS, 1),
+                    (Score.score_type == ScoreType.EXAM_45_MINS, 2),
+                    (Score.score_type == ScoreType.EXAM_FINAL, 3),
+                    else_=0
+                )
+            ).label('total_weight')
         )
         .join(TeachingPlan, Score.teaching_plan_id == TeachingPlan.id)
         .join(Semester, TeachingPlan.semester_id == Semester.id)
@@ -231,21 +218,21 @@ def get_class_statistics(year, semester, subject_id, grade=None):
             func.count(Student.id).label("total_students"),
             func.sum(
                 case(
-                    (avg_scores.c.avg_score >= 5, 1),
+                    (avg_scores_query.c.total_score / avg_scores_query.c.total_weight >= 5, 1),
                     else_=0
                 )
             ).label("num_passed"),
             (
-                    func.sum(
-                        case(
-                            (avg_scores.c.avg_score >= 5, 1),
-                            else_=0
-                        )
-                    ) / func.count(Student.id) * 100
+                func.sum(
+                    case(
+                        (avg_scores_query.c.total_score / avg_scores_query.c.total_weight >= 5, 1),
+                        else_=0
+                    )
+                ) / func.count(Student.id) * 100
             ).label("pass_rate"),
         )
         .join(Student, Student.class_id == Class.id)
-        .outerjoin(avg_scores, avg_scores.c.student_id == Student.id)
+        .outerjoin(avg_scores_query, avg_scores_query.c.student_id == Student.id)
     )
 
     if grade:
@@ -256,6 +243,7 @@ def get_class_statistics(year, semester, subject_id, grade=None):
     print(f"Parameters -> Year: {year}, Semester: {semester}, Subject: {subject_id}, Grade: {grade}")
 
     return results
+
 
 
 def get_lastest_exam_quantities(subject_id):
@@ -322,36 +310,14 @@ def get_semester(semester_value):
     return semester
 
 
-def get_semesters_by_year(year):
-    return Semester.query.filter(Semester.active == True, Semester.year == year).all()
-
-
 def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, class_id, teacher_id):
     teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
                                       teacher_id=teacher_id)
+    print(subject_id, semester_id, class_id)
+    print(teaching_plan)
 
     scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id) \
         .order_by(Score.create_date.desc()).all()
-
-    return scores
-
-
-def get_scores_by_year(student_ids, subject_id, year, class_id, teacher_id):
-    teaching_plans = (
-        TeachingPlan.query
-        .join(Semester, TeachingPlan.semester_id == Semester.id)
-        .filter(
-            TeachingPlan.class_id == class_id,
-            TeachingPlan.subject_id == subject_id,
-            Semester.year == year,
-            TeachingPlan.teacher_id == teacher_id
-        )
-        .all())
-
-    scores = Score.query.filter(
-        Score.student_id.in_(student_ids),
-        Score.teaching_plan_id.in_([plan.id for plan in teaching_plans])
-    ).all()
 
     return scores
 
