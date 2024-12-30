@@ -223,12 +223,12 @@ def get_class_statistics(year, semester, subject_id, grade=None):
                 )
             ).label("num_passed"),
             (
-                func.sum(
-                    case(
-                        (avg_scores_query.c.total_score / avg_scores_query.c.total_weight >= 5, 1),
-                        else_=0
-                    )
-                ) / func.count(Student.id) * 100
+                    func.sum(
+                        case(
+                            (avg_scores_query.c.total_score / avg_scores_query.c.total_weight >= 5, 1),
+                            else_=0
+                        )
+                    ) / func.count(Student.id) * 100
             ).label("pass_rate"),
         )
         .join(Student, Student.class_id == Class.id)
@@ -243,7 +243,6 @@ def get_class_statistics(year, semester, subject_id, grade=None):
     print(f"Parameters -> Year: {year}, Semester: {semester}, Subject: {subject_id}, Grade: {grade}")
 
     return results
-
 
 
 def get_lastest_exam_quantities(subject_id):
@@ -320,6 +319,28 @@ def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, cla
         .order_by(Score.create_date.desc()).all()
 
     return scores
+
+
+def get_scores_by_year(student_ids, subject_id, year, class_id, teacher_id):
+    teaching_plans = (
+        TeachingPlan.query
+        .join(Semester, TeachingPlan.semester_id == Semester.id)
+        .filter(
+            TeachingPlan.class_id == class_id,
+            TeachingPlan.subject_id == subject_id,
+            Semester.year == year,
+            TeachingPlan.teacher_id == teacher_id
+        )
+        .all())
+    scores = Score.query.filter(
+        Score.student_id.in_(student_ids),
+        Score.teaching_plan_id.in_([plan.id for plan in teaching_plans])
+    ).all()
+    return scores
+
+
+def get_semesters_by_year(year):
+    return Semester.query.filter(Semester.active == True, Semester.year == year).all()
 
 
 if __name__ == "__main__":
