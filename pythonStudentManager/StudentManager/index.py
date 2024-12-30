@@ -30,6 +30,8 @@ def index():
     return redirect('/login')
 
 
+# ##################################### STUDENT ###################################################
+
 # student_admission
 @app.route('/students', methods=['get', 'post'])
 def student_management():
@@ -37,159 +39,43 @@ def student_management():
     students_paginated = dao.get_all_students(page)
     grades = Grade.choices()
 
+    total_pages = students_paginated.pages
+    max_pages_display = 10
+
+    start_page = max(1, page - max_pages_display // 2)
+    end_page = min(total_pages, start_page + max_pages_display - 1)
+
+    if end_page - start_page + 1 < max_pages_display:
+        start_page = max(1, end_page - max_pages_display + 1)
+
     return render_template('/employee/student_management.html',
                            students=students_paginated.items,
                            grades=grades,
-                           pagination=students_paginated)
+                           pagination=students_paginated,
+                           start_page=start_page,
+                           end_page=end_page)
 
 
-# class_management
-@app.route('/classes', methods=['get', 'post'])
-def class_management():
-    page = request.args.get('page', 1)
-    page = int(page)
-    pages = dao.count_classes()
-    classes = dao.get_all_classes(page)
-    print(pages)
-    return render_template("/employee/class_management.html",
-                           classes=classes,
-                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
-                           current_page=int(page),
-                           total_classes=pages)
+# student details
+@app.route('/students/<int:student_id>')
+def student_details(student_id):
+    student = dao.get_student_by_id(student_id)
+    student_info = dao.get_user_info_by_id(student_id)
 
-
-# subject
-@app.route('/subjects')
-def subject_management():
-    page = request.args.get('page', 1)
-    page = int(page)
-    pages = dao.count_subjects()
-    subjects = dao.get_all_subjects(page)
-    return render_template('/employee/subject_management.html',
-                           subjects=subjects,
-                           pages=math.ceil(pages / app.config["SUBJECTS_PAGE_SIZE"]),
-                           current_page=int(page),
-                           total_subjects=pages)
-
-
-# rules
-@app.route('/rules')
-def rules():
-    return render_template('/admin/rules.html')
-
-
-# rules
-@app.route('/stats')
-def stats():
-    return render_template('/admin/stats.html')
-
-
-# register
-@app.route('/register', methods=["get", "post"])
-def register_user():
-    err_msg = None
-    if request.method.__eq__('POST'):
-        password = request.form.get('password')
-        confirm = request.form.get('confirm')
-        if password.__eq__(confirm):
-            ava_path = None
-            name = request.form.get('name')
-            username = request.form.get('username')
-            avatar = request.files.get('avatar')
-            if avatar:
-                res = cloudinary.uploader.upload(avatar)
-                ava_path = res['secure_url']
-            dao.add_user(name=name, username=username, password=password, avatar=ava_path)
-            return redirect('/login')
-        else:
-            err_msg = "Mật khẩu không khớp!"
-    return render_template('register.html', err_msg=err_msg)
-
-
-# login
-@app.route('/login', methods=['get', 'post'])
-def login_my_user():
-    if current_user.is_authenticated:
-        return redirect('/')
-    err_msg = None
-    if request.method.__eq__('POST'):
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = dao.auth_user(username=username, password=password)
-        if user:
-            login_user(user)
-            if user.user_info.role == Role.ADMIN:
-                return redirect('/admin/')
-            return redirect('/')
-        else:
-            err_msg = "Tài khoản hoặc mật khẩu không đúng!"
-
-    return render_template('login.html', err_msg=err_msg)
-
-
-@login.user_loader
-def load_user(user_id):
-    return dao.get_user_by_id(user_id=user_id)
-
-
-# logout
-@app.route('/logout')
-def logout_my_user():
-    logout_user()
-    return redirect('/login')
-
-
-# employee_profile
-@app.route('/profile')
-def employee_profile():
-    user = dao.get_user_by_id(current_user.get_id())
-    return render_template('/employee/employee_profile.html', username=user.username)
-
-
-@app.context_processor
-def common_attributes():
-    if current_user.is_authenticated:
-        return {
-            "user_info": dao.get_user_info_by_user_id(user_id=current_user.get_id())
-        }
-
-    return {
-    }
-
-
-@app.route('/api/classes', methods=['post'])
-def add_class():
-    class_name = request.json.get('class_name')
-    grade_value = request.json.get('grade')
-
-    # chuyển giá trị lấy được sang enum
-    grade = Grade(int(grade_value))
-
-    if Class.query.filter_by(name=class_name, grade=grade, active=True).first():
-        flash("Lớp đã tồn tại!", "danger")
-        return jsonify({"success": False})
-
-    new_class = Class(name=class_name, grade=grade)
-
-    # Thêm vào database
-    db.session.add(new_class)
-    db.session.commit()
-
-    flash("Thêm lớp thành công!", "success")
-    return jsonify({"success": True})
-
-
-@app.route('/api/classes/delete/<int:class_id>', methods=['POST'])
-def delete_class(class_id):
-    cls = dao.get_class_by_id(class_id)
+    cls = dao.get_class_by_id(student.class_id)
+    class_name = None
     if cls:
-        cls.active = False
-        db.session.commit()
-        flash("Xoá thành công!", "success")
-        return jsonify({"success": True})
-    else:
-        flash("Xoá thất bại!", "danger")
-        return jsonify({"success": False})
+        class_name = cls.name
+
+    print(class_name)
+    return render_template('/employee/student_details.html', student=student, student_info=student_info, class_name=class_name)
+
+
+@app.route('/get_students', methods=['POST'])
+def get_students():
+    class_id = request.json.get('classId')
+    students = dao.get_students_by_class(class_id)
+    return jsonify({"students": students})
 
 
 @app.route('/api/students', methods=['POST'])
@@ -300,6 +186,96 @@ def is_valid_age(birthdate):
     return True
 
 
+# ##################################### CLASS ###################################################
+
+# class_management
+@app.route('/classes', methods=['get', 'post'])
+def class_management():
+    page = request.args.get('page', 1)
+    page = int(page)
+    pages = dao.count_classes()
+    classes = dao.get_all_classes(page)
+    print(pages)
+    return render_template("/employee/class_management.html",
+                           classes=classes,
+                           pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
+                           current_page=int(page),
+                           total_classes=pages)
+
+
+@app.route('/get_classes/<grade>', methods=['GET'])
+def get_classes(grade):
+    grade = Grade(int(grade))
+    classes = dao.get_classes_by_grade(grade)
+    if classes:
+        return jsonify([{"id": cls.id, "name": cls.name} for cls in classes])
+
+    return jsonify([])
+
+
+# api add class
+@app.route('/api/classes', methods=['post'])
+def add_class():
+    class_name = request.json.get('class_name')
+    grade_value = request.json.get('grade')
+
+    # chuyển giá trị lấy được sang enum
+    grade = Grade(int(grade_value))
+
+    if Class.query.filter_by(name=class_name, grade=grade, active=True).first():
+        flash("Lớp đã tồn tại!", "danger")
+        return jsonify({"success": False})
+
+    new_class = Class(name=class_name, grade=grade)
+
+    # Thêm vào database
+    db.session.add(new_class)
+    db.session.commit()
+
+    flash("Thêm lớp thành công!", "success")
+    return jsonify({"success": True})
+
+
+# api delete class
+@app.route('/api/classes/delete/<int:class_id>', methods=['POST'])
+def delete_class(class_id):
+    cls = dao.get_class_by_id(class_id)
+    if cls:
+        cls.active = False
+        db.session.commit()
+        flash("Xoá thành công!", "success")
+        return jsonify({"success": True})
+    else:
+        flash("Xoá thất bại!", "danger")
+        return jsonify({"success": False})
+
+
+# ##################################### SUBJECT ###################################################
+
+# subject
+@app.route('/subjects')
+def subject_management():
+    page = request.args.get('page', 1)
+    page = int(page)
+    pages = dao.count_subjects()
+    subjects = dao.get_all_subjects(page)
+    return render_template('/employee/subject_management.html',
+                           subjects=subjects,
+                           pages=math.ceil(pages / app.config["SUBJECTS_PAGE_SIZE"]),
+                           current_page=int(page),
+                           total_subjects=pages)
+
+
+@app.route('/get_subjects/<grade>', methods=['GET'])
+def get_subjects(grade):
+    grade = Grade(int(grade))
+    subjects = dao.get_subjects_by_grade(grade)
+    if subjects:
+        return jsonify([{"id": subject.id, "name": subject.name} for subject in subjects])
+
+    return jsonify([])
+
+
 @app.route('/api/subjects', methods=['post'])
 def add_subjects():
     subject_name = request.json.get('subject_name')
@@ -338,39 +314,92 @@ def delete_subject(subject_id):
         return jsonify({"success": False})
 
 
-# lecturer
+# ##################################### RULE ###################################################
+
+@app.route('/rules')
+def rules():
+    return render_template('/admin/rules.html')
+
+
+# ##################################### STATS ###################################################
+
+@app.route('/stats')
+def stats():
+    return render_template('/admin/stats.html')
+
+
+# ##################################### LOGIN - REGISTER ###################################################
+
+# register
+@app.route('/register', methods=["get", "post"])
+def register_user():
+    err_msg = None
+    if request.method.__eq__('POST'):
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        if password.__eq__(confirm):
+            ava_path = None
+            name = request.form.get('name')
+            username = request.form.get('username')
+            avatar = request.files.get('avatar')
+            if avatar:
+                res = cloudinary.uploader.upload(avatar)
+                ava_path = res['secure_url']
+            dao.add_user(name=name, username=username, password=password, avatar=ava_path)
+            return redirect('/login')
+        else:
+            err_msg = "Mật khẩu không khớp!"
+    return render_template('register.html', err_msg=err_msg)
+
+
+# login
+@app.route('/login', methods=['get', 'post'])
+def login_my_user():
+    if current_user.is_authenticated:
+        return redirect('/')
+    err_msg = None
+    if request.method.__eq__('POST'):
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = dao.auth_user(username=username, password=password)
+        if user:
+            login_user(user)
+            if user.user_info.role == Role.ADMIN:
+                return redirect('/admin/')
+            return redirect('/')
+        else:
+            err_msg = "Tài khoản hoặc mật khẩu không đúng!"
+
+    return render_template('login.html', err_msg=err_msg)
+
+
+@login.user_loader
+def load_user(user_id):
+    return dao.get_user_by_id(user_id=user_id)
+
+
+# logout
+@app.route('/logout')
+def logout_my_user():
+    logout_user()
+    return redirect('/login')
+
+
+# ##################################### PROFILE ###################################################
+
+# employee_profile
+@app.route('/profile')
+def employee_profile():
+    user = dao.get_user_by_id(current_user.get_id())
+    return render_template('/employee/employee_profile.html', username=user.username)
+
+
+# ##################################### SCORE ###################################################
 @app.route('/entry_score')
 def entry_score():
     subjects = dao.get_all_subjects()
     return render_template('/lecturer/entry_score.html',
                            subjects=subjects)
-
-
-@app.route('/get_classes/<grade>', methods=['GET'])
-def get_classes(grade):
-    grade = Grade(int(grade))
-    classes = dao.get_classes_by_grade(grade)
-    if classes:
-        return jsonify([{"id": cls.id, "name": cls.name} for cls in classes])
-
-    return jsonify([])
-
-
-@app.route('/get_subjects/<grade>', methods=['GET'])
-def get_subjects(grade):
-    grade = Grade(int(grade))
-    subjects = dao.get_subjects_by_grade(grade)
-    if subjects:
-        return jsonify([{"id": subject.id, "name": subject.name} for subject in subjects])
-
-    return jsonify([])
-
-
-@app.route('/get_students', methods=['POST'])
-def get_students():
-    class_id = request.json.get('classId')
-    students = dao.get_students_by_class(class_id)
-    return jsonify({"students": students})
 
 
 @app.route('/get_exam_quantities/<int:subject_id>', methods=['GET'])
@@ -458,7 +487,8 @@ def get_avg_scores():
     for subject_id in subjects:
         scores = []
         for semester in semesters:
-            scores += dao.get_scores_by_subject_and_semester(students, subject_id, semester.id, class_id, current_user.get_id())
+            scores += dao.get_scores_by_subject_and_semester(students, subject_id, semester.id, class_id,
+                                                             current_user.get_id())
 
         # Tạo obj lưu điểm theo hs
         scores_by_student = {}
@@ -498,6 +528,16 @@ def get_avg_scores():
     #         "overall_average": 8.7
 
     return jsonify(averages)
+
+
+@app.context_processor
+def common_attributes():
+    if current_user.is_authenticated:
+        return {
+            "user_info": dao.get_user_info_by_user_id(user_id=current_user.get_id())
+        }
+
+    return {}
 
 
 if __name__ == "__main__":

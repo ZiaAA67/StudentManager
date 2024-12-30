@@ -125,7 +125,9 @@
         <td>{{ student.user_information.birth.strftime('%d-%m-%Y') }}</td>
         <td>{{ student.grade }}</td>
         <td width="200" class="text-center">
-            <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
+            <button class="btn btn-success mt-1 mb-1 me-2">
+                <a style="text-decoration: none; color: white" href="/students/{{student.id}}">Chi tiết</a>
+            </button>
             <button class="btn btn-danger mt-1 mb-1" onclick="deleteStudent({{student.id}})">Xoá</button>
         </td>
     </tr>
@@ -147,7 +149,7 @@
         </li>
         {% endif %}
 
-        {% for page_num in range(1, pagination.pages + 1) %}
+        {% for page_num in range(start_page, end_page + 1) %}
         <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
             <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
         </li>

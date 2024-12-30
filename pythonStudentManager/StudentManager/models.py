@@ -155,81 +155,81 @@ class Notification(Base):
     title = Column(String(50), nullable=False)
     content = Column(String(255), nullable=False)
 
-
-if __name__ == "__main__":
-    with app.app_context():
-        # tao bang
-        db.create_all()
-
-        # admin_user_info = UserInformation(full_name="ADMIN USER",
-        #                                   gender=True,
-        #                                   address="hcm city",
-        #                                   birth=datetime(1999, 2, 12),
-        #                                   phone="023675348",
-        #                                   email="nguyen@ou.com",
-        #                                   role=Role.ADMIN)
-        # db.session.add(admin_user_info)
-        # db.session.commit()
-        # admin_detail = Administrator(id=admin_user_info.id)
-        # db.session.add(admin_detail)
-        # db.session.commit()
-        # username = "admin"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=admin_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # teacher_user_info = UserInformation(full_name="Teacher User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023675344",
-        #                                     email="nguyenjss@ou.com",
-        #                                     role=Role.TEACHER)
-        # db.session.add(teacher_user_info)
-        # db.session.commit()
-        # teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
-        # db.session.add(teacher_detail)
-        # db.session.commit()
-        # username = "teacher"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=teacher_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # employee_user_info = UserInformation(full_name="Employee User",
-        #                                      gender=True,
-        #                                      address="hcm city",
-        #                                      birth=datetime(1999, 2, 12),
-        #                                      phone="023675343",
-        #                                      email="nguyenjsa@ou.com",
-        #                                      role=Role.STAFF)
-        # db.session.add(employee_user_info)
-        # db.session.commit()
-        # username = "employee"
-        # password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
-        # account = User(username=username,
-        #                password=password,
-        #                user_info_id=employee_user_info.id)
-        # db.session.add(account)
-        # db.session.commit()
-        #
-        # student_user_info = UserInformation(full_name="Student User",
-        #                                     gender=True,
-        #                                     address="hcm city",
-        #                                     birth=datetime(1999, 2, 12),
-        #                                     phone="023695343",
-        #                                     email="nguynjsa@ou.com",
-        #                                     role=Role.STUDENT)
-        # db.session.add(student_user_info)
-        # db.session.commit()
-        # student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
-        # db.session.add(student_detail)
-        # db.session.commit()
+#
+# if __name__ == "__main__":
+#     with app.app_context():
+#         # tao bang
+#         db.create_all()
+#
+#         admin_user_info = UserInformation(full_name="ADMIN USER",
+#                                           gender=True,
+#                                           address="hcm city",
+#                                           birth=datetime(1999, 2, 12),
+#                                           phone="023675348",
+#                                           email="nguyen@ou.com",
+#                                           role=Role.ADMIN)
+#         db.session.add(admin_user_info)
+#         db.session.commit()
+#         admin_detail = Administrator(id=admin_user_info.id)
+#         db.session.add(admin_detail)
+#         db.session.commit()
+#         username = "admin"
+#         password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+#         account = User(username=username,
+#                        password=password,
+#                        user_info_id=admin_user_info.id)
+#         db.session.add(account)
+#         db.session.commit()
+#
+#         teacher_user_info = UserInformation(full_name="Teacher User",
+#                                             gender=True,
+#                                             address="hcm city",
+#                                             birth=datetime(1999, 2, 12),
+#                                             phone="023675344",
+#                                             email="nguyenjss@ou.com",
+#                                             role=Role.TEACHER)
+#         db.session.add(teacher_user_info)
+#         db.session.commit()
+#         teacher_detail = Teacher(id=teacher_user_info.id, degree="Khong co")
+#         db.session.add(teacher_detail)
+#         db.session.commit()
+#         username = "teacher"
+#         password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+#         account = User(username=username,
+#                        password=password,
+#                        user_info_id=teacher_user_info.id)
+#         db.session.add(account)
+#         db.session.commit()
+#
+#         employee_user_info = UserInformation(full_name="Employee User",
+#                                              gender=True,
+#                                              address="hcm city",
+#                                              birth=datetime(1999, 2, 12),
+#                                              phone="023675343",
+#                                              email="nguyenjsa@ou.com",
+#                                              role=Role.STAFF)
+#         db.session.add(employee_user_info)
+#         db.session.commit()
+#         username = "employee"
+#         password = str(hashlib.md5("123".encode('utf-8')).hexdigest())
+#         account = User(username=username,
+#                        password=password,
+#                        user_info_id=employee_user_info.id)
+#         db.session.add(account)
+#         db.session.commit()
+#
+#         student_user_info = UserInformation(full_name="Student User",
+#                                             gender=True,
+#                                             address="hcm city",
+#                                             birth=datetime(1999, 2, 12),
+#                                             phone="023695343",
+#                                             email="nguynjsa@ou.com",
+#                                             role=Role.STUDENT)
+#         db.session.add(student_user_info)
+#         db.session.commit()
+#         student_detail = Student(id=student_user_info.id, grade=Grade.GRADE_10)
+#         db.session.add(student_detail)
+#         db.session.commit()
 
 # Sample
 from random import choice, randint
@@ -263,168 +263,168 @@ def generate_unique_email():
 if __name__ == "__main__":
     with app.app_context():
         # Create teachers
-        # teachers = []
-        # for _ in range(6):
-        #     full_name = fake.name()
-        #     gender = choice([True, False])
-        #     address = fake.address()
-        #     birth = generate_random_birth(min_age=25, max_age=60)
-        #     phone = generate_unique_phone()
-        #     email = generate_unique_email()
-        #     role = Role.TEACHER
-        #     degree = choice(["Cử nhân", "Thạc sĩ", "Tiến sĩ"])
-        #
-        #     teacher_info = UserInformation(
-        #         full_name=full_name,
-        #         gender=gender,
-        #         address=address,
-        #         birth=birth,
-        #         phone=phone,
-        #         email=email,
-        #         role=role
-        #     )
-        #     db.session.add(teacher_info)
-        #     db.session.commit()
-        #
-        #     teacher_detail = Teacher(id=teacher_info.id, degree=degree)
-        #     db.session.add(teacher_detail)
-        #     db.session.commit()
-        #
-        #     teachers.append(teacher_detail)
-        #
-        # print(f"Successfully added {len(teachers)} teachers.")
-        #
-        # # Create classes
-        # classes = []
-        # class_names = ["10A", "10B", "11A", "11B", "12A", "12B"]
-        # for class_name in class_names:
-        #     grade_value = int(class_name[:2])
-        #     grade = Grade(grade_value)
-        #     new_class = Class(name=class_name, grade=grade)
-        #     db.session.add(new_class)
-        #     db.session.commit()
-        #     classes.append(new_class)
-        #
-        # print(f"Successfully added {len(classes)} classes.")
-        #
-        # # Create students
-        # students = []
-        # student_index = 0
-        # for class_obj in classes:
-        #     for _ in range(40):
-        #         if student_index >= 199:
-        #             break
-        #
-        #         full_name = fake.name()
-        #         gender = choice([True, False])
-        #         address = fake.address()
-        #         birth = generate_random_birth()
-        #         phone = generate_unique_phone()
-        #         email = generate_unique_email()
-        #         role = Role.STUDENT
-        #
-        #         student_info = UserInformation(
-        #             full_name=full_name,
-        #             gender=gender,
-        #             address=address,
-        #             birth=birth,
-        #             phone=phone,
-        #             email=email,
-        #             role=role
-        #         )
-        #         db.session.add(student_info)
-        #         db.session.commit()
-        #
-        #         student_detail = Student(id=student_info.id, grade=class_obj.grade, class_id=class_obj.id)
-        #         db.session.add(student_detail)
-        #         db.session.commit()
-        #
-        #         students.append(student_detail)
-        #         student_index += 1
-        #
-        # # Add remaining students without classes
-        # for _ in range(30):
-        #     full_name = fake.name()
-        #     gender = choice([True, False])
-        #     address = fake.address()
-        #     birth = generate_random_birth()
-        #     phone = generate_unique_phone()
-        #     email = generate_unique_email()
-        #     role = Role.STUDENT
-        #     grade = choice(list(Grade))
-        #
-        #     student_info = UserInformation(
-        #         full_name=full_name,
-        #         gender=gender,
-        #         address=address,
-        #         birth=birth,
-        #         phone=phone,
-        #         email=email,
-        #         role=role
-        #     )
-        #     db.session.add(student_info)
-        #     db.session.commit()
-        #
-        #     student_detail = Student(id=student_info.id, grade=grade)
-        #     db.session.add(student_detail)
-        #     db.session.commit()
-        #
-        #     students.append(student_detail)
-        #     student_index += 1
-        #
-        # print(f"Successfully added {len(students)} students.")
-        #
-        # # Create subjects for each grade
-        # subjects = ["Toán", "Văn", "Anh"]
-        # for grade in Grade:
-        #     for subject_name in subjects:
-        #         subject = Subject(name=subject_name, desc=f"Môn {subject_name} khôi {grade.value}", grade=grade)
-        #         db.session.add(subject)
-        # db.session.commit()
-        #
-        # print("Successfully added subjects for all grades.")
-        # new_semester = Semester(semester=1, year="2024")
-        # db.session.add(new_semester)
-        # db.session.commit()
+        teachers = []
+        for _ in range(6):
+            full_name = fake.name()
+            gender = choice([True, False])
+            address = fake.address()
+            birth = generate_random_birth(min_age=25, max_age=60)
+            phone = generate_unique_phone()
+            email = generate_unique_email()
+            role = Role.TEACHER
+            degree = choice(["Cử nhân", "Thạc sĩ", "Tiến sĩ"])
 
-        # teacher = Teacher.query.first()
-        # subject = Subject.query.first()
-        # class_ = Class.query.first()
-        # semester = Semester.query.first()
-        #
-        # new_teaching_plan = TeachingPlan(
-        #     teacher_id=teacher.id,
-        #     subject_id=subject.id,
-        #     class_id=class_.id,
-        #     semester_id=semester.id,
-        # )
-        # db.session.add(new_teaching_plan)
-        # db.session.commit()
-        # print("New teaching plan created successfully!")
+            teacher_info = UserInformation(
+                full_name=full_name,
+                gender=gender,
+                address=address,
+                birth=birth,
+                phone=phone,
+                email=email,
+                role=role
+            )
+            db.session.add(teacher_info)
+            db.session.commit()
 
-        # student_ids = list(range(11, 201))
-        #
-        # # Các kiểu điểm
-        # score_types = [ScoreType.EXAM_15_MINS, ScoreType.EXAM_45_MINS, ScoreType.EXAM_FINAL]
-        #
-        # # Tạo 400 điểm ngẫu nhiên
-        # scores = []
-        # for _ in range(400):
-        #     student_id = choice(student_ids)
-        #     score_type = choice(score_types)
-        #     score_value = round(uniform(1, 10), 2)  # Tạo số thực ngẫu nhiên từ 1 đến 10 với 2 chữ số thập phân
-        #
-        #     new_score = Score(
-        #         student_id=student_id,
-        #         teaching_plan_id=1, # lỗi thì sửa teaching_plan
-        #         score_type=score_type,
-        #         score=score_value
-        #     )
-        #     scores.append(new_score)
-        #
-        # # Lưu các điểm vào cơ sở dữ liệu
-        # db.session.bulk_save_objects(scores)
-        # db.session.commit()
-        # print(f"Tạo thành công {len(scores)} điểm.")
-        # print("New teaching plan created successfully!")
+            teacher_detail = Teacher(id=teacher_info.id, degree=degree)
+            db.session.add(teacher_detail)
+            db.session.commit()
+
+            teachers.append(teacher_detail)
+
+        print(f"Successfully added {len(teachers)} teachers.")
+
+        # Create classes
+        classes = []
+        class_names = ["10A", "10B", "11A", "11B", "12A", "12B"]
+        for class_name in class_names:
+            grade_value = int(class_name[:2])
+            grade = Grade(grade_value)
+            new_class = Class(name=class_name, grade=grade)
+            db.session.add(new_class)
+            db.session.commit()
+            classes.append(new_class)
+
+        print(f"Successfully added {len(classes)} classes.")
+
+        # Create students
+        students = []
+        student_index = 0
+        for class_obj in classes:
+            for _ in range(40):
+                if student_index >= 199:
+                    break
+
+                full_name = fake.name()
+                gender = choice([True, False])
+                address = fake.address()
+                birth = generate_random_birth()
+                phone = generate_unique_phone()
+                email = generate_unique_email()
+                role = Role.STUDENT
+
+                student_info = UserInformation(
+                    full_name=full_name,
+                    gender=gender,
+                    address=address,
+                    birth=birth,
+                    phone=phone,
+                    email=email,
+                    role=role
+                )
+                db.session.add(student_info)
+                db.session.commit()
+
+                student_detail = Student(id=student_info.id, grade=class_obj.grade, class_id=class_obj.id)
+                db.session.add(student_detail)
+                db.session.commit()
+
+                students.append(student_detail)
+                student_index += 1
+
+        # Add remaining students without classes
+        for _ in range(30):
+            full_name = fake.name()
+            gender = choice([True, False])
+            address = fake.address()
+            birth = generate_random_birth()
+            phone = generate_unique_phone()
+            email = generate_unique_email()
+            role = Role.STUDENT
+            grade = choice(list(Grade))
+
+            student_info = UserInformation(
+                full_name=full_name,
+                gender=gender,
+                address=address,
+                birth=birth,
+                phone=phone,
+                email=email,
+                role=role
+            )
+            db.session.add(student_info)
+            db.session.commit()
+
+            student_detail = Student(id=student_info.id, grade=grade)
+            db.session.add(student_detail)
+            db.session.commit()
+
+            students.append(student_detail)
+            student_index += 1
+
+        print(f"Successfully added {len(students)} students.")
+
+        # Create subjects for each grade
+        subjects = ["Toán", "Văn", "Anh"]
+        for grade in Grade:
+            for subject_name in subjects:
+                subject = Subject(name=subject_name, desc=f"Môn {subject_name} khôi {grade.value}", grade=grade)
+                db.session.add(subject)
+        db.session.commit()
+
+        print("Successfully added subjects for all grades.")
+        new_semester = Semester(semester=1, year="2024")
+        db.session.add(new_semester)
+        db.session.commit()
+
+        teacher = Teacher.query.first()
+        subject = Subject.query.first()
+        class_ = Class.query.first()
+        semester = Semester.query.first()
+
+        new_teaching_plan = TeachingPlan(
+            teacher_id=teacher.id,
+            subject_id=subject.id,
+            class_id=class_.id,
+            semester_id=semester.id,
+        )
+        db.session.add(new_teaching_plan)
+        db.session.commit()
+        print("New teaching plan created successfully!")
+
+        student_ids = list(range(11, 201))
+
+        # Các kiểu điểm
+        score_types = [ScoreType.EXAM_15_MINS, ScoreType.EXAM_45_MINS, ScoreType.EXAM_FINAL]
+
+        # Tạo 400 điểm ngẫu nhiên
+        scores = []
+        for _ in range(400):
+            student_id = choice(student_ids)
+            score_type = choice(score_types)
+            score_value = round(uniform(1, 10), 2)  # Tạo số thực ngẫu nhiên từ 1 đến 10 với 2 chữ số thập phân
+
+            new_score = Score(
+                student_id=student_id,
+                teaching_plan_id=1, # lỗi thì sửa teaching_plan
+                score_type=score_type,
+                score=score_value
+            )
+            scores.append(new_score)
+
+        # Lưu các điểm vào cơ sở dữ liệu
+        db.session.bulk_save_objects(scores)
+        db.session.commit()
+        print(f"Tạo thành công {len(scores)} điểm.")
+        print("New teaching plan created successfully!")
         print("Success!")

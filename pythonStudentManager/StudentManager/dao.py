@@ -102,6 +102,10 @@ def get_students_by_class(class_id):
     ]
 
 
+def get_student_by_id(student_id):
+    return Student.query.filter(Student.active==True, Student.id==student_id).first()
+
+
 def get_all_students(page=None):
     page_size = app.config.get("PAGE_SIZE")
     return Student.query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
