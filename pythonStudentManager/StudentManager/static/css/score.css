@@ -16,6 +16,7 @@
     --table-hover-bg-color: #eaf3fc;
     --table-header-color: #555;
     --note-color: #666;
+    --fieldset-bg-color:#ffffff;
 }
 .darkmode{
     --background-color: #1c1c1c;/* Nền tối */
@@ -35,6 +36,7 @@
     --table-odd-bg-color: #1f1f1f; /* Nền bảng chẵn tối */
     --table-hover-bg-color: #333333; /* Màu nền khi hover vào bảng */
     --note-color: #b0b0b0; /* Màu ghi chú sáng hơn */
+     --fieldset-bg-color:gray;
 }
 body {
     background-color: var(--background-color);
@@ -91,6 +93,7 @@ h1 {
 
 
 .form-floating .form-control:focus {
+    background-color: var(--fieldset-bg-color);
      border-color: var(--focus-border-color) !important;
     box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional */
 }
@@ -105,6 +108,7 @@ h1 {
     color: var(--text-color);
 }
 .fieldset {
+    background-color: var(--fieldset-bg-color);
     border-radius: 15px;
     border: 3px solid #ced4da;
     padding:10px;
