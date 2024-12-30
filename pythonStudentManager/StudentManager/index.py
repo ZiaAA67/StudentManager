@@ -36,7 +36,8 @@ def index():
 @app.route('/students', methods=['get', 'post'])
 def student_management():
     page = request.args.get('page', 1, type=int)
-    students_paginated = dao.get_all_students(page)
+    q = request.args.get('q')
+    students_paginated = dao.get_all_students(page, q)
     grades = Grade.choices()
 
     total_pages = students_paginated.pages
@@ -52,9 +53,10 @@ def student_management():
                            students=students_paginated.items,
                            grades=grades,
                            pagination=students_paginated,
-                           total_pages = total_pages,
+                           total_pages=total_pages,
                            start_page=start_page,
-                           end_page=end_page)
+                           end_page=end_page,
+                           q=q)
 
 
 # student details
@@ -192,9 +194,10 @@ def is_valid_age(birthdate):
 @app.route('/classes', methods=['get', 'post'])
 def class_management():
     page = request.args.get('page', 1)
+    q = request.args.get('q')
     page = int(page)
     pages = dao.count_classes()
-    classes = dao.get_all_classes(page)
+    classes = dao.get_all_classes(page, q)
     return render_template("/employee/class_management.html",
                            classes=classes,
                            pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
@@ -275,9 +278,10 @@ def delete_class(class_id):
 @app.route('/subjects')
 def subject_management():
     page = request.args.get('page', 1)
+    q = request.args.get('q')
     page = int(page)
     pages = dao.count_subjects()
-    subjects = dao.get_all_subjects(page)
+    subjects = dao.get_all_subjects(page, q)
     return render_template('/employee/subject_management.html',
                            subjects=subjects,
                            pages=math.ceil(pages / app.config["SUBJECTS_PAGE_SIZE"]),

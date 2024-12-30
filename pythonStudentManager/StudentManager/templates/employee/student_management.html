@@ -143,7 +143,7 @@
 
         {% if pagination.has_prev %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ pagination.prev_num }}" aria-label="Previous">
+            <a class="page-link" href="?page={{ pagination.prev_num }}{% if q %}&q={{ q }}{% endif %}" aria-label="Previous">
                 <span aria-hidden="true">Previous</span>
             </a>
         </li>
@@ -155,13 +155,13 @@
 
         {% for page_num in range(start_page, end_page + 1) %}
         <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            <a class="page-link" href="?page={{ page_num }}{% if q %}&q={{ q }}{% endif %}">{{ page_num }}</a>
         </li>
         {% endfor %}
 
         {% if pagination.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ pagination.next_num }}" aria-label="Next">
+            <a class="page-link" href="?page={{ pagination.next_num }}{% if q %}&q={{ q }}{% endif %}" aria-label="Next">
                 <span aria-hidden="true">Next</span>
             </a>
         </li>

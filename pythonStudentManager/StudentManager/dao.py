@@ -35,8 +35,12 @@ def count_classes():
     return db.session.query(db.func.count(Class.id)).filter(Class.active == True).scalar()
 
 
-def get_all_classes(page=None):
+def get_all_classes(page=None, q=None):
     query = Class.query
+
+    if q:
+        query = query.filter(Class.name.contains(q))
+
     if page:
         page_size = app.config["CLASSES_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
@@ -113,9 +117,14 @@ def get_student_by_id(student_id):
     return Student.query.filter(Student.active==True, Student.id==student_id).first()
 
 
-def get_all_students(page=None):
+def get_all_students(page=None, q=None):
+    query = Student.query
+
+    if q:
+        query = query.join(Student.user_information).filter(UserInformation.full_name.contains(q))
+
     page_size = app.config.get("PAGE_SIZE")
-    return Student.query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
+    return query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
 
 
 def check_phone_unique(phone):
@@ -148,8 +157,12 @@ def count_notifications():
     return db.session.query(db.func.count(Notification.id)).filter(Subject.active == True).scalar()
 
 
-def get_all_subjects(page=None):
+def get_all_subjects(page=None, q=None):
     query = Subject.query
+
+    if q:
+        query = query.filter(Subject.name.contains(q))
+
     if page:
         page_size = app.config["SUBJECTS_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
