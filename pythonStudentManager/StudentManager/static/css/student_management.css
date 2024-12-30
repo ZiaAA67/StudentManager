@@ -1,18 +1,65 @@
+:root {
+    --background-color: #2f353b;
+    --container-background: #ffffff;
+    --card-bg-color: white;
+    --text-color: #495057;
+    --heading-color: #495057;
+    --heading-border-color: lightseagreen;
+    --fieldset-border-color: #ced4da;
+    --fieldset-bg-color:#ffffff;
+    --placeholder-color: #6c757d;
+    --input-border-color: #ccc;
+    --table-border: #ddd;
+    --table-header-background: #f5f7fa;
+    --table-header-color: #555;
+    --table-hover-bg-color: #eaf3fc;
+    --separator-color: lightseagreen;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.darkmode {
+    --background-color: #1c1c1c;/* Nền tối */
+    --container-background: #2b2b2b;
+     --card-bg-color: #2b2b2b;
+    --text-color: #e0e0e0; /* Màu chữ sáng cho chế độ tối */
+    --heading-color: #ffffff; /* Màu tiêu đề sáng */
+    --heading-border-color: #20b2aa; /* Màu viền tiêu đề */
+    --fieldset-border-color: #e4e4e4; /* Màu viền fieldset */
+    --fieldset-bg-color:#2b2b2b;
+    --placeholder-color: #ffffff; /* Màu chữ placeholder */
+    --input-border-color: #3a3f54; /* Màu viền của input */
+    --table-border: #44475a; /* Màu viền bảng */
+    --table-header-background: #333; /* Màu nền tiêu đề bảng */
+    --table-header-color: grey; /* Màu chữ tiêu đề bảng */
+      --table-hover-bg-color: #333333; /* Màu nền khi hover vào bảng */
+    --separator-color: #20b2aa; /* Màu của separator */
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Hiệu ứng bóng tối */
+}
+
 body {
-    background-color: #2f353b;
+    background-color: var(--background-color);
     font-family: 'Arial', sans-serif;
-    color: #495057;
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-.container {
-    width: 70%;
-    margin: 30px auto;
+.container{
+    display: flex;
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    align-items: center; /* Canh giữa theo chiều dọc */
+    padding: 20px; /* Thêm một chút padding quanh content */
+    margin-top: 30px; /* Thêm khoảng cách cho phần main */
+    margin-bottom: 30px; /* Khoảng cách dưới phần main */
+}
+.card {
+    display: flex; /* Chia card thành 2 phần */
+    width: 100%; /* Độ rộng của card */
+    max-width: 1100px; /* Giới hạn độ rộng tối đa */
     padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+   background: var(--card-bg-color);
+    justify-content: center;
+    box-shadow: 0 4px 20px var(--card-shadow-color);
+    border-radius: 10px;
 }
 h1 {
     text-align: center;
@@ -26,22 +73,48 @@ h1 {
     border-radius:4px;
 }
 .fieldset {
+    background-color: var(--fieldset-bg-color);
+    border: 3px solid var(--fieldset-border-color);
+    color: var(--placeholder-color);
     border-radius: 15px;
-    border: 3px solid #ced4da;
     padding:15px;
 }
+.form-floating .form-control {
+    background-color: var(--fieldset-bg-color);
+
+}
+
 .form-floating .form-control:focus {
-    border-color: lightseagreen !important;
-    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional */
+    background-color: var(--fieldset-bg-color);
+    border-color: var(--heading-border-color) !important;
+    box-shadow: var(--box-shadow); /* Optional */
+}
+.form-floating label {
+    color: var(--placeholder-color);
+  }
+.form-floating input {
+    color: var(--placeholder-color);
+}
+.form-floating input:focus {
+    color: var(--placeholder-color);
+}
+#address{
+    background-color: var(--fieldset-bg-color);
+}
+textarea#address:focus{
+    color: var(--placeholder-color);
+}
+textarea#address{
+    color: var(--placeholder-color);
 }
 input::placeholder,
 textarea::placeholder {
-    color: #6c757d;
+    color: var(--placeholder-color);
 }
 select, textarea {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border-color);
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
@@ -50,7 +123,7 @@ input[type="radio"] {
     appearance: none;
     width: 16px;
     height: 16px;
-    border: 2px solid #ccc;
+     border: 2px solid var(--input-border-color);
     border-radius: 50%;
     outline: none;
     cursor: pointer;
@@ -130,28 +203,31 @@ table {
 }
 
 table td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--table-border);
     padding: 12px;
     text-align: left;
 }
 
 table th {
-    background-color: #f5f7fa;
-    color: #555;
+   background-color: var(--table-header-background);
+    color: var(--table-header-color);
     font-weight: bold;
-    border: 1px solid #ddd;
+     border: 1px solid var(--table-border);
     padding: 12px;
     text-align: center;
+}
+table tbody tr:hover {
+    background-color: var(--table-hover-bg-color);
 }
 /*separator*/
 .separator::before,
 .separator::after {
     content: "";
     flex: 1;
-    border-bottom: 2px solid lightseagreen;
+    border-bottom: 2px solid var(--separator-color);
     margin: 0 10px;
 }
 
 .separator span {
-    color: black;
+    color: var(--heading-color);
 }

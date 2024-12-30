@@ -1,8 +1,31 @@
+:root {
+    --background-color: #495057;
+    --card-background: #ffffff;
+    --border-color: #6c757d;
+    --text-color-primary: #495057;
+    --text-color-secondary: #343a40;
+    --hover-background: #f8f9fa;
+    --box-shadow: 0 4px 20px rgba(69, 90, 100, 0.1);
+    --box-shadow-inset: inset 0 0 5px rgba(0, 0, 0, 0.05);
+    --box-shadow-hover: inset 0 0 8px rgba(0, 0, 0, 0.1);
+}
+.darkmode {
+    --background-color: #1c1c1c;
+    --card-background: #2b2b2b;
+    --border-color: grey;
+    --text-color-primary: #e0e0e0;
+    --text-color-secondary: #ffffff;
+    --hover-background: #3a3a3a;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    --box-shadow-inset: inset 0 0 5px rgba(255, 255, 255, 0.1);
+    --box-shadow-hover: inset 0 0 8px rgba(255, 255, 255, 0.2);
+}
 /* Đảm bảo không ảnh hưởng đến header và footer */
-body, html {
+body{
     margin: 0;
     padding: 0;
-    background-color: #495057; /* Màu nền nhẹ nhàng */
+    background-color: var(--background-color); /* Màu nền nhẹ nhàng */
+
 }
 
 .main-content {
@@ -19,9 +42,9 @@ body, html {
     width: 70%; /* Độ rộng của card */
     max-width: 1100px; /* Giới hạn độ rộng tối đa */
     padding: 20px;
-    background: white;
+     background: var(--card-background);
     justify-content: center;
-    box-shadow: 0 4px 20px rgba(69, 90, 100, 0.1); /* Hiệu ứng đổ bóng */
+    box-shadow: var(--box-shadow);
     border-radius: 10px;
 }
 
@@ -40,7 +63,7 @@ body, html {
     object-fit: cover;
     border-radius: 50%; /* Avatar tròn */
     border: 3px solid #6c757d;
-    box-shadow: 0 4px 10px black;
+      border: 3px solid var(--border-color);
     margin-bottom: 15px;
 }
 
@@ -49,23 +72,24 @@ body, html {
     font-weight: 600;
     text-align: center;
     margin-bottom: 5px;
+    color: var(--text-color-primary);
 }
 
 .job {
     font-size: 16px;
     text-align: center;
     font-weight: 400;
-    color:#495057;
+    color: var(--text-color-primary);
 }
 
 /* Phần card-body bên phải */
 .card-body {
     width:80%;
     padding: 20px 20px; /* Tăng padding nhẹ nhàng */
-    background-color: #ffffff; /* Màu nền trắng để tạo sự rõ ràng */
-    border: 4px solid #6c757d; /* Viền bên trái tạo điểm nhấn */
+   background-color: var(--card-background);
+        border: 4px solid var(--border-color);
     border-radius: 10px; /* Bo tròn góc bên phải */
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ bên trong */
+      box-shadow: var(--box-shadow-inset);
     transition: box-shadow 0.3s ease;
     display: flex; /* Kích hoạt Flexbox */
     justify-content: center; /* Căn giữa theo chiều ngang */
@@ -73,18 +97,19 @@ body, html {
 }
 
 .card-body:hover {
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng nhẹ khi hover */
+    box-shadow: var(--box-shadow-hover);
 }
 
 .card-body table {
     width: 90%;
     border-collapse: collapse;
     border-spacing: 0; /* Loại bỏ khoảng cách giữa các ô */
+
 }
 
 .card-body td {
     padding: 12px 15px; /* Tăng padding cho ô */
-    color: #495057; /* Màu chữ hiện đại */
+    color: var(--text-color-primary);
     border-bottom: 1px solid #dee2e6; /* Màu viền nhẹ nhàng */
     font-size: 15px; /* Cỡ chữ vừa phải */
     text-align: left; /* Canh trái nội dung */
@@ -93,11 +118,11 @@ body, html {
 
 .card-body td:first-child {
     font-weight: bold;
-    color: #343a40; /* Tạo điểm nhấn cho cột đầu */
+   color: var(--text-color-secondary);
 }
 
 .card-body tr:hover td {
-    background-color: #f8f9fa; /* Thay đổi màu nền khi hover từng dòng */
+    background-color: var(--hover-background);
 }
 
 /* Nút Edit */
@@ -105,14 +130,14 @@ body, html {
     position: absolute;
     right: 15px;
     top: 15px;
-    color: #6c757d;
+    color: var(--border-color);
     font-size: 18px;
     cursor: pointer;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .card-body .edit:hover {
-    color: #495057;
+    color: var(--text-color-primary);
     transform: scale(1.1); /* Phóng to nhẹ khi hover */
 }
 
