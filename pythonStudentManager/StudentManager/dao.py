@@ -179,6 +179,34 @@ def get_student_in_class():
         .join(Student, Student.class_id.__eq__(Class.id)).group_by(Class.id).all()
 
 
+def calculate_average_score(scores):
+    """
+    - 15 phút: hệ số 1
+    - 45 phút: hệ số 2
+    - Thi cuối kỳ: hệ số 3
+    """
+    total_score = 0
+    total_weight = 0
+
+    for score in scores:
+        if score.score_type == ScoreType.EXAM_15_MINS:
+            weight = 1  # hệ số cho 15 phút
+        elif score.score_type == ScoreType.EXAM_45_MINS:
+            weight = 2  # hệ số cho 45 phút
+        elif score.score_type == ScoreType.EXAM_FINAL:
+            weight = 3  # hệ số cho thi cuối kỳ
+        else:
+            weight = 1  # mặc định nếu không thuộc loại trên
+
+        total_score += score.score * weight
+        total_weight += weight
+
+    if total_weight == 0:
+        return 0  # tránh chia cho 0 nếu không có điểm
+
+    return total_score / total_weight
+
+
 def get_class_statistics(year, semester, subject_id, grade=None):
     avg_scores = (
         db.session.query(
@@ -309,4 +337,4 @@ def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, cla
 if __name__ == "__main__":
     with app.app_context():
         print("Hello world!")
-        print(get_class_statistics("2024", 1, 1, Grade.GRADE_11))
+        print(get_class_statistics("2024", 1, 1, Grade.GRADE_10))
