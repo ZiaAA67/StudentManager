@@ -86,13 +86,20 @@ def count_students_in_class(class_id):
     return 0
 
 
-def get_students_by_class(class_id):
-    students = Student.query.filter(Student.active == True, Student.class_id == class_id).all()
+def get_students_by_class(class_id, page=None):
+    query = Student.query
+    if page:
+        page_size = app.config["PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.filter_by(active=True, class_id=class_id).slice(start, start + page_size)
+
+    students = query.all()
     return [
         {
             "id": student.id,
             "full_name": student.user_information.full_name,
             "grade": student.grade.value,
+            "gender": "Nam" if student.user_information.gender else "Nữ",
             "address": student.user_information.address,
             "birth": student.user_information.birth.strftime('%d-%m-%Y'),
             "phone": student.user_information.phone,

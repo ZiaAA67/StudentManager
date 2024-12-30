@@ -52,6 +52,7 @@ def student_management():
                            students=students_paginated.items,
                            grades=grades,
                            pagination=students_paginated,
+                           total_pages = total_pages,
                            start_page=start_page,
                            end_page=end_page)
 
@@ -67,7 +68,6 @@ def student_details(student_id):
     if cls:
         class_name = cls.name
 
-    print(class_name)
     return render_template('/employee/student_details.html', student=student, student_info=student_info, class_name=class_name)
 
 
@@ -195,12 +195,31 @@ def class_management():
     page = int(page)
     pages = dao.count_classes()
     classes = dao.get_all_classes(page)
-    print(pages)
     return render_template("/employee/class_management.html",
                            classes=classes,
                            pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
                            current_page=int(page),
                            total_classes=pages)
+
+
+# class details
+@app.route('/classes/<int:class_id>')
+def class_details(class_id):
+    cls = dao.get_class_by_id(class_id)
+    amount = dao.count_students_in_class(cls.id)
+
+    page = request.args.get('page', 1, type=int)
+    pages = dao.count_students_in_class(cls.id)
+    students = dao.get_students_by_class(cls.id, page)
+
+    print(math.ceil(pages / app.config["PAGE_SIZE"]))
+
+    return render_template('/employee/class_details.html',
+                           cls=cls,
+                           amount=amount,
+                           students=students,
+                           pages=math.ceil(pages / app.config["PAGE_SIZE"]),
+                           current_page=int(page))
 
 
 @app.route('/get_classes/<grade>', methods=['GET'])

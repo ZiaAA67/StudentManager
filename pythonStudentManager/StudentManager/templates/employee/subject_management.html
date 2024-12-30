@@ -74,6 +74,7 @@
         <tr>
             <th>STT</th>
             <th>Tên môn học</th>
+            <th>Mô tả</th>
             <th>Khối</th>
             <th>Tùy chọn</th>
         </tr>
@@ -81,11 +82,11 @@
     <tbody id="class-list">
         {%for s in subjects%}
         <tr>
-            <td>{{loop.index}}</td>
+            <td>{{(current_page - 1) * 4 + loop.index}}</td>
             <td>{{s.name}}</td>
+            <td>{{s.desc}}</td>
             <td>Khối {{s.grade.value}}</td>
-            <td width="300" class="text-center">
-                <button class="btn btn-success mt-1 mb-1 me-4">Chi tiết</button>
+            <td width="100" class="text-center">
                 <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{s.id}})">Xoá</button>
             </td>
         </tr>

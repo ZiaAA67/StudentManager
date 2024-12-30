@@ -26,6 +26,7 @@
                 <label for="class_name">Tên lớp</label>
             </div>
 
+            <label for="grade">* Khối lớp</label>
             <div class="mt-1 mb-3">
                 <select class="fieldset" id="grade" name="grade" required>
                     <option value="">Chọn khối</option>
@@ -33,6 +34,7 @@
                     <option value="11">Khối 11</option>
                     <option value="12">Khối 12</option>
                 </select>
+
             </div>
             <!--                <div>-->
             <!--                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">-->
@@ -82,12 +84,14 @@
         <tbody id="class-list">
         {%for c in classes%}
         <tr>
-            <td>{{loop.index}}</td>
+            <td>{{(current_page - 1) * 4 + loop.index}}</td>
             <td>{{c.class.name}}</td>
             <td>Khối {{c.class.grade.value}}</td>
             <td>{{c.student_count}}</td>
             <td width="200" class="text-center">
-                <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
+                <button class="btn btn-success mt-1 mb-1 me-2">
+                    <a style="text-decoration: none; color: white" href="/classes/{{c.class.id}}">Chi tiết</a>
+                </button>
                 <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{c.class.id}})">Xoá</button>
             </td>
         </tr>

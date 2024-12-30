@@ -111,10 +111,10 @@ select {
     box-sizing: border-box;
 }
 select:focus{
-    color: #ffffff;
+    /*color: #ffffff;*/
 }
 select:valid {
-    color: #ffffff;
+    /*color: #ffffff;*/
 }
 /* Button Styles */
 button {
