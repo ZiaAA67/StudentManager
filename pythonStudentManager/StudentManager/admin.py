@@ -6,7 +6,7 @@ from flask_admin.contrib.sqla import ModelView
 from sqlalchemy.testing.suite.test_reflection import users
 
 from StudentManager.dao import get_years_semesters
-from models import SchoolRules, Notification, Role, Subject, Grade, Class, Semester
+from models import SchoolRules, Notification, Role, Subject, Grade, Class, Semester, ExamQuantity
 from StudentManager import app, db, dao
 from flask_login import current_user, logout_user
 
@@ -97,7 +97,8 @@ class StatsView(BaseView):
 
 
 class SubjectView(BaseAdminView):
-    column_labels = {'name': 'Tên môn học',
+    column_labels = {'id': 'Mã môn',
+                     'name': 'Tên môn học',
                      'desc': 'Mô tả',
                      'grade': 'Khối'}
     column_filters = ['name', 'grade']
@@ -122,9 +123,17 @@ class MyAdminIndexView(AdminIndexView):
         return self.render('admin/index.html', statistics=statistics)
 
 
+class ExamQuantityView(BaseAdminView):
+    column_labels = {'exam_type': 'Loại',
+                     'quantity': 'Số lượng',
+                     'subject_id': 'Môn học'}
+    form_columns = ['exam_type', 'quantity', 'subject_id']
+
+
 admin = Admin(app=app, name="Quản trị viên", template_mode="bootstrap4", index_view=MyAdminIndexView())
 admin.add_view(SchoolRulesView(SchoolRules, db.session, name="Quy định"))
 admin.add_view(NotificationView(Notification, db.session, name="Thông báo"))
 admin.add_view(SubjectView(Subject, db.session, name="Môn học"))
+admin.add_view(ExamQuantityView(ExamQuantity, db.session, name="Số lượng bài kiểm tra"))
 admin.add_view(StatsView(name='Thống kê', endpoint='statsview'))
 admin.add_view(LogoutView(name="Đăng xuất"))
