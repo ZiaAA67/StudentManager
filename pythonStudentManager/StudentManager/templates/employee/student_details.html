@@ -6,6 +6,7 @@
 <!--<link href="{{url_for('static', filename='css/student_management.css')}}" rel="stylesheet">-->
 <link href="{{url_for('static', filename='css/profile.css')}}" rel="stylesheet">
 <link href="{{url_for('static', filename='css/darkmode.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
 {%endblock%}
 
 {%block content%}
@@ -17,6 +18,19 @@
         <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
     </svg>
 </button>
+
+<style>
+    select {
+        border: none;
+        padding: 4px;
+        margin-left: -10px;
+        font-size: 15px;
+    }
+
+    .cls:hover select {
+        background-color: #f7f9fb;
+    }
+</style>
 
 <div class="main-content">
 
@@ -31,18 +45,26 @@
 
         <!-- Info -->
         <div class="card-body">
-            <i class="fa fa-pen fa-xs edit"></i>
-            <table>
+            <i class="fa fa-pen fa-xs edit btn-edit"></i>
+            <i class="fa fa-check fa-xs edit btn-confirm" style="display: none"></i>
+            <table data-student-id={{student.id}} id="table">
                 <tbody>
                 <tr>
                     <td>Khối</td>
                     <td>:</td>
-                    <td>{{student.grade}}</td>
+                    <td data-grade=10 id="grade">{{student.grade}}</td>
                 </tr>
-                <tr>
+                <tr class="cls">
                     <td>Lớp</td>
                     <td>:</td>
-                    <td> {%if class_name%} {{class_name}} {%endif%}</td>
+                    <td>
+                         <select class="fieldset" id="cls" name="cls" disabled>
+                            <option value="">Chọn lớp</option>
+                             {%if class_name%}
+                                <option value="{{class_name}}" selected>{{class_name}}</option>
+                             {%endif%}
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>Ngày sinh</td>
@@ -76,4 +98,5 @@
 
 {%block link_js%}
 <script src="{{url_for('static', filename='js/darkmode.js')}}"></script>
+<script src="{{url_for('static', filename='js/student_details.js')}}"></script>
 {%endblock%}

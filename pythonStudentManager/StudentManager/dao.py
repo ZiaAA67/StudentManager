@@ -31,8 +31,13 @@ def get_user_info_by_user_id(user_id):
     return UserInformation.query.get(user.user_info_id)
 
 
-def count_classes():
-    return db.session.query(db.func.count(Class.id)).filter(Class.active == True).scalar()
+def count_classes(q=None):
+    query = db.session.query(db.func.count(Class.id)).filter(Class.active == True)
+
+    if q:
+        query = query.filter(Class.name.contains(q))
+
+    return query.scalar()
 
 
 def get_all_classes(page=None, q=None):
@@ -80,6 +85,19 @@ def get_classes_by_grade(grade):
 
 def get_class_by_id(class_id):
     return Class.query.get(class_id)
+
+
+def change_class_by_student_id(class_id, student_id):
+    student = Student.query.filter(Student.active == True, Student.id == student_id).first()
+    if student:
+        if not class_id:
+            student.class_id = None
+        else:
+            student.class_id = class_id
+
+        db.session.commit()
+        return True
+    return False
 
 
 def count_students_in_class(class_id):
@@ -149,8 +167,13 @@ def init_school_rules():
     return rule
 
 
-def count_subjects():
-    return db.session.query(db.func.count(Subject.id)).filter(Subject.active == True).scalar()
+def count_subjects(q=None):
+    query = db.session.query(db.func.count(Subject.id)).filter(Subject.active == True)
+
+    if q:
+        query = query.filter(Subject.name.contains(q))
+
+    return query.scalar()
 
 
 def count_notifications():

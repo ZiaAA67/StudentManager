@@ -196,13 +196,17 @@ def class_management():
     page = request.args.get('page', 1)
     q = request.args.get('q')
     page = int(page)
-    pages = dao.count_classes()
+    pages = dao.count_classes(q)
     classes = dao.get_all_classes(page, q)
+
+    print(classes)
+    print(pages)
     return render_template("/employee/class_management.html",
                            classes=classes,
                            pages=math.ceil(pages / app.config["CLASSES_PAGE_SIZE"]),
                            current_page=int(page),
-                           total_classes=pages)
+                           total_classes=pages,
+                           q=q)
 
 
 # class details
@@ -233,6 +237,19 @@ def get_classes(grade):
         return jsonify([{"id": cls.id, "name": cls.name} for cls in classes])
 
     return jsonify([])
+
+
+@app.route('/change_class', methods=['POST'])
+def change_class():
+    data = request.json
+    class_id = data.get('classId')
+    student_id = data.get('studentId')
+    print(class_id, student_id)
+    res = dao.change_class_by_student_id(class_id, student_id)
+    if res:
+        return jsonify({'success': True})
+
+    return jsonify({'success': False})
 
 
 # api add class
@@ -280,13 +297,14 @@ def subject_management():
     page = request.args.get('page', 1)
     q = request.args.get('q')
     page = int(page)
-    pages = dao.count_subjects()
+    pages = dao.count_subjects(q)
     subjects = dao.get_all_subjects(page, q)
     return render_template('/employee/subject_management.html',
                            subjects=subjects,
                            pages=math.ceil(pages / app.config["SUBJECTS_PAGE_SIZE"]),
                            current_page=int(page),
-                           total_subjects=pages)
+                           total_subjects=pages,
+                           q=q)
 
 
 @app.route('/get_subjects/<grade>', methods=['GET'])
