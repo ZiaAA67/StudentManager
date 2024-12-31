@@ -2,7 +2,7 @@ from datetime import date
 
 from models import *
 import hashlib
-from sqlalchemy import func, case
+from sqlalchemy import func, case, desc
 
 
 def auth_user(username, password):
@@ -122,6 +122,8 @@ def get_all_students(page=None, q=None):
 
     if q:
         query = query.join(Student.user_information).filter(UserInformation.full_name.contains(q))
+
+    query = query.order_by(desc(Student.id))
 
     page_size = app.config.get("PAGE_SIZE")
     return query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
