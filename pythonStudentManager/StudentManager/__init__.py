@@ -10,9 +10,10 @@ app.secret_key = "^&$$%$$FGGFAHGA"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/educatedb?charset=utf8mb4" % quote('Admin@123')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
-app.config["PAGE_SIZE"] = 6
+app.config["PAGE_SIZE"] = 12
 app.config["CLASSES_PAGE_SIZE"] = 4
 app.config["SUBJECTS_PAGE_SIZE"] = 4
+app.config["NOTIFICATIONS_PAGE_SIZE"]=4
 
 db = SQLAlchemy(app)
 login = LoginManager(app=app)

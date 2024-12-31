@@ -1,28 +1,49 @@
+:root {
+    --background-color: #2f353b;
+    --text-color: #495057;
+    --secondary-text-color: #888888; /* Màu chữ phụ */
+    --container-background: #ffffff; /* Nền của container */
+    --container-shadow-light: rgba(255, 255, 255, 0.3); /* Bóng nhẹ của container */
+    --container-shadow-strong: rgba(255, 255, 255, 0.4); /* Bóng mạnh khi hover */
+    --divider-color: #e0e0e0; /* Màu đường chia */
+    --border-color: #ddd; /* Màu viền của các mục */
+    --highlight-background: lightgrey; /* Nền khi hover */
+    --heading-border-color: #333333; /* Màu viền dưới tiêu đề */
+    --link-color: #333333; /* Màu chữ của liên kết */
+    --placeholder-color: #6c757d; /* Màu placeholder (nếu cần) */
+    --image-border-radius: 5%; /* Độ bo góc của ảnh */
+}
+.darkmode {
+--background-color: #1c1c1c;/* Nền tối */
+--container-background: #2b2b2b;
+--text-color: #e0e0e0; /* Màu chữ sáng cho chế độ tối */
+--link-color: #ffffff;  /* Màu chữ của liên kết */
+--heading-border-color: #ffffff; /* Màu viền dưới tiêu đề */
+--highlight-background: grey;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
-.container {
+.card {
     display: flex;
     flex-direction: row;
+    padding:50px;
     margin-top: 70px;
     margin-bottom: 70px;
     border-radius: 10px;
     align-items: center;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); /* Light-colored shadow (white with opacity) */
-    background-color: white;
-    transition: box-shadow 0.3s ease;
+    background-color: var(--container-background);
 }
-.container:hover {
-    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.4); /* Stronger shadow on hover */
+.card:hover {
+    box-shadow: 0 10px 40px var(--container-shadow-strong);
 }
 .left-panel {
     flex: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-right: 1px solid #ddd;
     padding-right: 20px;
 }
 .right-panel {
@@ -31,12 +52,14 @@ body {
 }
 .announcement {
     margin-bottom: 20px;
+
 }
 .announcement h2 {
     margin-bottom: 15px;
-    border-bottom: 2px solid #4E4E4E ;
+    border-bottom: 2px solid var(--heading-border-color);
     display: inline-block;
     padding-bottom: 5px;
+    color:red;
 }
 .announcement-list {
     list-style: none;
@@ -53,20 +76,21 @@ body {
 
 }
 .announcement-list li:hover {
-    background-color: #cbf5f3; /* light green hover */
+  background-color: var(--highlight-background);
 }
 .announcement-list li a {
     text-decoration: none;
-    color: #4E4E4E;
+    color: var(--link-color);
     font-weight: bold;
     font-size: 1em;
 }
 .announcement-list li span {
-    color: #888888;
+    color: grey;
     font-size: 0.9em;
 }
 .img {
     width: 350px;
     height: 350px;
     border-radius: 5%;
+
 }

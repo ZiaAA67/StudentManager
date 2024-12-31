@@ -2,66 +2,78 @@
 
 {%block title%} Quản Lý Lớp Học {%endblock%}
 
-{%block link_css%} <link href="{{url_for('static', filename='css/class_management.css')}}" rel="stylesheet"> {%endblock%}
+{%block link_css%}
+<link href="{{url_for('static', filename='css/class_management.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='css/darkmode.css')}}" rel="stylesheet">
+{%endblock%}
 
 {%block content%}
-<div class="d-flex justify-content-center align-items-center">
-    <div class="card" style="width: 38rem;">
-        <div class="card-body">
-            <form id="class-form">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp"
-                           name="class_name" required>
-                    <label for="class_name">Tên lớp</label>
+<button id="theme-switch">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+        <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+        <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+    </svg>
+</button>
+<div class="alert" id="alert"></div>
+<div class="card">
+    <div class="d-flex justify-content-center align-items-center">
+        <form id="class-form" style="width:35rem">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control shadow-sm" id="class_name" placeholder="Lớp"
+                       name="class_name" required>
+                <label for="class_name">Tên lớp</label>
+            </div>
+
+
+            <div class=" select mt-1 mb-3">
+                <label for="grade">* Khối lớp</label>
+                <select class="fieldset" id="grade" name="grade" required>
+                    <option value="">Chọn khối</option>
+                    <option value="10">Khối 10</option>
+                    <option value="11">Khối 11</option>
+                    <option value="12">Khối 12</option>
+                </select>
+
+            </div>
+            <!--                <div>-->
+            <!--                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">-->
+            <!--                </div>-->
+
+            <!-- Register Button -->
+
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            <div id="flash-messages" style="display:none;">
+                {% for category, message in messages %}
+                <div class="alert alert-{{category}}">
+                    {{ message }}
                 </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
 
-                <div class="mt-1 mb-3">
-                    <select class="fieldset" id="grade" name="grade" required>
-                        <option value="">Chọn khối</option>
-                        <option value="10">Khối 10</option>
-                        <option value="11">Khối 11</option>
-                        <option value="12">Khối 12</option>
-                    </select>
-                </div>
-                <!--                <div>-->
-                <!--                    <input class="fieldset" type="number" id="class_size" min="1" max="40" placeholder="Sỉ số">-->
-                <!--                </div>-->
-
-                <!-- Register Button -->
-
-                {% with messages = get_flashed_messages(with_categories=True) %}
-                    {% if messages %}
-                        <div id="flash-messages" style="display:none;">
-                            {% for category, message in messages %}
-                                <div class="alert alert-{{category}}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-
-                <div class="d-grid">
-                    <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
-                </div>
-            </form>
+            <div class="d-grid">
+                <button class="btn btn-red shadow" type="submit">Tạo lớp</button>
+            </div>
+        </form>
+    </div>
+    <div class="mt-5">
+        <div class="separator">
+            <span><h2>DANH SÁCH LỚP HỌC</h2></span>
         </div>
+        <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
+            <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
+                   placeholder="Tìm kiếm lớp học...">
+            <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
+                Tìm
+            </button>
+        </form>
     </div>
-</div>
-<div class="mt-5">
-    <div class="separator">
-        <span><h2 style="color:black">DANH SÁCH LỚP HỌC</h2></span>
-    </div>
-    <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
-        <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
-               placeholder="Tìm kiếm lớp học...">
-        <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
-            Tìm
-        </button>
-    </form>
-</div>
-<table>
-    <thead>
+    <table>
+        <thead>
         <tr>
             <th>STT</th>
             <th>Tên lớp</th>
@@ -69,46 +81,51 @@
             <th>Sĩ số</th>
             <th>Tùy chọn</th>
         </tr>
-    </thead>
-    <tbody id="class-list">
+        </thead>
+        <tbody id="class-list">
         {%for c in classes%}
         <tr>
-            <td>{{loop.index}}</td>
+            <td>{{(current_page - 1) * 4 + loop.index}}</td>
             <td>{{c.class.name}}</td>
             <td>Khối {{c.class.grade.value}}</td>
             <td>{{c.student_count}}</td>
             <td width="200" class="text-center">
-                <button class="btn btn-success mt-1 mb-1 me-2">Chi tiết</button>
+                <button class="btn btn-success mt-1 mb-1 me-2">
+                    <a style="text-decoration: none; color: white" href="/classes/{{c.class.id}}">Chi tiết</a>
+                </button>
                 <button class="btn btn-danger mt-1 mb-1" onclick="deleteClass({{c.class.id}})">Xoá</button>
             </td>
         </tr>
         {%endfor%}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 
-    <ul class="pagination d-flex align-items-center justify-content-center mt-3" id="pagination" page-data="{{total_classes}}">
+    <ul class="pagination d-flex align-items-center justify-content-center mt-3" id="pagination"
+        page-data="{{total_classes}}">
         {%if pages > 1%}
-      <li class="page-item {%if current_page == 1%} disabled {%endif%}">
-          <a class="page-link" href="/classes?page={{current_page - 1}}">Previous</a>
-      </li>
+        <li class="page-item {%if current_page == 1%} disabled {%endif%}">
+            <a class="page-link" href="?page={{current_page - 1}}{% if q %}&q={{ q }}{% endif %}">Previous</a>
+        </li>
 
-      {%for p in range(1, pages+1)%}
-      <li class="page-item {%if p == current_page%} active {%endif%}">
-          <a class="page-link" href="/classes?page={{p}}">{{p}}</a>
-      </li>
-      {%endfor%}
+        {%for p in range(1, pages+1)%}
+        <li class="page-item {%if p == current_page%} active {%endif%}">
+            <a class="page-link" href="?page={{p}}{% if q %}&q={{ q }}{% endif %}">{{p}}</a>
+        </li>
+        {%endfor%}
 
-      <li class="page-item {%if current_page == pages%} disabled {%endif%}">
-          <a class="page-link" href="/classes?page={{current_page + 1}}">Next</a>
-      </li>
+        <li class="page-item {%if current_page == pages%} disabled {%endif%}">
+            <a class="page-link" href="?page={{current_page + 1}}{% if q %}&q={{ q }}{% endif %}">Next</a>
+        </li>
         {%endif%}
     </ul>
-
-
+</div>
 {%endblock%}
 
-{%block link_js%} <script src="{{url_for('static', filename='js/classes.js')}}"></script> {%endblock%}
+{%block link_js%}
+<script src="{{url_for('static', filename='js/classes.js')}}"></script>
+<script src="{{url_for('static', filename='js/darkmode.js')}}"></script>
+{%endblock%}
 
 
 

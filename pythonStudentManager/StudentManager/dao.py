@@ -1,6 +1,8 @@
+from datetime import date
+
 from models import *
 import hashlib
-from sqlalchemy import func
+from sqlalchemy import func, case, desc
 
 
 def auth_user(username, password):
@@ -29,12 +31,21 @@ def get_user_info_by_user_id(user_id):
     return UserInformation.query.get(user.user_info_id)
 
 
-def count_classes():
-    return db.session.query(db.func.count(Class.id)).filter(Class.active == True).scalar()
+def count_classes(q=None):
+    query = db.session.query(db.func.count(Class.id)).filter(Class.active == True)
+
+    if q:
+        query = query.filter(Class.name.contains(q))
+
+    return query.scalar()
 
 
-def get_all_classes(page=None):
+def get_all_classes(page=None, q=None):
     query = Class.query
+
+    if q:
+        query = query.filter(Class.name.contains(q))
+
     if page:
         page_size = app.config["CLASSES_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
@@ -53,7 +64,19 @@ def get_all_classes(page=None):
 
 
 def get_class_by_grade(grade):
-    return Class.query.filter(Class.grade.__eq__(grade), Class.active == True).first()
+    school_rule = init_school_rules()
+    max_students = school_rule.max_students_in_class
+
+    classes = Class.query.filter(
+        Class.grade == grade,
+        Class.active == True
+    ).all()
+
+    for cls in classes:
+        if cls.students.count() < max_students:
+            return cls
+
+    return None
 
 
 def get_classes_by_grade(grade):
@@ -64,21 +87,35 @@ def get_class_by_id(class_id):
     return Class.query.get(class_id)
 
 
+def change_class_by_student_id(class_id, student_id):
+    student = Student.query.filter(Student.active == True, Student.id == student_id).first()
+    if student:
+        if not class_id:
+            student.class_id = None
+        else:
+            student.class_id = class_id
+
+        db.session.commit()
+        return True
+    return False
+
+
 def count_students_in_class(class_id):
     cls = Class.query.filter(Class.id == class_id, Class.active == True).first()
 
     if cls:
-        return len(cls.students)
+        return cls.students.count()
     return 0
 
 
 def get_students_by_class(class_id):
-    students = Student.query.filter(Student.active == True, Student.class_id == class_id).all()
+    students = Student.query.filter(Student.active==True, Student.class_id==class_id).all()
     return [
         {
             "id": student.id,
             "full_name": student.user_information.full_name,
             "grade": student.grade.value,
+            "gender": "Nam" if student.user_information.gender else "Nữ",
             "address": student.user_information.address,
             "birth": student.user_information.birth.strftime('%d-%m-%Y'),
             "phone": student.user_information.phone,
@@ -88,9 +125,52 @@ def get_students_by_class(class_id):
     ]
 
 
-def get_all_students(page=None):
+def get_students_pagination_by_class(class_id, page=None, q=None):
+    query = Student.query.join(UserInformation, Student.user_information)
+
+    query = query.filter(Student.class_id == class_id)
+
+    if q:
+        query = query.filter(UserInformation.full_name.contains(q))
+
+    page_size = app.config["PAGE_SIZE"]
+    pagination = query.paginate(page=page, per_page=page_size, error_out=False)
+
+    return {
+        "students": [
+            {
+                "id": student.id,
+                "full_name": student.user_information.full_name,
+                "grade": student.grade.value,
+                "gender": "Nam" if student.user_information.gender else "Nữ",
+                "address": student.user_information.address,
+                "birth": student.user_information.birth.strftime('%d-%m-%Y'),
+                "phone": student.user_information.phone,
+                "email": student.user_information.email,
+            }
+            for student in pagination.items
+        ],
+        "total_pages": pagination.pages,
+        "current_page": pagination.page,
+        "has_next": pagination.has_next,
+        "has_prev": pagination.has_prev,
+    }
+
+
+def get_student_by_id(student_id):
+    return Student.query.filter(Student.active==True, Student.id==student_id).first()
+
+
+def get_all_students(page=None, q=None):
+    query = Student.query
+
+    if q:
+        query = query.join(Student.user_information).filter(UserInformation.full_name.contains(q))
+
+    query = query.order_by(desc(Student.id))
+
     page_size = app.config.get("PAGE_SIZE")
-    return Student.query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
+    return query.filter_by(active=True).paginate(page=page, per_page=page_size, error_out=False)
 
 
 def check_phone_unique(phone):
@@ -106,22 +186,51 @@ def check_email_unique(email):
 
 
 def init_school_rules():
-    if not SchoolRules.query.first():
-        new_rule = SchoolRules()
-        db.session.add(new_rule)
+    rule = SchoolRules.query.order_by(SchoolRules.create_date.desc()).first()
+    if not rule:
+        rule = SchoolRules()
+        db.session.add(rule)
         db.session.commit()
 
-
-def count_subjects():
-    return db.session.query(db.func.count(Subject.id)).filter(Subject.active == True).scalar()
+    return rule
 
 
-def get_all_subjects(page=None):
+def count_subjects(q=None):
+    query = db.session.query(db.func.count(Subject.id)).filter(Subject.active == True)
+
+    if q:
+        query = query.filter(Subject.name.contains(q))
+
+    return query.scalar()
+
+
+def count_notifications():
+    return db.session.query(db.func.count(Notification.id)).filter(Subject.active == True).scalar()
+
+
+def get_all_subjects(page=None, q=None):
     query = Subject.query
+
+    if q:
+        query = query.filter(Subject.name.contains(q))
+
     if page:
         page_size = app.config["SUBJECTS_PAGE_SIZE"]
         start = (int(page) - 1) * page_size
         query = query.filter_by(active=True).slice(start, start + page_size)
+
+    return query.all()
+
+
+def get_all_notifications(page=None):
+    query = Notification.query.filter_by(active=True)
+
+    if page:
+        page_size = app.config["NOTIFICATIONS_PAGE_SIZE"]
+        start = (int(page) - 1) * page_size
+        query = query.order_by(Notification.create_date.desc()).slice(start, start + page_size)
+    else:
+        query = query.order_by(Notification.create_date.desc())
 
     return query.all()
 
@@ -135,5 +244,181 @@ def get_subjects_by_grade(grade):
                                 Subject.active == True).all()
 
 
+def get_years_semesters():
+    years = db.session.query(Semester.year).group_by(Semester.year).all()
+    return [year[0] for year in years]
+
+
+def get_student_in_class():
+    return db.session.query(Class.id, Class.name, func.count(Student.id)) \
+        .join(Student, Student.class_id.__eq__(Class.id)).group_by(Class.id).all()
+
+
+def get_class_statistics(year, semester, subject_id, grade=None):
+    avg_scores_query = (
+        db.session.query(
+            Score.student_id,
+            func.sum(
+                case(
+                    (Score.score_type == ScoreType.EXAM_15_MINS, Score.score * 1),
+                    (Score.score_type == ScoreType.EXAM_45_MINS, Score.score * 2),
+                    (Score.score_type == ScoreType.EXAM_FINAL, Score.score * 3),
+                    else_=0
+                )
+            ).label('total_score'),
+            func.sum(
+                case(
+                    (Score.score_type == ScoreType.EXAM_15_MINS, 1),
+                    (Score.score_type == ScoreType.EXAM_45_MINS, 2),
+                    (Score.score_type == ScoreType.EXAM_FINAL, 3),
+                    else_=0
+                )
+            ).label('total_weight')
+        )
+        .join(TeachingPlan, Score.teaching_plan_id == TeachingPlan.id)
+        .join(Semester, TeachingPlan.semester_id == Semester.id)
+        .filter(
+            Semester.year == year,
+            Semester.semester == semester,
+            TeachingPlan.subject_id == subject_id
+        )
+        .group_by(Score.student_id)
+        .subquery()
+    )
+
+    query = (
+        db.session.query(
+            Class.id,
+            Class.name.label("class_name"),
+            func.count(Student.id).label("total_students"),
+            func.sum(
+                case(
+                    (avg_scores_query.c.total_score / avg_scores_query.c.total_weight >= 5, 1),
+                    else_=0
+                )
+            ).label("num_passed"),
+            (
+                    func.sum(
+                        case(
+                            (avg_scores_query.c.total_score / avg_scores_query.c.total_weight >= 5, 1),
+                            else_=0
+                        )
+                    ) / func.count(Student.id) * 100
+            ).label("pass_rate"),
+        )
+        .join(Student, Student.class_id == Class.id)
+        .outerjoin(avg_scores_query, avg_scores_query.c.student_id == Student.id)
+    )
+
+    if grade:
+        query = query.filter(Class.grade == grade)
+
+    results = query.group_by(Class.id).all()
+
+    print(f"Parameters -> Year: {year}, Semester: {semester}, Subject: {subject_id}, Grade: {grade}")
+
+    return results
+
+
+def get_lastest_exam_quantities(subject_id):
+    default_quantities = {
+        ScoreType.EXAM_15_MINS.name: 2,
+        ScoreType.EXAM_45_MINS.name: 1,
+        ScoreType.EXAM_FINAL.name: 1
+    }
+
+    for score_type in ScoreType:
+        latest_record = ExamQuantity.query.filter(ExamQuantity.active == True,
+                                                  ExamQuantity.subject_id == subject_id,
+                                                  ExamQuantity.exam_type == score_type,
+                                                  ).order_by(ExamQuantity.update_date.desc()).first()
+
+        if latest_record:
+            default_quantities[score_type.name] = latest_record.quantity
+
+    return default_quantities
+
+
+def get_teaching_plan(class_id, subject_id, semester_id, teacher_id):
+    teaching = TeachingPlan.query.filter_by(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
+                                            teacher_id=teacher_id).first()
+    if not teaching:
+        teaching = TeachingPlan(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
+                                teacher_id=teacher_id)
+        db.session.add(teaching)
+        db.session.commit()
+    return teaching
+
+
+def save_score(student_id, teaching_plan_id, score_type, score_value, index):
+    existing_score = Score.query.filter_by(
+        student_id=student_id,
+        teaching_plan_id=teaching_plan_id,
+        score_type=score_type,
+        index=index
+    ).first()
+
+    if existing_score:
+        existing_score.score = score_value
+    else:
+        new_score = Score(
+            student_id=student_id,
+            teaching_plan_id=teaching_plan_id,
+            score_type=score_type,
+            index=index,
+            score=score_value
+        )
+        db.session.add(new_score)
+
+    db.session.commit()
+
+
+def get_semester(semester_value):
+    year = date.today().year
+    semester = Semester.query.filter(Semester.active == True, Semester.semester == semester_value,
+                                     Semester.year == year).first()
+    if not semester:
+        semester = Semester(semester=semester_value, year=year)
+        db.session.add(semester)
+        db.session.commit()
+    return semester
+
+
+def get_scores_by_subject_and_semester(student_ids, subject_id, semester_id, class_id, teacher_id):
+    teaching_plan = get_teaching_plan(class_id=class_id, subject_id=subject_id, semester_id=semester_id,
+                                      teacher_id=teacher_id)
+    print(subject_id, semester_id, class_id)
+    print(teaching_plan)
+
+    scores = Score.query.filter(Score.student_id.in_(student_ids), Score.teaching_plan_id == teaching_plan.id) \
+        .order_by(Score.create_date.desc()).all()
+
+    return scores
+
+
+def get_scores_by_year(student_ids, subject_id, year, class_id, teacher_id):
+    teaching_plans = (
+        TeachingPlan.query
+        .join(Semester, TeachingPlan.semester_id == Semester.id)
+        .filter(
+            TeachingPlan.class_id == class_id,
+            TeachingPlan.subject_id == subject_id,
+            Semester.year == year,
+            TeachingPlan.teacher_id == teacher_id
+        )
+        .all())
+    scores = Score.query.filter(
+        Score.student_id.in_(student_ids),
+        Score.teaching_plan_id.in_([plan.id for plan in teaching_plans])
+    ).all()
+    return scores
+
+
+def get_semesters_by_year(year):
+    return Semester.query.filter(Semester.active == True, Semester.year == year).all()
+
+
 if __name__ == "__main__":
-    print()
+    with app.app_context():
+        print("Hello world!")
+        print(get_class_statistics("2024", 1, 1, Grade.GRADE_10))
