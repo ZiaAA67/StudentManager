@@ -51,25 +51,17 @@
                 {% if err_msg %}
                 <div class="alert alert-danger text-center py-2">{{ err_msg }}</div>
                 {% endif %}
-                <!-- Forgot Password Link -->
-                <div class="text-end">
-                    <a href="/forgot-password" class="text-decoration-none text-info">
-                        Quên mật khẩu?
-                    </a>
-                </div>
+
                 <!-- Login Button -->
-                <div class="d-grid mt-3 mb-3">
+                <div class="d-grid mt-4 mb-4">
                     <button class="btn btn-lightseagreen shadow" type="submit ">Đăng nhập</button>
                 </div>
 
-                <div class="separator">
+                <div class="separator mb-3">
                     <span>Bạn chưa có tài khoản?</span>
                 </div>
+                <p style="text-align:center;font-size:14px; font-weight:bold"> Hãy liên hệ với ADMIN để được hồ trợ!</p>
 
-                <div class="d-grid mt-3">
-                    <button class="btn btn-lightseagreen shadow" onclick="goToRegisterPage()">Đăng ký</button>
-                    <script src="static/js/script.js"></script>
-                </div>
 
             </form>
         </div>

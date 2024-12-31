@@ -24,7 +24,7 @@
     --heading-color: #ffffff; /* Màu tiêu đề sáng */
     --heading-border-color: #20b2aa; /* Màu viền tiêu đề */
     --fieldset-border-color: #e4e4e4; /* Màu viền fieldset */
-    --fieldset-bg-color:#2b2b2b;
+    --fieldset-bg-color:gray;
     --placeholder-color: #ffffff; /* Màu chữ placeholder */
     --input-border-color: #3a3f54; /* Màu viền của input */
     --table-border: #44475a; /* Màu viền bảng */
@@ -102,6 +102,9 @@ h1 {
     background-color: var(--fieldset-bg-color);
 }
 textarea#address:focus{
+    color: var(--placeholder-color);
+}
+textarea#address::placeholder{
     color: var(--placeholder-color);
 }
 textarea#address{
