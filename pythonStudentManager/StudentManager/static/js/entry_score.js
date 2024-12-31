@@ -75,7 +75,7 @@ classElement.addEventListener('change', () => {
                     student_ids.push(student.id)
                     let html = `
                         <tr class="student-row" data-student-id=${student.id}>
-                            <td>${student.id}</td>
+                            <td>${index+1}</td>
                             <td>${student.full_name}</td>
                             <td>${student.birth}</td>`
 

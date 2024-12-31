@@ -57,7 +57,7 @@ gradeElement.addEventListener('change', function () {
                     html += `<th>${capitalize(s.name)}</th>`
                 })
 
-                html += `<th>Điểm trung bình</th>`
+                html += `<th id="avg-label">Điểm trung bình</th>`
 
                 heading.innerHTML = html;
 
@@ -72,10 +72,15 @@ gradeElement.addEventListener('change', function () {
 
 
 semesterElement.addEventListener('change', () => {
+    const avgLabel = document.getElementById('avg-label');
+    const semesterLabel = document.getElementById('label-semester');
+
     if(parseInt(semesterElement.value) ===  3) {
-        document.getElementById('label-semester').innerText = "Tổng kết năm học";
+        semesterLabel.innerText = "Tổng kết năm học";
+        avgLabel.innerText = "Điểm TB năm học"
     } else {
-        document.getElementById('label-semester').innerText = "Học kỳ: Học kỳ " + semesterElement.value;
+        semesterLabel.innerText = "Học kỳ: Học kỳ " + semesterElement.value;
+        avgLabel.innerText = "Điểm TB HK" + semesterElement.value;
     }
 
     if(semesterElement.value) {
