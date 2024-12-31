@@ -71,13 +71,13 @@
         <div class="separator">
             <span><h3>DANH SÁCH HỌC SINH</h3></span>
         </div>
-<!--        <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">-->
-<!--            <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"-->
-<!--                   placeholder="Tìm kiếm học sinh...">-->
-<!--            <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">-->
-<!--                Tìm-->
-<!--            </button>-->
-<!--        </form>-->
+        <form class="d-flex" style="align-items:center;margin-left:auto;width:fit-content">
+            <input class="fieldset" style="width:300px;margin-right:5px" name="q" type="text"
+                   placeholder="Tìm kiếm học sinh...">
+            <button class="btn btn-red mb-3" style="background-color:dodgerblue;width:80px; height:50px" type="submit">
+                Tìm
+            </button>
+        </form>
 
         <table class="table-students">
             <thead>
@@ -100,23 +100,21 @@
             </tbody>
         </table>
 
-        <ul class="pagination d-flex align-items-center justify-content-center mt-3" id="pagination">
-            {%if pages > 1%}
-            <li class="page-item {%if current_page == 1%} disabled {%endif%}">
-                <a class="page-link" href="/classes?page={{current_page - 1}}">Previous</a>
-            </li>
-
-            {%for p in range(1, pages+1)%}
-            <li class="page-item {%if p == current_page%} active {%endif%}">
-                <a class="page-link" href="?page={{p}}">{{p}}</a>
-            </li>
-            {%endfor%}
-
-            <li class="page-item {%if current_page == pages%} disabled {%endif%}">
-                <a class="page-link" href="/classes?page={{current_page + 1}}">Next</a>
-            </li>
-            {%endif%}
-        </ul>
+        <nav aria-label="Pagination" class="mt-3">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not has_prev %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ current_page - 1 }}&q={{ q or '' }}">Previous</a>
+                </li>
+                {% for p in range(1, pages + 1) %}
+                <li class="page-item {% if p == current_page %}active{% endif %}">
+                    <a class="page-link" href="?page={{ p }}&q={{ q or '' }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+                <li class="page-item {% if not has_next %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ current_page + 1 }}&q={{ q or '' }}">Next</a>
+                </li>
+            </ul>
+        </nav>
 
     </div>
 </div>

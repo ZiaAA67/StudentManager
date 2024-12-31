@@ -125,27 +125,36 @@ def get_students_by_class(class_id):
     ]
 
 
-# def get_students_by_class(class_id, page=None):
-#     query = Student.query
-#     if page:
-#         page_size = app.config["PAGE_SIZE"]
-#         start = (int(page) - 1) * page_size
-#         query = query.filter_by(active=True, class_id=class_id).slice(start, start + page_size)
-#
-#     students = query.all()
-#     return [
-#         {
-#             "id": student.id,
-#             "full_name": student.user_information.full_name,
-#             "grade": student.grade.value,
-#             "gender": "Nam" if student.user_information.gender else "Nữ",
-#             "address": student.user_information.address,
-#             "birth": student.user_information.birth.strftime('%d-%m-%Y'),
-#             "phone": student.user_information.phone,
-#             "email": student.user_information.email
-#         }
-#         for student in students
-#     ]
+def get_students_pagination_by_class(class_id, page=None, q=None):
+    query = Student.query.join(UserInformation, Student.user_information)
+
+    query = query.filter(Student.class_id == class_id)
+
+    if q:
+        query = query.filter(UserInformation.full_name.contains(q))
+
+    page_size = app.config["PAGE_SIZE"]
+    pagination = query.paginate(page=page, per_page=page_size, error_out=False)
+
+    return {
+        "students": [
+            {
+                "id": student.id,
+                "full_name": student.user_information.full_name,
+                "grade": student.grade.value,
+                "gender": "Nam" if student.user_information.gender else "Nữ",
+                "address": student.user_information.address,
+                "birth": student.user_information.birth.strftime('%d-%m-%Y'),
+                "phone": student.user_information.phone,
+                "email": student.user_information.email,
+            }
+            for student in pagination.items
+        ],
+        "total_pages": pagination.pages,
+        "current_page": pagination.page,
+        "has_next": pagination.has_next,
+        "has_prev": pagination.has_prev,
+    }
 
 
 def get_student_by_id(student_id):

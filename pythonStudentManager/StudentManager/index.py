@@ -216,17 +216,22 @@ def class_details(class_id):
     amount = dao.count_students_in_class(cls.id)
 
     page = request.args.get('page', 1, type=int)
-    pages = dao.count_students_in_class(cls.id)
-    students = dao.get_students_by_class(cls.id, page)
+    q = request.args.get('q')
 
-    print(math.ceil(pages / app.config["PAGE_SIZE"]))
+    result = dao.get_students_pagination_by_class(cls.id, page, q)
+    students = result["students"]
+    total_pages = result["total_pages"]
+    current_page = result["current_page"]
 
     return render_template('/employee/class_details.html',
                            cls=cls,
                            amount=amount,
                            students=students,
-                           pages=math.ceil(pages / app.config["PAGE_SIZE"]),
-                           current_page=int(page))
+                           pages=total_pages,
+                           current_page=current_page,
+                           has_next=result["has_next"],
+                           has_prev=result["has_prev"],
+                           q=q)
 
 
 @app.route('/get_classes/<grade>', methods=['GET'])
