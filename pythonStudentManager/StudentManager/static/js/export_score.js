@@ -109,11 +109,11 @@ classElement.addEventListener('change', () => {
                 tbody.innerHTML = '';
 
                 student_ids = [];
-                data.students.forEach((student) => {
+                data.students.forEach((student, index) => {
                     student_ids.push(student.id);
                     let html = `
                         <tr class="student-row" data-student-id=${student.id}>
-                            <td>${student.id}</td>
+                            <td>${index+1}</td>
                             <td>${student.full_name}</td>
                             <td>${student.birth}</td>`
 
@@ -171,6 +171,10 @@ function loadAvgScores(student_ids, subject_ids) {
             }
         })
 }
+
+document.querySelector('.btn-export').addEventListener('click', () => {
+    window.print();
+})
 
 function capitalize(s) {
     return String(s[0]).toUpperCase() + String(s).slice(1);
